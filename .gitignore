@@ -1,0 +1,36 @@
+__pycache__/
+*.py[cod]
+.venv/
+build/
+dist/
+*.egg-info/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local tooling caches
+# Local tooling and private notes (not part of the template)
+.atl/
+.claude/
+reports/
+research_notes/
+
+# Case data: keep config, design and crawler; never raw data
+case/*/index/
+case/*/raw_html/
+case/*/samples/**
+!case/*/samples/README.md
+!case/*/samples/LICENSE
+!case/*/samples/_manifest.json
+
+# Local dev auth keys (agintis.cli.dev_token): private keys, never commit
+.dev/
+
+# Answer dumps and judge reports (cli.dump_answers / cli.judge): they hold corpus text
+case/*/judge/
+case/spensiones/profiles/validation/chunks_preview.jsonl

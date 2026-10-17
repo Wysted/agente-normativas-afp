@@ -1,0 +1,180 @@
+x-tei: &tei
+  image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.9.3
+  restart: unless-stopped
+  volumes:
+    - hf_cache:/data
+  environment:
+    OMP_NUM_THREADS: ${TEI_THREADS:-2}
+    MKL_NUM_THREADS: ${TEI_THREADS:-2}
+    RAYON_NUM_THREADS: ${TEI_THREADS:-2}
+    MALLOC_ARENA_MAX: "2"
+  healthcheck:
+    test: ["CMD", "curl", "-fsS", "http://127.0.0.1:80/health"]
+    interval: 10s
+    timeout: 5s
+    retries: 30
+    start_period: 120s
+
+x-app-env: &app-env
+  DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:?set POSTGRES_USER in .env}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:?set POSTGRES_DB in .env}
+  EMBEDDINGS_URL: http://embeddings:80
+  # Tokenizer baked into the image (bge-m3). Using another EMBEDDINGS_MODEL? Point
+  # APP_EMBEDDINGS_TOKENIZER to that model's hub id or a mounted tokenizer.json.
+  EMBEDDINGS_TOKENIZER: ${APP_EMBEDDINGS_TOKENIZER:-/app/models/bge-m3/tokenizer.json}
+  # The app does not depend on the reranker: if the `rerank` profile is not running,
+  # retrieval degrades to the vector order (FallbackReranker).
+  RERANKER_URL: http://reranker:80
+  # Traces go to the `observability` profile's Phoenix when OBSERVABILITY_TRACING=otlp.
+  OBSERVABILITY_OTLP_ENDPOINT: ${APP_OTLP_ENDPOINT:-http://phoenix:6006/v1/traces}
+  # .env is shared with local development, where these hold host-relative paths that do not
+  # exist in the container: empty = unset. Set the APP_* variants to container paths (mount
+  # the files yourself, e.g. under the case dir) when you need them.
+  LLM_PROFILES_FILE: ${APP_LLM_PROFILES_FILE:-}
+  AUTH_JWKS_FILE: ${APP_AUTH_JWKS_FILE:-}
+
+x-case-mount: &case-mount
+  # `CASE=<name>` mounts ./case/<name> read-only at /app/case (the image is case-agnostic).
+  # create_host_path false: a mistyped CASE fails at `up` instead of mounting an empty dir.
+  type: bind
+  source: ./case/${CASE:-fastapi_es}
+  target: /app/case
+  read_only: true
+  bind:
+    create_host_path: false
+
+services:
+  db:
+    image: pgvector/pgvector:0.8.7-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  embeddings:
+    <<: *tei
+    command:
+      - --model-id=${EMBEDDINGS_MODEL:-BAAI/bge-m3}
+      - --max-client-batch-size=${TEI_MAX_CLIENT_BATCH_SIZE:-16}
+      - --max-batch-tokens=${TEI_MAX_BATCH_TOKENS:-1024}
+      - --max-concurrent-requests=${TEI_MAX_CONCURRENT_REQUESTS:-32}
+      - --tokenization-workers=${TEI_THREADS:-2}
+      - --auto-truncate
+    mem_limit: ${EMBEDDINGS_MEM_LIMIT:-2g}
+    ports:
+      - "127.0.0.1:${EMBEDDINGS_PORT:-8081}:80"
+
+  reranker:
+    <<: *tei
+    profiles: ["rerank"]
+    mem_limit: ${RERANKER_MEM_LIMIT:-2g}
+    command:
+      - --model-id=${RERANKER_MODEL:-BAAI/bge-reranker-v2-m3}
+      - --max-client-batch-size=${TEI_MAX_CLIENT_BATCH_SIZE:-16}
+      - --max-batch-tokens=${TEI_MAX_BATCH_TOKENS:-1024}
+      - --max-concurrent-requests=${TEI_MAX_CONCURRENT_REQUESTS:-32}
+      - --tokenization-workers=${TEI_THREADS:-2}
+      - --auto-truncate
+    ports:
+      - "127.0.0.1:${RERANKER_PORT:-8082}:80"
+
+  # Optional tracing backend for local development (OBSERVABILITY_TRACING=otlp, endpoint
+  # http://localhost:6006/v1/traces): `docker compose --profile observability up -d phoenix`.
+  # Arize Phoenix (Elastic License 2.0: free to self-host, not to resell as a service). SQLite on
+  # the named volume keeps it to one light container; for production point it at Postgres >= 14
+  # with PHOENIX_SQL_DATABASE_URL (postgresql://user:pass@host:5432/db) instead.
+  phoenix:
+    image: arizephoenix/phoenix:version-20.23.0
+    profiles: ["observability"]
+    restart: unless-stopped
+    environment:
+      PHOENIX_WORKING_DIR: /mnt/data
+      PHOENIX_TELEMETRY_ENABLED: "false"
+    volumes:
+      - phoenix_data:/mnt/data
+    mem_limit: ${PHOENIX_MEM_LIMIT:-1g}
+    # Distroless image: no shell or curl, only its own Python.
+    healthcheck:
+      test:
+        - CMD
+        - /usr/bin/python3.13
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:6006/healthz', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    ports:
+      # UI and OTLP/HTTP traces (/v1/traces) share this port; local only.
+      - "127.0.0.1:${PHOENIX_PORT:-6006}:6006"
+
+  # One-shot schema setup: Alembic head + LangGraph checkpointer tables (both idempotent).
+  # `docker compose --profile app up -d` runs it before the app starts.
+  # checkpointer_setup exit 2 (CHECKPOINTER_ENABLED=false, nothing to set up) counts as success;
+  # `$$` escapes compose interpolation.
+  migrate:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agintis-app
+    env_file: .env
+    # No case mount: the migrate CLIs never read profiles or agent specs.
+    environment: *app-env
+    command:
+      - sh
+      - -c
+      - alembic upgrade head && { python -m agintis.cli.checkpointer_setup || [ $$? -eq 2 ]; }
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agintis-app
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      <<: *app-env
+      KNOWLEDGE_PROFILES_DIR: /app/case/profiles
+      AGENTS_DIR: /app/case/agents
+    volumes:
+      - *case-mount
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    depends_on:
+      db:
+        condition: service_healthy
+      embeddings:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata:
+  hf_cache:
+  phoenix_data:

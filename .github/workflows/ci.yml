@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+env:
+  # Never re-resolve in CI: every `uv sync`/`uv run` must match uv.lock.
+  # The interpreter version comes from .python-version.
+  UV_FROZEN: "1"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          enable-cache: true
+      # --all-extras: unit tests exercise every LLM provider package (anthropic, ollama,
+      # deepseek) and the otel adapter. No test needs .env, network or case samples.
+      - run: uv sync --all-extras
+      - run: scripts/check.sh
+
+  # Real Postgres (pgvector) + TEI (bge-m3). Only on main and manual runs: the model is ~2 GB.
+  integration:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/agintis
+      TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/postgres
+      PGPASSWORD: postgres
+      # A missing Postgres/TEI fails the tests instead of skipping them (see tests/conftest.py).
+      # The optional reranker still skips: it is not started here.
+      AGINTIS_REQUIRE_SERVICES: "1"
+    services:
+      db:
+        image: pgvector/pgvector:0.8.7-pg17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: agintis
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d agintis"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          enable-cache: true
+      - run: uv sync --all-extras
+
+      # Same extensions as docker/postgres/init; template1 so test databases inherit them.
+      - name: Create extensions
+        run: |
+          for db in agintis template1; do
+            psql -h localhost -U postgres -d "$db" \
+              -c "CREATE EXTENSION IF NOT EXISTS vector" \
+              -c "CREATE EXTENSION IF NOT EXISTS unaccent"
+          done
+
+      # TEI runs as a step (not a `services:` container) so the HF model cache can be restored
+      # BEFORE it starts: service containers start before any step. The cache holds the bge-m3
+      # weights (~2 GB, within the 10 GB repo cache quota); a cold run downloads them. It is
+      # saved right after TEI is healthy, and only on a cache miss (keys are immutable), so a
+      # failing pytest still keeps it and a failed TEI start never stores a partial cache.
+      - name: Restore Hugging Face cache
+        id: hf
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/hf_cache
+          key: hf-bge-m3-${{ runner.os }}-v1
+      - name: Start TEI embeddings
+        run: |
+          mkdir -p "$RUNNER_TEMP/hf_cache"
+          # Keep image and args in sync with the `tei` service in docker-compose.yml.
+          docker run -d --name tei -p 8081:80 -v "$RUNNER_TEMP/hf_cache:/data" \
+            ghcr.io/huggingface/text-embeddings-inference:cpu-1.9.3 \
+            --model-id=BAAI/bge-m3 --max-client-batch-size=16 --max-batch-tokens=1024 \
+            --max-concurrent-requests=32 --auto-truncate
+          for _ in $(seq 1 90); do
+            curl -fsS http://localhost:8081/health >/dev/null 2>&1 && exit 0
+            if [ "$(docker inspect -f '{{.State.Running}}' tei)" != "true" ]; then
+              echo "TEI container exited early" >&2
+              break
+            fi
+            sleep 10
+          done
+          docker logs --tail 100 tei
+          exit 1
+      - name: Save Hugging Face cache
+        if: steps.hf.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/hf_cache
+          key: hf-bge-m3-${{ runner.os }}-v1
+
+      - name: Migrate (smoke check of the Alembic history and checkpointer tables)
+        run: |
+          uv run alembic upgrade head
+          uv run python -m agintis.cli.checkpointer_setup
+      - run: uv run pytest -m integration -q -rs
+
+  # Image build only (no push, no registry). `docker compose config` needs POSTGRES_* from
+  # .env, so the Dockerfile is built directly.
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          # Only main writes the cache; PRs read it without evicting it.
+          cache-to: ${{ github.ref == 'refs/heads/main' && 'type=gha,mode=max' || '' }}

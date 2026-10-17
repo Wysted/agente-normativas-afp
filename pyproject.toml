@@ -1,0 +1,341 @@
+[project]
+name = "agintis"
+version = "0.1.0"
+description = "Python + LangGraph template for building agents (modular monolith, hexagonal)"
+authors = [
+    { name = "Wysted" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.0",
+    "fastapi>=0.143.2",
+    "httpx>=0.28.1,<1",
+    "langchain>=1.4.6,<2",
+    "langchain-core>=1.6.11,<2",
+    "langchain-postgres>=0.0.19,<0.1",
+    "langgraph>=1.2.15,<2",
+    "langgraph-checkpoint-postgres>=3.2.0,<4",
+    "lxml>=6,<7",
+    "pgvector>=0.3.6,<0.5",
+    "psycopg[binary,pool]>=3.3.6",
+    "pydantic>=2.12,<3",
+    "pydantic-settings>=2.16.0",
+    "pyjwt[crypto]>=2.15.1,<3",
+    "pypdf[crypto]>=6,<7",
+    "python-docx>=1.2,<2",
+    "python-dotenv>=1.2,<2",
+    "pyyaml>=6,<7",
+    "sqlalchemy[asyncio]>=2.1.4,<2.2",
+    "tokenizers>=0.23,<1",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.optional-dependencies]
+openai = [
+    "langchain-openai>=1.7.2,<2",
+]
+anthropic = [
+    "langchain-anthropic>=1.7.6,<2",
+]
+ollama = [
+    "langchain-ollama>=1.1.0,<2",
+]
+# Tracing (OBSERVABILITY_TRACING=otlp). Docker: build-arg UV_EXTRAS="... otel".
+otel = [
+    "openinference-instrumentation>=0.1.71,<0.2",
+    "openinference-instrumentation-langchain>=0.1.79,<0.2",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.1,<2",
+    "opentelemetry-sdk>=1.45.1,<2",
+]
+deepseek = [
+    "langchain-deepseek>=1.1.1,<2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "import-linter>=2.15",
+    "langchain-openai>=1.7.2,<2",
+    "lxml-stubs>=0.5,<1",
+    "mypy>=2.4.0",
+    "openinference-instrumentation>=0.1.71,<0.2",
+    "openinference-instrumentation-langchain>=0.1.79,<0.2",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.1,<2",
+    "opentelemetry-sdk>=1.45.1,<2",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.17.1",
+    "types-pyyaml>=6,<7",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+# `case/` holds user case data (documents), not project code.
+extend-exclude = ["case"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "ASYNC", "TID", "RUF", "PT"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"langgraph.prebuilt.create_react_agent".msg = "Use langchain.agents.create_agent"
+"langgraph.graph.MessageGraph".msg = "Deprecated"
+"langgraph_supervisor".msg = "Forbidden: use own router/Send"
+"asyncpg".msg = "Single driver: psycopg3"
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src", "tests"]
+mypy_path = "src"
+strict = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+# pgvector ships no type information.
+module = ["pgvector.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]
+# Default run = unit/contract only. Integration tests need real services:
+#   docker compose up -d --wait embeddings   (reranker test: --profile rerank, service `reranker`)
+#   uv run pytest -m integration            (a later -m overrides the one in addopts)
+addopts = "-m 'not integration'"
+markers = [
+    "integration: needs real services (TEI embeddings/reranker, Postgres); skipped when unreachable",
+]
+
+[tool.importlinter]
+root_package = "agintis"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Domain and shared kernel stay framework-free"
+type = "forbidden"
+source_modules = ["agintis.modules.*.domain", "agintis.shared_kernel"]
+forbidden_modules = [
+    "langgraph",
+    "langchain",
+    "langchain_core",
+    "langchain_postgres",
+    "langsmith",
+    "fastapi",
+    "starlette",
+    "sqlalchemy",
+    "psycopg",
+    "asyncpg",
+    "pgvector",
+    "alembic",
+    "pydantic_settings",
+    "uvicorn",
+    "httpx",
+]
+
+[[tool.importlinter.contracts]]
+name = "Application layer uses only langchain_core from the framework stack"
+type = "forbidden"
+source_modules = ["agintis.modules.*.application"]
+forbidden_modules = [
+    "langgraph",
+    "langchain",
+    "langchain_postgres",
+    "langsmith",
+    "fastapi",
+    "starlette",
+    "sqlalchemy",
+    "psycopg",
+    "asyncpg",
+    "pgvector",
+    "alembic",
+    "pydantic_settings",
+    "uvicorn",
+    "httpx",
+]
+
+[[tool.importlinter.contracts]]
+name = "Module layers"
+type = "layers"
+containers = [
+    "agintis.modules.conversations",
+    "agintis.modules.knowledge",
+    "agintis.modules.agents_catalog",
+]
+# http (routers) sits above api (the pure facade); layers a module does not have are optional.
+layers = ["(http)", "api", "(infrastructure)", "(profiles)", "application", "(domain)"]
+
+[[tool.importlinter.contracts]]
+name = "Module api.py is a pure Python facade (no web framework)"
+type = "forbidden"
+source_modules = ["agintis.modules.*.api"]
+forbidden_modules = ["fastapi", "starlette", "uvicorn", "httpx"]
+
+[[tool.importlinter.contracts]]
+name = "Direction: modules < agent_kit < agents"
+type = "forbidden"
+source_modules = [
+    "agintis.modules.conversations",
+    "agintis.modules.knowledge",
+    "agintis.modules.agents_catalog",
+]
+forbidden_modules = ["agintis.agent_kit", "agintis.modules.agents"]
+
+[[tool.importlinter.contracts]]
+name = "Agent code does not depend on HTTP or bootstrap"
+type = "forbidden"
+source_modules = ["agintis.agent_kit", "agintis.modules.agents"]
+forbidden_modules = ["agintis.platform.http", "agintis.bootstrap"]
+
+[[tool.importlinter.contracts]]
+name = "Agents consume modules only via api.py"
+type = "forbidden"
+source_modules = ["agintis.agent_kit", "agintis.modules.agents"]
+forbidden_modules = [
+    "agintis.modules.*.domain",
+    "agintis.modules.*.application",
+    "agintis.modules.*.infrastructure",
+    "fastapi",
+    "starlette",
+    "sqlalchemy",
+    "psycopg",
+]
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "agent_kit is agent-agnostic"
+type = "forbidden"
+source_modules = ["agintis.agent_kit"]
+forbidden_modules = ["agintis.modules.agents"]
+
+[[tool.importlinter.contracts]]
+name = "Shared kernel is the innermost layer"
+type = "forbidden"
+source_modules = ["agintis.shared_kernel"]
+forbidden_modules = [
+    "agintis.platform",
+    "agintis.modules",
+    "agintis.agent_kit",
+    "agintis.bootstrap",
+    "agintis.main",
+]
+
+[[tool.importlinter.contracts]]
+name = "Platform does not depend on business code"
+type = "forbidden"
+source_modules = ["agintis.platform"]
+forbidden_modules = [
+    "agintis.modules",
+    "agintis.agent_kit",
+    "agintis.bootstrap",
+    "agintis.main",
+]
+# get_container is the typed FastAPI accessor for the composition root; it only reads app.state.
+ignore_imports = ["agintis.platform.http.dependencies -> agintis.bootstrap.container"]
+
+[[tool.importlinter.contracts]]
+name = "Business modules do not depend on the composition root"
+type = "forbidden"
+source_modules = [
+    "agintis.modules.conversations",
+    "agintis.modules.knowledge",
+    "agintis.modules.agents_catalog",
+]
+forbidden_modules = ["agintis.bootstrap", "agintis.main"]
+
+[[tool.importlinter.contracts]]
+name = "Business modules are independent"
+type = "independence"
+modules = [
+    "agintis.modules.conversations",
+    "agintis.modules.knowledge",
+    "agintis.modules.agents_catalog",
+]
+
+[[tool.importlinter.contracts]]
+name = "OpenTelemetry stays behind the observability port"
+type = "forbidden"
+source_modules = [
+    "agintis.modules",
+    "agintis.shared_kernel",
+    "agintis.agent_kit",
+    "agintis.bootstrap",
+    "agintis.main",
+    "agintis.cli",
+]
+forbidden_modules = ["opentelemetry", "openinference"]
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "Only the composition root imports the OTLP tracing adapter"
+type = "forbidden"
+source_modules = [
+    "agintis.modules",
+    "agintis.platform",
+    "agintis.shared_kernel",
+    "agintis.agent_kit",
+    "agintis.cli",
+]
+forbidden_modules = ["agintis.platform.observability.otlp"]
+allow_indirect_imports = true
+# The port builds its own adapter lazily (needs the extra); that is the one allowed edge.
+ignore_imports = ["agintis.platform.observability.tracing -> agintis.platform.observability.otlp"]
+
+[[tool.importlinter.contracts]]
+name = "JWT verification (platform.auth) knows no web framework nor business module"
+type = "forbidden"
+source_modules = ["agintis.platform.auth"]
+forbidden_modules = [
+    "fastapi",
+    "starlette",
+    "agintis.modules",
+    "agintis.agent_kit",
+    "agintis.bootstrap",
+    "agintis.platform.http",
+]
+
+[[tool.importlinter.contracts]]
+name = "The judge data schema and the source rendering are pure (no graph, no models)"
+type = "forbidden"
+source_modules = ["agintis.agent_kit.judge.records", "agintis.agent_kit.source_text"]
+forbidden_modules = [
+    "langgraph",
+    "langchain",
+    "langchain_core",
+    "agintis.platform",
+    "agintis.agent_kit.nodes",
+    "agintis.agent_kit.runtime",
+    "agintis.bootstrap",
+]
+
+[[tool.importlinter.contracts]]
+name = "Nothing depends on the command-line entry points"
+type = "forbidden"
+source_modules = [
+    "agintis.modules",
+    "agintis.platform",
+    "agintis.shared_kernel",
+    "agintis.agent_kit",
+    "agintis.bootstrap",
+    "agintis.main",
+]
+forbidden_modules = ["agintis.cli"]
+
+[[tool.importlinter.contracts]]
+name = "CLI reaches the business modules only through api.py"
+type = "forbidden"
+source_modules = ["agintis.cli"]
+forbidden_modules = [
+    "agintis.modules.*.domain",
+    "agintis.modules.*.application",
+    "agintis.modules.*.infrastructure",
+    "agintis.modules.*.profiles",
+]
+allow_indirect_imports = true

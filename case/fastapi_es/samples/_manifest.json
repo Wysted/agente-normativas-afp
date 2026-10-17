@@ -1,0 +1,450 @@
+[
+ {
+  "id": "fa-tut-background-tasks",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/background-tasks/",
+  "family": "tutorial",
+  "path": "tutorial/background-tasks.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-bigger-applications",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/bigger-applications/",
+  "family": "tutorial",
+  "path": "tutorial/bigger-applications.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-body-fields",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/body-fields/",
+  "family": "tutorial",
+  "path": "tutorial/body-fields.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-body-multiple-params",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/body-multiple-params/",
+  "family": "tutorial",
+  "path": "tutorial/body-multiple-params.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-body-nested-models",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/body-nested-models/",
+  "family": "tutorial",
+  "path": "tutorial/body-nested-models.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-body-updates",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/body-updates/",
+  "family": "tutorial",
+  "path": "tutorial/body-updates.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-body",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/body/",
+  "family": "tutorial",
+  "path": "tutorial/body.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-cookie-param-models",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/cookie-param-models/",
+  "family": "tutorial",
+  "path": "tutorial/cookie-param-models.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-cookie-params",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/cookie-params/",
+  "family": "tutorial",
+  "path": "tutorial/cookie-params.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-cors",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/cors/",
+  "family": "tutorial",
+  "path": "tutorial/cors.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-debugging",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/debugging/",
+  "family": "tutorial",
+  "path": "tutorial/debugging.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-dependencies-classes-as-dependencies",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/dependencies/classes-as-dependencies/",
+  "family": "tutorial",
+  "path": "tutorial/dependencies__classes-as-dependencies.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-dependencies-dependencies-in-path-operation-decorators",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/dependencies/dependencies-in-path-operation-decorators/",
+  "family": "tutorial",
+  "path": "tutorial/dependencies__dependencies-in-path-operation-decorators.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-dependencies-dependencies-with-yield",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/dependencies/dependencies-with-yield/",
+  "family": "tutorial",
+  "path": "tutorial/dependencies__dependencies-with-yield.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-dependencies-global-dependencies",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/dependencies/global-dependencies/",
+  "family": "tutorial",
+  "path": "tutorial/dependencies__global-dependencies.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-dependencies-index",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/dependencies/",
+  "family": "tutorial",
+  "path": "tutorial/dependencies__index.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-dependencies-sub-dependencies",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/dependencies/sub-dependencies/",
+  "family": "tutorial",
+  "path": "tutorial/dependencies__sub-dependencies.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-encoder",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/encoder/",
+  "family": "tutorial",
+  "path": "tutorial/encoder.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-extra-data-types",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/extra-data-types/",
+  "family": "tutorial",
+  "path": "tutorial/extra-data-types.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-extra-models",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/extra-models/",
+  "family": "tutorial",
+  "path": "tutorial/extra-models.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-first-steps",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/first-steps/",
+  "family": "tutorial",
+  "path": "tutorial/first-steps.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-frontend",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/frontend/",
+  "family": "tutorial",
+  "path": "tutorial/frontend.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-handling-errors",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/handling-errors/",
+  "family": "tutorial",
+  "path": "tutorial/handling-errors.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-header-param-models",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/header-param-models/",
+  "family": "tutorial",
+  "path": "tutorial/header-param-models.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-header-params",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/header-params/",
+  "family": "tutorial",
+  "path": "tutorial/header-params.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-index",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/",
+  "family": "tutorial",
+  "path": "tutorial/index.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-metadata",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/metadata/",
+  "family": "tutorial",
+  "path": "tutorial/metadata.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-middleware",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/middleware/",
+  "family": "tutorial",
+  "path": "tutorial/middleware.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-path-operation-configuration",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/path-operation-configuration/",
+  "family": "tutorial",
+  "path": "tutorial/path-operation-configuration.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-path-params-numeric-validations",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/path-params-numeric-validations/",
+  "family": "tutorial",
+  "path": "tutorial/path-params-numeric-validations.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-path-params",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/path-params/",
+  "family": "tutorial",
+  "path": "tutorial/path-params.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-query-param-models",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/query-param-models/",
+  "family": "tutorial",
+  "path": "tutorial/query-param-models.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-query-params-str-validations",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/query-params-str-validations/",
+  "family": "tutorial",
+  "path": "tutorial/query-params-str-validations.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-query-params",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/query-params/",
+  "family": "tutorial",
+  "path": "tutorial/query-params.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-request-files",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/request-files/",
+  "family": "tutorial",
+  "path": "tutorial/request-files.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-request-form-models",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/request-form-models/",
+  "family": "tutorial",
+  "path": "tutorial/request-form-models.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-request-forms-and-files",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/request-forms-and-files/",
+  "family": "tutorial",
+  "path": "tutorial/request-forms-and-files.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-request-forms",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/request-forms/",
+  "family": "tutorial",
+  "path": "tutorial/request-forms.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-response-model",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/response-model/",
+  "family": "tutorial",
+  "path": "tutorial/response-model.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-response-status-code",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/response-status-code/",
+  "family": "tutorial",
+  "path": "tutorial/response-status-code.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-schema-extra-example",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/schema-extra-example/",
+  "family": "tutorial",
+  "path": "tutorial/schema-extra-example.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-security-first-steps",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/security/first-steps/",
+  "family": "tutorial",
+  "path": "tutorial/security__first-steps.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-security-get-current-user",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/security/get-current-user/",
+  "family": "tutorial",
+  "path": "tutorial/security__get-current-user.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-security-index",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/security/",
+  "family": "tutorial",
+  "path": "tutorial/security__index.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-security-oauth2-jwt",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/security/oauth2-jwt/",
+  "family": "tutorial",
+  "path": "tutorial/security__oauth2-jwt.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-security-simple-oauth2",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/security/simple-oauth2/",
+  "family": "tutorial",
+  "path": "tutorial/security__simple-oauth2.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-server-sent-events",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/server-sent-events/",
+  "family": "tutorial",
+  "path": "tutorial/server-sent-events.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-sql-databases",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/sql-databases/",
+  "family": "tutorial",
+  "path": "tutorial/sql-databases.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-static-files",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/static-files/",
+  "family": "tutorial",
+  "path": "tutorial/static-files.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-stream-json-lines",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/stream-json-lines/",
+  "family": "tutorial",
+  "path": "tutorial/stream-json-lines.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-tut-testing",
+  "url": "https://fastapi.tiangolo.com/es/tutorial/testing/",
+  "family": "tutorial",
+  "path": "tutorial/testing.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-index",
+  "url": "https://fastapi.tiangolo.com/es/",
+  "family": "guia",
+  "path": "guia/index.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-async",
+  "url": "https://fastapi.tiangolo.com/es/async/",
+  "family": "guia",
+  "path": "guia/async.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-python-types",
+  "url": "https://fastapi.tiangolo.com/es/python-types/",
+  "family": "guia",
+  "path": "guia/python-types.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-features",
+  "url": "https://fastapi.tiangolo.com/es/features/",
+  "family": "guia",
+  "path": "guia/features.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-alternatives",
+  "url": "https://fastapi.tiangolo.com/es/alternatives/",
+  "family": "guia",
+  "path": "guia/alternatives.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-fastapi-cli",
+  "url": "https://fastapi.tiangolo.com/es/fastapi-cli/",
+  "family": "guia",
+  "path": "guia/fastapi-cli.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-history-design-future",
+  "url": "https://fastapi.tiangolo.com/es/history-design-future/",
+  "family": "guia",
+  "path": "guia/history-design-future.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-help-fastapi",
+  "url": "https://fastapi.tiangolo.com/es/help-fastapi/",
+  "family": "guia",
+  "path": "guia/help-fastapi.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-benchmarks",
+  "url": "https://fastapi.tiangolo.com/es/benchmarks/",
+  "family": "guia",
+  "path": "guia/benchmarks.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-editor-support",
+  "url": "https://fastapi.tiangolo.com/es/editor-support/",
+  "family": "guia",
+  "path": "guia/editor-support.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-environment-variables",
+  "url": "https://fastapi.tiangolo.com/es/environment-variables/",
+  "family": "guia",
+  "path": "guia/environment-variables.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-project-generation",
+  "url": "https://fastapi.tiangolo.com/es/project-generation/",
+  "family": "guia",
+  "path": "guia/project-generation.md",
+  "content_type": "text/markdown"
+ },
+ {
+  "id": "fa-guia-virtual-environments",
+  "url": "https://fastapi.tiangolo.com/es/virtual-environments/",
+  "family": "guia",
+  "path": "guia/virtual-environments.md",
+  "content_type": "text/markdown"
+ }
+]

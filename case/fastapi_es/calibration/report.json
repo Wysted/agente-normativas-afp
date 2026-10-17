@@ -1,0 +1,746 @@
+{
+  "meta": {
+    "git": "5586180",
+    "agent": "fastapi-es-rag",
+    "tenant": "default",
+    "query_input": "analyzed",
+    "evidence_aggregate": "max",
+    "probe_k": 3,
+    "topics": [
+      "tutorial",
+      "guia"
+    ],
+    "profiles": [
+      "fastapi_es_tutorial",
+      "fastapi_es_guia"
+    ],
+    "ready_chunks": {
+      "fastapi_es_tutorial": 576,
+      "fastapi_es_guia": 159
+    },
+    "profile_fingerprints": {
+      "fastapi_es_tutorial": "bcc8e474c63de56acad5784f3b40fa2c2915ce2bfa2e786c3f6d30e539ead76f",
+      "fastapi_es_guia": "773242c20edd723889438fab70f1ae82f4875de420cb2699bef0a2dac095e8ec"
+    },
+    "profiles_files": {
+      "sha256": "ba69065c4b2e9335355a038104a5795e511447b377ccb200cb154d41bf8a1ed1",
+      "files": {
+        "guia.yaml": "ce83c555299b69b21926c6759a5e8ec982fe9b903b1f9f8d62f113d597275946",
+        "tutorial.yaml": "1b1f86dfd8fc62d87eca3d2d8eea5ed2feecc6dcda7f714484059df910df1cf5"
+      }
+    },
+    "embeddings_model": "BAAI/bge-m3",
+    "embeddings_query_prefix": "",
+    "hnsw_ef_search": 40,
+    "max_query_chars": 2000,
+    "files": {
+      "case/fastapi_es/calibration/in_dev.jsonl": "0f3f9e500f1aff815f1e58a8ada24553590e5094b7e502da3c3578237fba12e4",
+      "case/fastapi_es/calibration/ood.jsonl": "af5cbffd2208b4b1d8dc3017ac9f48eda7be75a28a4109fc9397c6ee97efc6c9"
+    },
+    "analyzer_model": "default (openai:gpt-5.4-mini)"
+  },
+  "score": "max over ALL the agent's topics of TopicEvidence.raw_score (the topic's evidence_aggregate of its probe_k similarities, without evidence_bias)",
+  "caveats": [
+    "The 'in' queries were written looking at the documents: in-domain recall and AUROC are optimistic.",
+    "A threshold is valid only for the corpus snapshot, tenant, embedding model and profiles in meta: recalibrate after a re-ingest. Changing a rule needs a fresh OOD set."
+  ],
+  "rule": "p95 of the 'out' scores (pre-registered); 'in' only reports recall",
+  "quantile_method": "linear",
+  "confidence": 0.95,
+  "distributions": {
+    "in": {
+      "n": 30.0,
+      "min": 0.5776998308062755,
+      "max": 0.8135278356249218,
+      "mean": 0.7206935186195287,
+      "p5": 0.6204115933933896,
+      "p25": 0.694268541361855,
+      "p50": 0.7258663259761668,
+      "p75": 0.7661598324775737,
+      "p95": 0.7912514666865018,
+      "p99": 0.8095635895947224
+    },
+    "out": {
+      "n": 40.0,
+      "min": 0.28413154388258577,
+      "max": 0.663413624065711,
+      "mean": 0.49008313168210715,
+      "p5": 0.3584237172082247,
+      "p25": 0.45609401391449084,
+      "p50": 0.4922480950002631,
+      "p75": 0.537024192085751,
+      "p95": 0.6572482808883338,
+      "p99": 0.6632995180880351
+    }
+  },
+  "auroc": 0.9866666666666667,
+  "threshold": 0.6572482808883338,
+  "threshold_interval": {
+    "confidence": 0.95,
+    "lower": 0.5918328938434393,
+    "upper": null,
+    "lower_rank": 35,
+    "upper_rank": null,
+    "n": 40,
+    "coverage": 0.9861230507866964
+  },
+  "in_recall": 0.9,
+  "in_recall_interval": {
+    "k": 27,
+    "n": 30,
+    "rate": 0.9,
+    "lower": 0.7347115495257921,
+    "upper": 0.9788828629702775,
+    "confidence": 0.95
+  },
+  "out_false_in_rate": 0.05,
+  "out_false_in_rate_interval": {
+    "k": 2,
+    "n": 40,
+    "rate": 0.05,
+    "lower": 0.006113646599350819,
+    "upper": 0.16919686395941763,
+    "confidence": 0.95
+  },
+  "out_above": [
+    {
+      "id": "out-fa-30",
+      "score": 0.663413624065711,
+      "topic": "guia",
+      "question": "Escríbeme un Dockerfile para empaquetar mi aplicación FastAPI."
+    },
+    {
+      "id": "out-fa-33",
+      "score": 0.6631210446357727,
+      "topic": "guia",
+      "question": "¿Cómo implemento rate limiting por IP en una API de FastAPI?"
+    }
+  ],
+  "in_below": [
+    {
+      "id": "in-fa-08",
+      "score": 0.5776998308062755,
+      "topic": "tutorial",
+      "question": "¿Cómo hago para que un endpoint POST responda con el código 201?"
+    },
+    {
+      "id": "in-fa-21",
+      "score": 0.6197152095778499,
+      "topic": "tutorial",
+      "question": "¿Cómo valido que un path parameter sea mayor o igual a 1 y menor o igual a 1000?"
+    },
+    {
+      "id": "in-fa-24",
+      "score": 0.6212627291679382,
+      "topic": "guia",
+      "question": "¿Qué diferencia hay entre `fastapi dev` y `fastapi run`, y cuál uso en producción?"
+    }
+  ],
+  "out_of_scope": {
+    "rule": "p50 of the 'out' scores (pre-registered); 'in' only reports",
+    "threshold": 0.4922480950002631,
+    "threshold_interval": {
+      "confidence": 0.95,
+      "lower": 0.46861350349268416,
+      "upper": 0.5116132802732763,
+      "lower_rank": 14,
+      "upper_rank": 27,
+      "n": 40,
+      "coverage": 0.9615226917157997
+    },
+    "in_refused_rate": 0.0,
+    "in_refused_rate_interval": {
+      "k": 0,
+      "n": 30,
+      "rate": 0.0,
+      "lower": 0.0,
+      "upper": 0.11570330822202773,
+      "confidence": 0.95
+    },
+    "in_below": []
+  },
+  "strata": {
+    "fa": {
+      "in": {
+        "n": 30,
+        "min": 0.5776998308062755,
+        "median": 0.7258663259761668,
+        "max": 0.8135278356249218,
+        "above_low_confidence": 27,
+        "below_out_of_scope": 0
+      },
+      "out": {
+        "n": 40,
+        "min": 0.28413154388258577,
+        "median": 0.4922480950002631,
+        "max": 0.663413624065711,
+        "above_low_confidence": 2,
+        "below_out_of_scope": 20
+      }
+    }
+  },
+  "standalone_queries": {
+    "in-fa-01": "¿Cómo permito que un frontend en localhost:8080 llame a mi API de FastAPI sin errores de CORS?",
+    "in-fa-02": "¿Cómo depuro mi app de FastAPI con el debugger de VS Code?",
+    "in-fa-03": "¿Para qué sirve `if __name__ == \"__main__\"` cuando llamo a uvicorn desde mi archivo?",
+    "in-fa-04": "Dame un ejemplo de cómo servir archivos estáticos con StaticFiles.",
+    "in-fa-05": "¿Cómo mido el tiempo que tarda cada request y lo devuelvo en un header usando un middleware en FastAPI?",
+    "in-fa-06": "¿Qué campos puedo configurar en la metadata de la API en FastAPI, como título, versión o contacto?",
+    "in-fa-07": "Explícame para qué sirve `jsonable_encoder` y cuándo conviene usarlo en FastAPI.",
+    "in-fa-08": "¿Cómo hago para que un endpoint POST responda con el código 201?",
+    "in-fa-09": "¿Qué necesito instalar para recibir campos de formulario con Form?",
+    "in-fa-10": "¿Cuándo me conviene usar BackgroundTasks y cuándo una herramienta más grande para tareas en segundo plano en FastAPI?",
+    "in-fa-11": "¿Cómo escribo pruebas para mi aplicación con TestClient y qué dependencia hay que instalar?",
+    "in-fa-12": "¿Cuál es la diferencia entre declarar un parámetro como bytes con File y usar UploadFile en FastAPI?",
+    "in-fa-13": "Cómo recibo un header que viene repetido varias veces en el request en FastAPI?",
+    "in-fa-14": "¿Cómo reanudo un stream de Server-Sent Events cuando el navegador se reconecta?",
+    "in-fa-15": "Quiero una dependencia que abra una sesión de base de datos y la cierre al terminar el request, ¿cómo lo hago con yield?",
+    "in-fa-16": "¿Qué librerías usa el tutorial de FastAPI para firmar tokens JWT y para hacer hash de contraseñas?",
+    "in-fa-17": "¿Cómo creo las tablas de la base de datos al arrancar la aplicación usando SQLModel?",
+    "in-fa-18": "¿Cómo lanzo un error 404 personalizado con HTTPException y agrego headers al error en FastAPI?",
+    "in-fa-19": "¿Cómo marco una path operation como obsoleta sin eliminarla en FastAPI?",
+    "in-fa-20": "¿Cómo hago un PATCH para actualizar parcialmente un modelo, solo con los campos enviados por el cliente?",
+    "in-fa-21": "¿Cómo valido que un path parameter sea mayor o igual a 1 y menor o igual a 1000?",
+    "in-fa-22": "¿Se puede prohibir que lleguen query params extra definiendo un modelo de Pydantic en FastAPI?",
+    "in-fa-23": "¿Cómo organizo un proyecto de FastAPI en varios archivos usando APIRouter e incluyo esos routers en la app principal?",
+    "in-fa-24": "¿Qué diferencia hay entre `fastapi dev` y `fastapi run`, y cuál uso en producción?",
+    "in-fa-25": "explícame la analogía de las hamburguesas para entender concurrencia vs paralelismo",
+    "in-fa-26": "¿Cómo creo un proyecto nuevo e instalo fastapi[standard] usando uv en un entorno virtual?",
+    "in-fa-27": "¿Qué tan rápido es FastAPI según los benchmarks de TechEmpower y con qué hay que compararlo?",
+    "in-fa-28": "¿Qué tecnologías incluye la plantilla Full Stack FastAPI?",
+    "in-fa-29": "¿Hay una extensión oficial de FastAPI para VS Code? ¿Qué ofrece?",
+    "in-fa-30": "¿Para qué se usa Annotated en los tipos de Python y de dónde se importa?",
+    "out-fa-01": "¿Qué síntomas tiene una gripe y cuándo debo ir al médico?",
+    "out-fa-02": "Dame una receta de lasaña boloñesa para cuatro personas.",
+    "out-fa-03": "¿A qué edad puedo jubilarme y cómo se calcula mi pensión?",
+    "out-fa-04": "¿Qué lugares recomiendas visitar en Lisboa en tres días?",
+    "out-fa-05": "Si me despiden sin causa, ¿cuánta indemnización me corresponde?",
+    "out-fa-06": "¿Cómo se declara el impuesto a la renta de una persona natural?",
+    "out-fa-07": "¿Cuánto tiempo se cocina un huevo duro?",
+    "out-fa-08": "¿Cuál es la capital de Australia y cuántos habitantes tiene?",
+    "out-fa-09": "¿Qué ejercicios me recomiendas para fortalecer la espalda baja?",
+    "out-fa-10": "¿Cómo puedo reclamar una devolución a una aerolínea por un vuelo cancelado?",
+    "out-fa-11": "Hola",
+    "out-fa-12": "buenas tardes, ¿cómo estás?",
+    "out-fa-13": "Muchas gracias, me ayudaste un montón",
+    "out-fa-14": "¿Qué puedes hacer?",
+    "out-fa-15": "¿Quién eres y quién te creó?",
+    "out-fa-16": "chao, hasta luego",
+    "out-fa-17": "Escribe una función en Python que invierta un string.",
+    "out-fa-18": "Implementa una búsqueda binaria en JavaScript.",
+    "out-fa-19": "¿Cómo ordeno un arreglo de objetos por fecha en Java?",
+    "out-fa-20": "Escribe un script en Bash que renombre todos los archivos .txt a .md.",
+    "out-fa-21": "explica la diferencia entre una lista enlazada y un array",
+    "out-fa-22": "Escribe una función recursiva en Go que calcule el factorial de un número.",
+    "out-fa-23": "¿Cómo uso select_related y prefetch_related en el ORM de Django para evitar consultas N+1?",
+    "out-fa-24": "¿Cómo registro un Blueprint de Flask con su propio url_prefix y carpeta de templates?",
+    "out-fa-25": "¿Cómo escribo un middleware en Express que valide un token antes de llegar a la ruta?",
+    "out-fa-26": "¿Cómo uso el hook useEffect de React para cargar datos al montar un componente?",
+    "out-fa-27": "¿Cómo configuro un Deployment de Kubernetes con tres réplicas y un Service tipo LoadBalancer?",
+    "out-fa-28": "¿Cómo defino un endpoint de WebSocket en FastAPI para un chat con varios clientes conectados?",
+    "out-fa-29": "¿Cómo configuro Gunicorn con workers de Uvicorn para desplegar mi API de FastAPI?",
+    "out-fa-30": "Escríbeme un Dockerfile para empaquetar mi aplicación FastAPI.",
+    "out-fa-31": "¿Cómo configuro un broker de Redis y un worker de Celery con reintentos automáticos de tareas?",
+    "out-fa-32": "¿Cómo optimizo una consulta SQL lenta usando EXPLAIN ANALYZE e índices compuestos?",
+    "out-fa-33": "¿Cómo implemento rate limiting por IP en una API de FastAPI?",
+    "out-fa-34": "¿Cómo instrumento mi API de FastAPI con Prometheus para exponer métricas?",
+    "out-fa-35": "¿Cómo hago un BUSCARV en Excel que busque en otra hoja?",
+    "out-fa-36": "¿Cómo agrego un usuario a un grupo en Linux?",
+    "out-fa-37": "¿Cómo configuro una regla de firewall con ufw para abrir el puerto 443?",
+    "out-fa-38": "como libero espacio en disco en ubuntu",
+    "out-fa-39": "¿Qué fórmula de Excel suma solo las celdas que cumplen una condición?",
+    "out-fa-40": "¿Cómo programo una tarea con cron para que corra todos los lunes a las 8?"
+  },
+  "scores": [
+    {
+      "id": "in-fa-15",
+      "score": 0.8135278356249218,
+      "topic": "tutorial",
+      "question": "Quiero una dependencia que abra una sesión de base de datos y la cierre al terminar el request, ¿cómo lo hago con yield?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-07",
+      "score": 0.7998580217276825,
+      "topic": "tutorial",
+      "question": "explicame para que sirve jsonable_encoder y cuando conviene usarlo",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-17",
+      "score": 0.7807323438583923,
+      "topic": "tutorial",
+      "question": "¿Cómo creo las tablas de la base de datos al arrancar la aplicación usando SQLModel?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-06",
+      "score": 0.7762608528137207,
+      "topic": "tutorial",
+      "question": "¿Qué campos puedo configurar en la metadata de la API, como título, versión o contacto?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-18",
+      "score": 0.7757429845409727,
+      "topic": "tutorial",
+      "question": "¿Cómo lanzo un error 404 personalizado con HTTPException y agrego headers al error?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-26",
+      "score": 0.7709977124033317,
+      "topic": "guia",
+      "question": "¿Cómo creo un proyecto nuevo e instalo fastapi[standard] usando uv en un entorno virtual?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-29",
+      "score": 0.770082065768427,
+      "topic": "guia",
+      "question": "¿Hay una extension oficial de FastAPI para VS Code? que ofrece?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-03",
+      "score": 0.7683811783790643,
+      "topic": "tutorial",
+      "question": "¿Para qué sirve `if __name__ == \"__main__\"` cuando llamo a uvicorn desde mi archivo?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-14",
+      "score": 0.7594957947731018,
+      "topic": "tutorial",
+      "question": "¿Cómo reanudo un stream de Server-Sent Events cuando el navegador se reconecta?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-23",
+      "score": 0.7556549906730652,
+      "topic": "tutorial",
+      "question": "¿Cómo organizo mi proyecto en varios archivos con APIRouter e incluyo los routers en la app principal?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-10",
+      "score": 0.7387721318372479,
+      "topic": "tutorial",
+      "question": "¿Cuándo me conviene usar BackgroundTasks y cuándo una herramienta más grande para tareas en segundo plano?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-30",
+      "score": 0.7372446060180664,
+      "topic": "guia",
+      "question": "¿Para qué se usa Annotated en los tipos de Python y de dónde se importa?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-19",
+      "score": 0.7372316718101501,
+      "topic": "tutorial",
+      "question": "¿Cómo marco una path operation como obsoleta sin eliminarla?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-27",
+      "score": 0.7361568651292852,
+      "topic": "guia",
+      "question": "¿Qué tan rápido es FastAPI según los benchmarks de TechEmpower y con qué hay que compararlo?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-22",
+      "score": 0.7265074686114484,
+      "topic": "tutorial",
+      "question": "¿Se puede prohibir que lleguen query params extra definiendo un modelo de Pydantic?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-25",
+      "score": 0.7252251833408853,
+      "topic": "guia",
+      "question": "explícame la analogía de las hamburguesas para entender concurrencia vs paralelismo",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-28",
+      "score": 0.7227063344296133,
+      "topic": "guia",
+      "question": "¿Qué tecnologías incluye la plantilla Full Stack FastAPI?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-04",
+      "score": 0.7091672209153436,
+      "topic": "tutorial",
+      "question": "Dame un ejemplo de cómo servir archivos estáticos con StaticFiles",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-13",
+      "score": 0.7049014778405871,
+      "topic": "tutorial",
+      "question": "Cómo recibo un header que viene repetido varias veces en el request?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-20",
+      "score": 0.7042286815779628,
+      "topic": "tutorial",
+      "question": "¿Cómo hago un PATCH para actualizar parcialmente un modelo, solo con los campos enviados por el cliente?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-05",
+      "score": 0.7026360067101726,
+      "topic": "tutorial",
+      "question": "¿Cómo mido el tiempo que tarda cada request y lo devuelvo en un header usando un middleware?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-01",
+      "score": 0.6959201097488403,
+      "topic": "tutorial",
+      "question": "¿Cómo permito que un frontend en localhost:8080 llame a mi API de FastAPI sin errores de CORS?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-16",
+      "score": 0.6937180185661932,
+      "topic": "tutorial",
+      "question": "¿Qué librerías usa el tutorial para firmar tokens JWT y para hacer hash de contraseñas?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-12",
+      "score": 0.6861656121114273,
+      "topic": "tutorial",
+      "question": "¿Cuál es la diferencia entre declarar un parámetro como bytes con File y usar UploadFile?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-09",
+      "score": 0.6796972549051892,
+      "topic": "tutorial",
+      "question": "¿Qué necesito instalar para recibir campos de formulario con Form?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-02",
+      "score": 0.6718582320002094,
+      "topic": "tutorial",
+      "question": "como depuro mi app de fastapi con el debugger de vscode",
+      "label": "in"
+    },
+    {
+      "id": "out-fa-30",
+      "score": 0.663413624065711,
+      "topic": "guia",
+      "question": "Escríbeme un Dockerfile para empaquetar mi aplicación FastAPI.",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-33",
+      "score": 0.6631210446357727,
+      "topic": "guia",
+      "question": "¿Cómo implemento rate limiting por IP en una API de FastAPI?",
+      "label": "out"
+    },
+    {
+      "id": "in-fa-11",
+      "score": 0.6592571329184941,
+      "topic": "tutorial",
+      "question": "¿Cómo escribo pruebas para mi aplicación con TestClient y qué dependencia hay que instalar?",
+      "label": "in"
+    },
+    {
+      "id": "out-fa-29",
+      "score": 0.6569391880595212,
+      "topic": "guia",
+      "question": "¿Cómo configuro Gunicorn con workers de Uvicorn para desplegar mi API de FastAPI?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-28",
+      "score": 0.6251709014381097,
+      "topic": "guia",
+      "question": "¿Cómo defino un endpoint de WebSocket en FastAPI para un chat con varios clientes conectados?",
+      "label": "out"
+    },
+    {
+      "id": "in-fa-24",
+      "score": 0.6212627291679382,
+      "topic": "guia",
+      "question": "¿Qué diferencia hay entre `fastapi dev` y `fastapi run`, y cuál uso en producción?",
+      "label": "in"
+    },
+    {
+      "id": "in-fa-21",
+      "score": 0.6197152095778499,
+      "topic": "tutorial",
+      "question": "¿Cómo valido que un path parameter sea mayor o igual a 1 y menor o igual a 1000?",
+      "label": "in"
+    },
+    {
+      "id": "out-fa-34",
+      "score": 0.6104786941837121,
+      "topic": "guia",
+      "question": "¿Cómo instrumento mi API de FastAPI con Prometheus para exponer métricas?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-25",
+      "score": 0.5918328938434393,
+      "topic": "tutorial",
+      "question": "¿Cómo escribo un middleware en Express que valide un token antes de llegar a la ruta?",
+      "label": "out"
+    },
+    {
+      "id": "in-fa-08",
+      "score": 0.5776998308062755,
+      "topic": "tutorial",
+      "question": "¿Cómo hago para que un endpoint POST responda con el código 201?",
+      "label": "in"
+    },
+    {
+      "id": "out-fa-17",
+      "score": 0.5654540398987565,
+      "topic": "guia",
+      "question": "Escribe una función en Python que invierta un string.",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-24",
+      "score": 0.5489100544995111,
+      "topic": "tutorial",
+      "question": "¿Cómo registro un Blueprint de Flask con su propio url_prefix y carpeta de templates?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-32",
+      "score": 0.5472670793533325,
+      "topic": "tutorial",
+      "question": "¿Cómo optimizo una consulta SQL lenta usando EXPLAIN ANALYZE e índices compuestos?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-31",
+      "score": 0.5454408092928177,
+      "topic": "tutorial",
+      "question": "¿Cómo configuro un broker de Redis y un worker de Celery con reintentos automáticos de tareas?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-14",
+      "score": 0.5342186530167288,
+      "topic": "guia",
+      "question": "¿Qué puedes hacer?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-40",
+      "score": 0.516781149294243,
+      "topic": "tutorial",
+      "question": "¿Cómo programo una tarea con cron para que corra todos los lunes a las 8?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-23",
+      "score": 0.514754264667377,
+      "topic": "tutorial",
+      "question": "¿Cómo uso select_related y prefetch_related en el ORM de Django para evitar consultas N+1?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-37",
+      "score": 0.5116132802732763,
+      "topic": "tutorial",
+      "question": "¿Cómo configuro una regla de firewall con ufw para abrir el puerto 443?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-36",
+      "score": 0.5104314088821411,
+      "topic": "tutorial",
+      "question": "¿Cómo agrego un usuario a un grupo en Linux?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-26",
+      "score": 0.5080504720241121,
+      "topic": "tutorial",
+      "question": "¿Cómo uso el hook useEffect de React para cargar datos al montar un componente?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-18",
+      "score": 0.49910274147987366,
+      "topic": "tutorial",
+      "question": "Implementa una búsqueda binaria en JavaScript.",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-19",
+      "score": 0.49556708335876465,
+      "topic": "tutorial",
+      "question": "¿Cómo ordeno un arreglo de objetos por fecha en Java?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-27",
+      "score": 0.49277578229687846,
+      "topic": "tutorial",
+      "question": "¿Cómo configuro un Deployment de Kubernetes con tres réplicas y un Service tipo LoadBalancer?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-13",
+      "score": 0.49263931745046263,
+      "topic": "guia",
+      "question": "Muchas gracias, me ayudaste un montón",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-10",
+      "score": 0.4918568725500636,
+      "topic": "tutorial",
+      "question": "¿Cómo puedo reclamar una devolución a una aerolínea por un vuelo cancelado?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-35",
+      "score": 0.48447303335127556,
+      "topic": "tutorial",
+      "question": "¿Cómo hago un BUSCARV en Excel que busque en otra hoja?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-12",
+      "score": 0.4722836332152116,
+      "topic": "guia",
+      "question": "buenas tardes, ¿cómo estás?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-05",
+      "score": 0.4702994227409363,
+      "topic": "tutorial",
+      "question": "Si me despiden sin causa, ¿cuánta indemnización me corresponde?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-21",
+      "score": 0.469718219654667,
+      "topic": "tutorial",
+      "question": "explica la diferencia entre una lista enlazada y un array",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-03",
+      "score": 0.4694680395246782,
+      "topic": "guia",
+      "question": "¿A qué edad puedo jubilarme y cómo se calcula mi pensión?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-39",
+      "score": 0.46861350349268416,
+      "topic": "tutorial",
+      "question": "¿Qué fórmula de Excel suma solo las celdas que cumplen una condición?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-20",
+      "score": 0.46409621834754944,
+      "topic": "guia",
+      "question": "Escribe un script en Bash que renombre todos los archivos .txt a .md.",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-22",
+      "score": 0.4589993333220084,
+      "topic": "tutorial",
+      "question": "Escribe una función recursiva en Go que calcule el factorial de un número.",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-11",
+      "score": 0.45848658433476674,
+      "topic": "guia",
+      "question": "Hola",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-38",
+      "score": 0.4489163026536631,
+      "topic": "tutorial",
+      "question": "como libero espacio en disco en ubuntu",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-06",
+      "score": 0.4399448299375083,
+      "topic": "tutorial",
+      "question": "¿Cómo se declara el impuesto a la renta de una persona natural?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-15",
+      "score": 0.40756007477999256,
+      "topic": "tutorial",
+      "question": "¿Quién eres y quién te creó?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-16",
+      "score": 0.40228959918022444,
+      "topic": "guia",
+      "question": "chao, hasta luego",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-02",
+      "score": 0.3951016601980729,
+      "topic": "guia",
+      "question": "Dame una receta de lasaña boloñesa para cuatro personas.",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-07",
+      "score": 0.38643816790353314,
+      "topic": "guia",
+      "question": "cuanto tiempo se cocina un huevo duro",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-01",
+      "score": 0.3844660520553589,
+      "topic": "tutorial",
+      "question": "¿Qué síntomas tiene una gripe y cuándo debo ir al médico?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-09",
+      "score": 0.36201414722330716,
+      "topic": "guia",
+      "question": "¿Qué ejercicios me recomiendas para fortalecer la espalda baja?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-08",
+      "score": 0.2902055469216571,
+      "topic": "tutorial",
+      "question": "¿Cuál es la capital de Australia y cuántos habitantes tiene?",
+      "label": "out"
+    },
+    {
+      "id": "out-fa-04",
+      "score": 0.28413154388258577,
+      "topic": "guia",
+      "question": "¿Qué lugares recomiendas visitar en Lisboa en tres días?",
+      "label": "out"
+    }
+  ]
+}

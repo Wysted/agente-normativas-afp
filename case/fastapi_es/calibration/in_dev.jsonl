@@ -1,0 +1,30 @@
+{"id": "in-fa-01", "question": "¿Cómo permito que un frontend en localhost:8080 llame a mi API de FastAPI sin errores de CORS?", "label": "in"}
+{"id": "in-fa-02", "question": "como depuro mi app de fastapi con el debugger de vscode", "label": "in"}
+{"id": "in-fa-03", "question": "¿Para qué sirve `if __name__ == \"__main__\"` cuando llamo a uvicorn desde mi archivo?", "label": "in"}
+{"id": "in-fa-04", "question": "Dame un ejemplo de cómo servir archivos estáticos con StaticFiles", "label": "in"}
+{"id": "in-fa-05", "question": "¿Cómo mido el tiempo que tarda cada request y lo devuelvo en un header usando un middleware?", "label": "in"}
+{"id": "in-fa-06", "question": "¿Qué campos puedo configurar en la metadata de la API, como título, versión o contacto?", "label": "in"}
+{"id": "in-fa-07", "question": "explicame para que sirve jsonable_encoder y cuando conviene usarlo", "label": "in"}
+{"id": "in-fa-08", "question": "¿Cómo hago para que un endpoint POST responda con el código 201?", "label": "in"}
+{"id": "in-fa-09", "question": "¿Qué necesito instalar para recibir campos de formulario con Form?", "label": "in"}
+{"id": "in-fa-10", "question": "¿Cuándo me conviene usar BackgroundTasks y cuándo una herramienta más grande para tareas en segundo plano?", "label": "in"}
+{"id": "in-fa-11", "question": "¿Cómo escribo pruebas para mi aplicación con TestClient y qué dependencia hay que instalar?", "label": "in"}
+{"id": "in-fa-12", "question": "¿Cuál es la diferencia entre declarar un parámetro como bytes con File y usar UploadFile?", "label": "in"}
+{"id": "in-fa-13", "question": "Cómo recibo un header que viene repetido varias veces en el request?", "label": "in"}
+{"id": "in-fa-14", "question": "¿Cómo reanudo un stream de Server-Sent Events cuando el navegador se reconecta?", "label": "in"}
+{"id": "in-fa-15", "question": "Quiero una dependencia que abra una sesión de base de datos y la cierre al terminar el request, ¿cómo lo hago con yield?", "label": "in"}
+{"id": "in-fa-16", "question": "¿Qué librerías usa el tutorial para firmar tokens JWT y para hacer hash de contraseñas?", "label": "in"}
+{"id": "in-fa-17", "question": "¿Cómo creo las tablas de la base de datos al arrancar la aplicación usando SQLModel?", "label": "in"}
+{"id": "in-fa-18", "question": "¿Cómo lanzo un error 404 personalizado con HTTPException y agrego headers al error?", "label": "in"}
+{"id": "in-fa-19", "question": "¿Cómo marco una path operation como obsoleta sin eliminarla?", "label": "in"}
+{"id": "in-fa-20", "question": "¿Cómo hago un PATCH para actualizar parcialmente un modelo, solo con los campos enviados por el cliente?", "label": "in"}
+{"id": "in-fa-21", "question": "¿Cómo valido que un path parameter sea mayor o igual a 1 y menor o igual a 1000?", "label": "in"}
+{"id": "in-fa-22", "question": "¿Se puede prohibir que lleguen query params extra definiendo un modelo de Pydantic?", "label": "in"}
+{"id": "in-fa-23", "question": "¿Cómo organizo mi proyecto en varios archivos con APIRouter e incluyo los routers en la app principal?", "label": "in"}
+{"id": "in-fa-24", "question": "¿Qué diferencia hay entre `fastapi dev` y `fastapi run`, y cuál uso en producción?", "label": "in"}
+{"id": "in-fa-25", "question": "explícame la analogía de las hamburguesas para entender concurrencia vs paralelismo", "label": "in"}
+{"id": "in-fa-26", "question": "¿Cómo creo un proyecto nuevo e instalo fastapi[standard] usando uv en un entorno virtual?", "label": "in"}
+{"id": "in-fa-27", "question": "¿Qué tan rápido es FastAPI según los benchmarks de TechEmpower y con qué hay que compararlo?", "label": "in"}
+{"id": "in-fa-28", "question": "¿Qué tecnologías incluye la plantilla Full Stack FastAPI?", "label": "in"}
+{"id": "in-fa-29", "question": "¿Hay una extension oficial de FastAPI para VS Code? que ofrece?", "label": "in"}
+{"id": "in-fa-30", "question": "¿Para qué se usa Annotated en los tipos de Python y de dónde se importa?", "label": "in"}

@@ -1,0 +1,29 @@
+# FastAPI tutorial pages (Spanish docs, index doc_type=tutorial, 51 pages incl. dependencies/ and
+# security/). Markdown with `{ #id }` heading attributes (dropped by the parser), admonitions
+# (`/// note | Nota`) and code blocks inlined by fetch/fetch.py. The title comes from the H1: the
+# index rows carry no title on purpose.
+key: fastapi_es_tutorial
+schema_version: 1
+routing:
+  - match: {doc_type: [tutorial]}
+top_k: 5
+chunk_max_tokens: 512
+parser_key: simple
+cleaners:
+  - key: strip_lines
+    # Only the bare admonition / tab closing fences go: the opening line ("/// tip | Consejo")
+    # keeps its label, which reads as natural text.
+    params: {patterns: ['^/{3,4}\s*$']}
+  - key: normalize_whitespace
+    params: {strip_lines: true, max_blank_lines: 1}
+chunker_key: structured
+chunker_params:
+  include_heading: true            # "H1 > H2" path in front of every chunk (single-topic titles)
+metadata_fields:
+  - {name: source_id,  type: str, source: 'document:id'}
+  - {name: doc_family, type: str, source: 'const:tutorial'}
+default_filter: null
+reranker_key: none
+# Hybrid like the spensiones profiles: questions name identifiers (Depends, Query, response_model)
+# that a lexical match pins down.
+retrieval_mode: hybrid

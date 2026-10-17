@@ -1,0 +1,28 @@
+# FastAPI guide pages (Spanish docs, index doc_type=guia, 13 pages): overview, async, Python types,
+# features, alternatives, CLI, history, help, benchmarks, editor support, environment variables,
+# project generation and virtual environments. Same Markdown shape as the tutorial profile.
+key: fastapi_es_guia
+schema_version: 1
+routing:
+  - match: {doc_type: [guia]}
+top_k: 5
+chunk_max_tokens: 512
+parser_key: simple
+cleaners:
+  - key: strip_lines
+    # Only the bare admonition / tab closing fences go: the opening line ("/// tip | Consejo")
+    # keeps its label, which reads as natural text.
+    params: {patterns: ['^/{3,4}\s*$']}
+  - key: normalize_whitespace
+    params: {strip_lines: true, max_blank_lines: 1}
+chunker_key: structured
+chunker_params:
+  include_heading: true            # "H1 > H2" path in front of every chunk (single-topic titles)
+metadata_fields:
+  - {name: source_id,  type: str, source: 'document:id'}
+  - {name: doc_family, type: str, source: 'const:guia'}
+default_filter: null
+reranker_key: none
+# Hybrid like the spensiones profiles: questions name identifiers (Depends, Query, response_model)
+# that a lexical match pins down.
+retrieval_mode: hybrid

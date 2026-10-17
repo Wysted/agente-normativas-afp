@@ -1,0 +1,90 @@
+[
+ {
+  "id": "circular-2425",
+  "family": "circulares",
+  "url": "https://www.spensiones.cl/apps/GetFile.php?id=001&namefile=CAFP2425.pdf",
+  "path": "circulares/circular-2425.pdf",
+  "bytes": 185524,
+  "content_type": "application/pdf",
+  "date": "2026-10-01",
+  "title": "TASA DE INTERÉS PARA EL CÁLCULO DE LOS RETIROS PROGRAMADOS Y LAS RENTAS TEMPORALES.",
+  "doc_type": "circular"
+ },
+ {
+  "id": "circular-cafp-100",
+  "family": "circulares",
+  "url": "https://www.spensiones.cl/apps/GetFile.php?id=001&namefile=CAFP100.pdf",
+  "path": "circulares/circular-cafp-100.pdf",
+  "bytes": 52532,
+  "content_type": "application/pdf",
+  "date": "1982-01-08",
+  "title": "INFORMES SEMANALES QUE LAS ADMINISTRADORAS DEBERAN PRESENTAR A LA SUPERINTENDENCIA, INSTRUYE SOBRE ABONO DEL BONO DE RECONOCIMIENTO AL FONDO DE PENSIONES Y MODIFICA CIRCULAR Nro. 7.",
+  "doc_type": "circular"
+ },
+ {
+  "id": "ncg-sp-372",
+  "family": "ncg",
+  "url": "https://www.spensiones.cl/apps/GetFile.php?id=003&namefile=NCG-SP/NP0000372.pdf",
+  "path": "ncg/ncg-sp-372.pdf",
+  "bytes": 175155,
+  "content_type": "application/pdf",
+  "date": "2026-08-18",
+  "title": "EXCLUSIÓN DE BENEFICIARIOS DE PENSIÓN DE SOBREVIVENCIA, DE ACUERDO CON EL ART. 5° BIS DEL D.L. N° 3.500, DE 1980. MODIFICA EL TÍTULO I SOBRE PENSIONES DEL LIBRO III DEL COMPENDIO DE NORMAS DEL SISTEMA DE PENSIONES.",
+  "doc_type": "ncg"
+ },
+ {
+  "id": "compendio-sp-libro-i",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2536.pdf",
+  "path": "compendio/compendio-sp-libro-i.pdf",
+  "bytes": 8400149,
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro I Afiliación al Sistema de Pensiones del D.L. N° 3.500, de 1980, e incorporación al Seguro Social Previsional de la ley N° 21.735",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sp-libro-i-titulo-i",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/w3-propertyvalue-2541.html",
+  "path": "compendio/compendio-sp-libro-i-titulo-i.html",
+  "bytes": 83682,
+  "content_type": "text/html",
+  "date": null,
+  "title": "Libro I / Título I Afiliación e Incorporación a una Administradora de Fondos de Pensiones",
+  "doc_type": "compendio_titulo"
+ },
+ {
+  "id": "cms-aid-14843",
+  "family": "guia_faq",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14843_recurso_1.pdf",
+  "path": "guia_faq/cms-aid-14843.pdf",
+  "bytes": 298481,
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "\"Libro de Jurisprudencia de la Superintendencia de Pensiones\"",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-17157",
+  "family": "resoluciones",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-17157_recurso_1.pdf",
+  "path": "resoluciones/cms-aid-17157.pdf",
+  "bytes": 722404,
+  "content_type": "application/pdf",
+  "date": "2026-09-15",
+  "title": "Resolución Exenta N° 1266, del 15 de septiembre de 2026, que complementa individualización de funcionario sujeto pasivo para efectos de la Ley de Lobby en la Superintendencia de Pensiones.",
+  "doc_type": "resolucion"
+ },
+ {
+  "id": "cms-aid-3590",
+  "family": "articulos_html",
+  "url": "https://www.spensiones.cl/portal/institucional/594/w3-article-3590.html",
+  "path": "articulos_html/cms-aid-3590.html",
+  "bytes": 43916,
+  "content_type": "text/html",
+  "date": null,
+  "title": "¿Cuánto me deben descontar de mi sueldo para el seguro de cesantía?",
+  "doc_type": "articulo_html"
+ }
+]

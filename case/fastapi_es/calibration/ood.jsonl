@@ -1,0 +1,40 @@
+{"id": "out-fa-01", "question": "¿Qué síntomas tiene una gripe y cuándo debo ir al médico?", "label": "out"}
+{"id": "out-fa-02", "question": "Dame una receta de lasaña boloñesa para cuatro personas.", "label": "out"}
+{"id": "out-fa-03", "question": "¿A qué edad puedo jubilarme y cómo se calcula mi pensión?", "label": "out"}
+{"id": "out-fa-04", "question": "¿Qué lugares recomiendas visitar en Lisboa en tres días?", "label": "out"}
+{"id": "out-fa-05", "question": "Si me despiden sin causa, ¿cuánta indemnización me corresponde?", "label": "out"}
+{"id": "out-fa-06", "question": "¿Cómo se declara el impuesto a la renta de una persona natural?", "label": "out"}
+{"id": "out-fa-07", "question": "cuanto tiempo se cocina un huevo duro", "label": "out"}
+{"id": "out-fa-08", "question": "¿Cuál es la capital de Australia y cuántos habitantes tiene?", "label": "out"}
+{"id": "out-fa-09", "question": "¿Qué ejercicios me recomiendas para fortalecer la espalda baja?", "label": "out"}
+{"id": "out-fa-10", "question": "¿Cómo puedo reclamar una devolución a una aerolínea por un vuelo cancelado?", "label": "out"}
+{"id": "out-fa-11", "question": "Hola", "label": "out"}
+{"id": "out-fa-12", "question": "buenas tardes, ¿cómo estás?", "label": "out"}
+{"id": "out-fa-13", "question": "Muchas gracias, me ayudaste un montón", "label": "out"}
+{"id": "out-fa-14", "question": "¿Qué puedes hacer?", "label": "out"}
+{"id": "out-fa-15", "question": "¿Quién eres y quién te creó?", "label": "out"}
+{"id": "out-fa-16", "question": "chao, hasta luego", "label": "out"}
+{"id": "out-fa-17", "question": "Escribe una función en Python que invierta un string.", "label": "out"}
+{"id": "out-fa-18", "question": "Implementa una búsqueda binaria en JavaScript.", "label": "out"}
+{"id": "out-fa-19", "question": "¿Cómo ordeno un arreglo de objetos por fecha en Java?", "label": "out"}
+{"id": "out-fa-20", "question": "Escribe un script en Bash que renombre todos los archivos .txt a .md.", "label": "out"}
+{"id": "out-fa-21", "question": "explica la diferencia entre una lista enlazada y un array", "label": "out"}
+{"id": "out-fa-22", "question": "Escribe una función recursiva en Go que calcule el factorial de un número.", "label": "out"}
+{"id": "out-fa-23", "question": "¿Cómo uso select_related y prefetch_related en el ORM de Django para evitar consultas N+1?", "label": "out"}
+{"id": "out-fa-24", "question": "¿Cómo registro un Blueprint de Flask con su propio url_prefix y carpeta de templates?", "label": "out"}
+{"id": "out-fa-25", "question": "¿Cómo escribo un middleware en Express que valide un token antes de llegar a la ruta?", "label": "out"}
+{"id": "out-fa-26", "question": "¿Cómo uso el hook useEffect de React para cargar datos al montar un componente?", "label": "out"}
+{"id": "out-fa-27", "question": "¿Cómo configuro un Deployment de Kubernetes con tres réplicas y un Service tipo LoadBalancer?", "label": "out"}
+{"id": "out-fa-28", "question": "¿Cómo defino un endpoint de WebSocket en FastAPI para un chat con varios clientes conectados?", "label": "out"}
+{"id": "out-fa-29", "question": "¿Cómo configuro Gunicorn con workers de Uvicorn para desplegar mi API de FastAPI?", "label": "out"}
+{"id": "out-fa-30", "question": "Escríbeme un Dockerfile para empaquetar mi aplicación FastAPI.", "label": "out"}
+{"id": "out-fa-31", "question": "¿Cómo configuro un broker de Redis y un worker de Celery con reintentos automáticos de tareas?", "label": "out"}
+{"id": "out-fa-32", "question": "¿Cómo optimizo una consulta SQL lenta usando EXPLAIN ANALYZE e índices compuestos?", "label": "out"}
+{"id": "out-fa-33", "question": "¿Cómo implemento rate limiting por IP en una API de FastAPI?", "label": "out"}
+{"id": "out-fa-34", "question": "¿Cómo instrumento mi API de FastAPI con Prometheus para exponer métricas?", "label": "out"}
+{"id": "out-fa-35", "question": "¿Cómo hago un BUSCARV en Excel que busque en otra hoja?", "label": "out"}
+{"id": "out-fa-36", "question": "¿Cómo agrego un usuario a un grupo en Linux?", "label": "out"}
+{"id": "out-fa-37", "question": "¿Cómo configuro una regla de firewall con ufw para abrir el puerto 443?", "label": "out"}
+{"id": "out-fa-38", "question": "como libero espacio en disco en ubuntu", "label": "out"}
+{"id": "out-fa-39", "question": "¿Qué fórmula de Excel suma solo las celdas que cumplen una condición?", "label": "out"}
+{"id": "out-fa-40", "question": "¿Cómo programo una tarea con cron para que corra todos los lunes a las 8?", "label": "out"}

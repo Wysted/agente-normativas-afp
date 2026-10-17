@@ -1,0 +1,235 @@
+"""Contract of the lexical branch and of hybrid (dense + lexical, RRF) search, per backend.
+
+Same guarantees as the dense search: tenant isolation, READY-only serving, filters applied in
+BOTH branches, deterministic order. The fake implements a simplified lexical scorer (AND of
+accent-free terms); the texts below only use words every backend tokenizes the same way.
+"""
+
+from datetime import UTC, datetime
+
+import pytest
+
+from agintis.modules.knowledge.domain import (
+    Chunk,
+    Document,
+    DocumentStatus,
+    MetadataField,
+    MetadataValue,
+)
+from agintis.shared_kernel.criteria import Filter, UnknownFieldError
+from agintis.shared_kernel.ids import ChunkId, DocumentId, TenantId
+from tests.contract.knowledge.conftest import Repos
+
+A = TenantId("tenant-a")
+B = TenantId("tenant-b")
+QUERY_VECTOR = [1.0, 0.0]
+NEAR = [1.0, 0.1]
+FAR = [0.1, 1.0]
+QUERY = "afiliación automática"
+EXACT_TEXT = "El inicio de labores genera la afiliación automática al sistema"
+OTHER_TEXT = "Las cotizaciones se pagan mensualmente"
+SCHEMA = (MetadataField("area", "str", filterable=True),)
+
+
+def _doc(tenant: TenantId, doc_id: str, status: DocumentStatus = DocumentStatus.READY) -> Document:
+    return Document(
+        id=DocumentId(doc_id),
+        tenant_id=tenant,
+        profile="p",
+        source_uri=f"file:///{doc_id}",
+        title=doc_id,
+        mime_type="text/plain",
+        content_hash=f"hash-{doc_id}",
+        profile_fingerprint="fp",
+        created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        status=status,
+    )
+
+
+def _chunk(tenant: TenantId, doc_id: str, name: str, text: str, **metadata: MetadataValue) -> Chunk:
+    return Chunk(
+        id=ChunkId(f"{tenant}-{name}"),
+        document_id=DocumentId(doc_id),
+        tenant_id=tenant,
+        profile="p",
+        ordinal=int(name[-1]) if name[-1].isdigit() else 0,
+        text=text,
+        metadata=metadata,
+    )
+
+
+async def _hybrid(repos: Repos, tenant: TenantId = A, expr: Filter | None = None, k: int = 10):  # type: ignore[no-untyped-def]
+    return await repos.chunks.search_hybrid(
+        tenant, QUERY_VECTOR, QUERY, expr, k, metadata_fields=SCHEMA
+    )
+
+
+class TestLexicalBranch:
+    async def test_matches_terms_regardless_of_accents_and_ranks_best_first(
+        self, repos: Repos
+    ) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        short = _chunk(A, "d", "c1", "afiliación automática")
+        long = _chunk(A, "d", "c2", EXACT_TEXT + " y otras obligaciones del empleador")
+        other = _chunk(A, "d", "c3", OTHER_TEXT)
+        await repos.chunks.add_many([long, other, short], [NEAR, NEAR, NEAR])
+        hits = await repos.chunks.search_lexical(A, "afiliacion automatica", None, k=10)
+        assert {h.chunk.id for h in hits} == {short.id, long.id}
+        assert [h.score for h in hits] == sorted((h.score for h in hits), reverse=True)
+        assert all(h.score > 0 for h in hits)
+
+    async def test_terms_are_combined_with_and_and_blank_queries_match_nothing(
+        self, repos: Repos
+    ) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        await repos.chunks.add_many([_chunk(A, "d", "c1", EXACT_TEXT)], [NEAR])
+        assert await repos.chunks.search_lexical(A, "afiliación inexistente", None, k=10) == []
+        assert await repos.chunks.search_lexical(A, "   ", None, k=10) == []
+        assert await repos.chunks.search_lexical(A, "", None, k=10) == []
+
+    async def test_search_syntax_in_the_query_is_plain_text(self, repos: Repos) -> None:
+        """The query is user input: no OR, negation, phrase or tsquery operator gets through."""
+        await repos.documents.save(_doc(A, "d"))
+        match = _chunk(A, "d", "c1", EXACT_TEXT)
+        await repos.chunks.add_many([match], [NEAR])
+
+        async def ids(query: str) -> list[ChunkId]:
+            return [h.chunk.id for h in await repos.chunks.search_lexical(A, query, None, k=10)]
+
+        assert await ids("afiliación OR inexistente") == []  # OR does not widen: still AND
+        assert await ids("-automática afiliación") == [match.id]  # '-' does not negate
+        assert await ids('"automática afiliación"') == [match.id]  # quotes are not a phrase
+        for hostile in ("afiliación & | ! ( ) :* <-> \\", "'", "(", "!!", "a:*b", "<->"):
+            await ids(hostile)  # never a syntax error
+
+    async def test_only_the_requesting_tenant_and_only_ready_documents(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "da"))
+        await repos.documents.save(_doc(B, "db"))
+        await repos.documents.save(_doc(A, "old", DocumentStatus.SUPERSEDED))
+        await repos.documents.save(_doc(A, "new", DocumentStatus.PENDING))
+        mine = _chunk(A, "da", "c1", EXACT_TEXT)
+        await repos.chunks.add_many([mine], [NEAR])
+        await repos.chunks.add_many([_chunk(B, "db", "c1", EXACT_TEXT)], [NEAR])
+        await repos.chunks.add_many([_chunk(A, "old", "c2", EXACT_TEXT)], [NEAR])
+        await repos.chunks.add_many([_chunk(A, "new", "c3", EXACT_TEXT)], [NEAR])
+        hits = await repos.chunks.search_lexical(A, QUERY, None, k=10)
+        assert [h.chunk.id for h in hits] == [mine.id]
+        foreign = Filter.eq("tenant_id", B)
+        assert await repos.chunks.search_lexical(A, QUERY, foreign, k=10) == []
+
+    async def test_filters_and_validation(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        sales = _chunk(A, "d", "c1", EXACT_TEXT, area="sales")
+        hr = _chunk(A, "d", "c2", EXACT_TEXT, area="hr")
+        await repos.chunks.add_many([sales, hr], [NEAR, NEAR])
+        got = await repos.chunks.search_lexical(
+            A, QUERY, Filter.eq("area", "hr"), k=10, metadata_fields=SCHEMA
+        )
+        assert [h.chunk.id for h in got] == [hr.id]
+        with pytest.raises(UnknownFieldError):
+            await repos.chunks.search_lexical(A, QUERY, Filter.eq("area", "hr"), k=10)
+        with pytest.raises(ValueError, match="k must be"):
+            await repos.chunks.search_lexical(A, QUERY, None, k=0)
+
+    async def test_ties_break_by_chunk_id_and_k_limits(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        chunks = [_chunk(A, "d", f"c{n}", EXACT_TEXT) for n in (3, 1, 2)]
+        await repos.chunks.add_many(chunks, [NEAR] * 3)
+        hits = await repos.chunks.search_lexical(A, QUERY, None, k=10)
+        assert [h.chunk.id for h in hits] == sorted(c.id for c in chunks)
+        assert len(await repos.chunks.search_lexical(A, QUERY, None, k=2)) == 2
+
+
+class TestHybridSearch:
+    async def test_a_chunk_found_by_both_branches_outranks_single_branch_chunks(
+        self, repos: Repos
+    ) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        both = _chunk(A, "d", "c1", EXACT_TEXT)
+        dense_only = _chunk(A, "d", "c2", OTHER_TEXT)
+        lexical_only = _chunk(A, "d", "c3", EXACT_TEXT + " y otras obligaciones del empleador")
+        await repos.chunks.add_many(
+            [both, dense_only, lexical_only], [[1.0, 0.05], [1.0, 0.0], FAR]
+        )
+        hits = await _hybrid(repos)
+        by_id = {h.chunk.id: h for h in hits}
+        assert hits[0].chunk.id == both.id
+        assert set(by_id) == {both.id, dense_only.id, lexical_only.id}
+        assert by_id[both.id].dense_rank == 2
+        assert by_id[both.id].lexical_rank is not None
+        assert by_id[dense_only.id].lexical_rank is None
+        assert by_id[dense_only.id].dense_rank == 1
+        assert by_id[lexical_only.id].dense_similarity is not None  # dense depth covers all rows
+        assert [h.fused_score for h in hits] == sorted((h.fused_score for h in hits), reverse=True)
+        assert len(await _hybrid(repos, k=2)) == 2
+
+    async def test_a_lexical_match_is_found_even_when_the_dense_branch_is_too_shallow(
+        self, repos: Repos
+    ) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        noise = [_chunk(A, "d", f"c{n}", OTHER_TEXT) for n in range(1, 4)]
+        needle = _chunk(A, "d", "c4", EXACT_TEXT)
+        await repos.chunks.add_many([*noise, needle], [NEAR] * 3 + [FAR])
+        hits = await repos.chunks.search_hybrid(
+            A, QUERY_VECTOR, QUERY, None, 1, metadata_fields=SCHEMA, branch_depth=1
+        )
+        # k=1 raises each branch to depth 1: the dense branch only sees a noise chunk, yet the
+        # lexical branch contributes the needle, and RRF ties are broken by id.
+        assert len(hits) == 1
+        full = await repos.chunks.search_hybrid(
+            A, QUERY_VECTOR, QUERY, None, 4, metadata_fields=SCHEMA, branch_depth=1
+        )
+        assert needle.id in {h.chunk.id for h in full}
+
+    async def test_tenants_never_mix(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "da"))
+        await repos.documents.save(_doc(B, "db"))
+        mine = _chunk(A, "da", "c1", OTHER_TEXT)
+        await repos.chunks.add_many([mine], [FAR])
+        await repos.chunks.add_many([_chunk(B, "db", "c1", EXACT_TEXT)], [QUERY_VECTOR])
+        hits = await _hybrid(repos, A)
+        assert {h.chunk.tenant_id for h in hits} == {A}
+        assert {h.chunk.tenant_id for h in await _hybrid(repos, B)} == {B}
+
+    async def test_filters_apply_inside_both_branches(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        allowed_lexical = _chunk(A, "d", "c1", EXACT_TEXT, area="hr")
+        blocked_lexical = _chunk(A, "d", "c2", EXACT_TEXT, area="sales")
+        allowed_dense = _chunk(A, "d", "c3", OTHER_TEXT, area="hr")
+        blocked_dense = _chunk(A, "d", "c4", OTHER_TEXT, area="sales")
+        await repos.chunks.add_many(
+            [allowed_lexical, blocked_lexical, allowed_dense, blocked_dense],
+            [FAR, QUERY_VECTOR, NEAR, QUERY_VECTOR],
+        )
+        hits = await _hybrid(repos, expr=Filter.eq("area", "hr"))
+        assert {h.chunk.id for h in hits} == {allowed_lexical.id, allowed_dense.id}
+
+    async def test_only_ready_documents_are_served(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "live"))
+        await repos.documents.save(_doc(A, "old", DocumentStatus.SUPERSEDED))
+        live = _chunk(A, "live", "c1", EXACT_TEXT)
+        await repos.chunks.add_many([live], [FAR])
+        await repos.chunks.add_many([_chunk(A, "old", "c2", EXACT_TEXT)], [QUERY_VECTOR])
+        assert [h.chunk.id for h in await _hybrid(repos)] == [live.id]
+
+    async def test_equal_scores_are_ordered_by_id_and_repeatable(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        chunks = [_chunk(A, "d", f"c{n}", EXACT_TEXT) for n in (3, 1, 2)]
+        await repos.chunks.add_many(chunks, [NEAR] * 3)
+        first = [h.chunk.id for h in await _hybrid(repos)]
+        assert first == sorted(c.id for c in chunks)
+        assert [h.chunk.id for h in await _hybrid(repos)] == first
+
+    async def test_validation(self, repos: Repos) -> None:
+        with pytest.raises(UnknownFieldError):
+            await repos.chunks.search_hybrid(A, QUERY_VECTOR, QUERY, Filter.eq("nope", 1), 3)
+        with pytest.raises(ValueError, match="k must be"):
+            await repos.chunks.search_hybrid(A, QUERY_VECTOR, QUERY, None, 0)
+
+    async def test_blank_text_degrades_to_the_dense_ranking(self, repos: Repos) -> None:
+        await repos.documents.save(_doc(A, "d"))
+        close, far = _chunk(A, "d", "c1", OTHER_TEXT), _chunk(A, "d", "c2", EXACT_TEXT)
+        await repos.chunks.add_many([far, close], [FAR, NEAR])
+        hits = await repos.chunks.search_hybrid(A, QUERY_VECTOR, " ", None, 5)
+        assert [h.chunk.id for h in hits] == [close.id, far.id]
+        assert all(h.lexical_rank is None for h in hits)
