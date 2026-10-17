@@ -1,17 +1,16 @@
 # Resoluciones (index doc_type=resolucion 281 rows + 6 articulo_html rows titled
 # "Resolución Exenta ..."). The sample (cms-aid-17157) is a browser print-to-PDF with
 # 4 image-only pages and 0 extractable characters: the existing `simple` parser raises
-# ScannedDocumentError. Two-stage plan:
-#   stage 1 (default, cheap): ingest the index card only (title + description from the
-#           crawler row) as ONE chunk, so resolutions are findable and citable by number/date.
-#   stage 2 (opt-in, `docling` parser with OCR): full text for the 186 rows under
-#           "Normativa del Sistema de Pensiones / Seguro de Cesantía"; the 57+ lobby /
-#           subrogation / institutional rows stay card-only.
+# ScannedDocumentError. This profile ingests the index card only (title + description from
+# the crawler row) as ONE chunk, so resolutions are findable and citable by number/date.
+# OCR is available opt-in (`parser_key: ocr_index_card` + the `ocr` uv extra). It was measured
+# here and not adopted: a card-snippet question dropped from rank 1 to 3 (dense MRR@10 fell
+# 0.79 -> 0.78), although in-res-30's body answer became retrievable.
 # Body layout (VISTOS / CONSIDERANDO / RESUELVO) is the standard Chilean administrative
 # act; NOT validated (sample has no text).
 key: spensiones_resolucion
 schema_version: 1
-# Status: the index-card mode is validated; the OCR mode (docling) is unvalidated and not wired.
+# Status: the index-card mode is validated; the OCR mode was measured and not adopted.
 routing:
   - match: {doc_type: [resolucion]}
   # Narrower than the generic article rule of articulo_faq: higher priority wins.
