@@ -35,10 +35,17 @@ def reciprocal_rank_fusion(
     *,
     k: int = DEFAULT_RRF_K,
     limit: int | None = None,
+    lexical_weight: float = 1.0,
 ) -> list[FusedChunk]:
-    """Fuse two best-first lists: `score(c) = sum over branches of 1 / (k + rank)`."""
+    """Fuse two best-first lists: `score(c) = sum over branches of weight / (k + rank)`.
+
+    The dense branch weighs 1; `lexical_weight` 1 (the default) is plain RRF, a smaller one
+    lowers how far the lexical branch alone can lift a chunk.
+    """
     if k <= 0:
         raise ValueError("k must be greater than 0")
+    if not lexical_weight > 0:  # also rejects NaN
+        raise ValueError("lexical_weight must be greater than 0")
     if limit is not None and limit <= 0:
         raise ValueError("limit must be greater than 0")
     chunks: dict[ChunkId, Chunk] = {}
@@ -56,8 +63,8 @@ def reciprocal_rank_fusion(
         FusedChunk(
             chunk=chunk,
             fused_score=sum(
-                1.0 / (k + ranks[chunk_id])
-                for ranks in (dense_rank, lexical_rank)
+                weight / (k + ranks[chunk_id])
+                for ranks, weight in ((dense_rank, 1.0), (lexical_rank, lexical_weight))
                 if chunk_id in ranks
             ),
             dense_rank=dense_rank.get(chunk_id),

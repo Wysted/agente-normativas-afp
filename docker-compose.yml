@@ -44,7 +44,8 @@ x-case-mount: &case-mount
 
 services:
   db:
-    image: pgvector/pgvector:0.8.7-pg17
+    # pgvector + pg_textsearch (BM25), preloaded by the image's CMD. CI builds the same Dockerfile.
+    build: ./docker/postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
@@ -56,7 +57,9 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      # Over TCP: during the init scripts the server listens on the Unix socket only, so a
+      # socket check would report healthy before the extensions exist.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10

@@ -14,7 +14,7 @@ con métricas de recuperación y un juez de respuestas.
 
 | Módulo | Qué contiene |
 |---|---|
-| `modules/knowledge` | Ingesta (parseo, limpieza, chunking, embeddings), almacenamiento en Postgres + pgvector, búsqueda densa/híbrida, rerank, perfiles de recuperación en YAML |
+| `modules/knowledge` | Ingesta (parseo, limpieza, chunking, embeddings), almacenamiento en Postgres + pgvector, búsqueda densa/híbrida/BM25, rerank, perfiles de recuperación en YAML |
 | `modules/conversations` | Hilos por tenant, leases, estado del checkpointer de LangGraph |
 | `modules/agents_catalog` | Registro de agentes y la API de ejecución HTTP/SSE |
 | `modules/agents` | Agentes concretos: `rag_chat` (construido desde especificaciones YAML) y `direct_chat` |
@@ -28,7 +28,7 @@ Necesitas Docker, [uv](https://docs.astral.sh/uv/) (solo para descargar el corpu
 
 ```bash
 cp .env.example .env        # fill POSTGRES_* and LLM_* (LLM_PROVIDER, LLM_MODEL, LLM_API_KEY)
-docker compose up -d db embeddings          # first start downloads the embedding model
+docker compose up -d db embeddings          # first start builds the DB image, downloads the model
 
 # 1. Fetch the corpus of a case (fastapi_es: FastAPI docs in Spanish, pinned commit)
 uv run --no-project --python 3.12 python -I case/fastapi_es/fetch/fetch.py
@@ -115,7 +115,18 @@ más los otros extras que uses (`--all-extras` lo incluye); Docker:
 `docker compose --profile app build --build-arg UV_EXTRAS="openai otel ocr"`.
 
 1. `profiles/*.yaml`: un perfil de recuperación por familia de documentos (parser, limpiadores, chunker,
-   ajustes de embeddings/búsqueda) más reglas de enrutamiento. No hay registro que editar.
+   ajustes de embeddings/búsqueda) más reglas de enrutamiento. No hay registro que editar. `retrieval_mode`:
+   `dense` (por defecto), `hybrid` (densa + texto completo de Postgres, cualquier Postgres) o el opcional
+   `bm25_hybrid` (densa + BM25 de la extensión pg_textsearch, RRF ponderado). `bm25_hybrid` requiere la
+   imagen de Postgres del proyecto (`docker/postgres`, la usan compose y CI); Postgres administrado como
+   RDS o Cloud SQL no tiene la extensión, así que ahí la app no arranca con un perfil así. Una DB de
+   compose creada antes de esa imagen debe reconstruirse (`docker compose up -d --build db`) antes de
+   `alembic upgrade head`; si no, la revisión 0005 omite el índice BM25 (con un warning en el log).
+   Los casos incluidos no lo usan: medido como MRR@10 frente a dense, un set de desarrollo nuevo de
+   spensiones mejoró (.7304 -> .7708) pero el anterior cayó más allá del límite de -0.01
+   (.7937 -> .7780; fastapi_es .7917 -> .7900). El índice BM25 es compartido por todos los tenants,
+   así que las estadísticas de términos (IDF) mezclan tenants; una corrida offline con índices por
+   tenant se había mantenido dentro de él (.7879; fastapi_es .7861).
 2. Corpus: `index/documents.jsonl` (una fila por documento, títulos desde `document_metadata.title`
    o el H1 del parser) y los archivos bajo `samples/` con `samples/_manifest.json`. Escribe un
    script en `fetch/` que produzca ambos. Tras una nueva descarga que cambió o eliminó fuentes, ingesta
