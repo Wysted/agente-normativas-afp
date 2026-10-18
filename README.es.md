@@ -146,8 +146,8 @@ más los otros extras que uses (`--all-extras` lo incluye); Docker:
    `mkdir -p case/spensiones/raw_html case/spensiones/index`, luego
    `case/spensiones/crawler/run.sh case/spensiones/crawler/<step>.py` para `phase_normativa`,
    `phase_cms`, `phase_cms_detail`, `phase_compendio`, `phase_stats` y `build`, en ese orden
-   (unas 600 requests con al menos 0,6 s entre ellas, páginas cacheadas en `raw_html/`; `run.sh`
-   invoca `~/.local/bin/uv`), y después `uv run python case/spensiones/fetch_samples.py` (descarga
+   (unas 600 requests con al menos 0,6 s entre ellas, páginas cacheadas en `raw_html/`), y después
+   `uv run python case/spensiones/fetch_samples.py` (descarga
    solo los archivos de `samples/_manifest.json`, con 3,5 s entre requests).
 3. `agents/*.yaml`: la especificación del agente (ver abajo).
 4. `calibration/in_dev.jsonl` y `ood.jsonl`: preguntas de desarrollo dentro y fuera del dominio, con
