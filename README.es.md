@@ -33,9 +33,12 @@ docker compose up -d db embeddings          # first start builds the DB image, d
 # 1. Fetch the corpus of a case (fastapi_es: FastAPI docs in Spanish, pinned commit)
 uv run --no-project --python 3.12 python -I case/fastapi_es/fetch/fetch.py
 
-# 2. Ingest it (the case dir is mounted at /app/case; CASE defaults to fastapi_es)
+# 2. Ingest it (the case dir is mounted at /app/case; CASE defaults to fastapi_es), then create
+#    the metadata indexes of the fields its profiles flag `indexed` (none in fastapi_es: no-op)
 docker compose --profile app run --rm app python -m agintis.cli.ingest \
     --profiles /app/case/profiles --index /app/case/index/documents.jsonl --samples /app/case/samples
+docker compose --profile app run --rm app python -m agintis.cli.indexes \
+    --profiles /app/case/profiles --apply
 
 # 3. Start the app. A one-shot `migrate` service first runs `alembic upgrade head` and
 #    `python -m agintis.cli.checkpointer_setup`; the app never migrates at boot.
@@ -136,7 +139,16 @@ más los otros extras que uses (`--all-extras` lo incluye); Docker:
 2. Corpus: `index/documents.jsonl` (una fila por documento, títulos desde `document_metadata.title`
    o el H1 del parser) y los archivos bajo `samples/` con `samples/_manifest.json`. Escribe un
    script en `fetch/` que produzca ambos. Tras una nueva descarga que cambió o eliminó fuentes, ingesta
-   con `--prune` (índice completo, sin `--limit`).
+   con `--prune` (índice completo, sin `--limit`); tras ingestar, ejecuta
+   `cli.indexes --profiles case/<name>/profiles --apply` para los campos marcados `indexed`.
+   `case/spensiones` no tiene `fetch/`: su índice, ignorado por git, sale de `crawler/`. Desde un
+   clon nuevo ejecuta
+   `mkdir -p case/spensiones/raw_html case/spensiones/index`, luego
+   `case/spensiones/crawler/run.sh case/spensiones/crawler/<step>.py` para `phase_normativa`,
+   `phase_cms`, `phase_cms_detail`, `phase_compendio`, `phase_stats` y `build`, en ese orden
+   (unas 600 requests con al menos 0,6 s entre ellas, páginas cacheadas en `raw_html/`; `run.sh`
+   invoca `~/.local/bin/uv`), y después `uv run python case/spensiones/fetch_samples.py` (descarga
+   solo los archivos de `samples/_manifest.json`, con 3,5 s entre requests).
 3. `agents/*.yaml`: la especificación del agente (ver abajo).
 4. `calibration/in_dev.jsonl` y `ood.jsonl`: preguntas de desarrollo dentro y fuera del dominio, con
    trampas de dominio cercano verificadas contra el corpus. Calibra los umbrales de evidencia:

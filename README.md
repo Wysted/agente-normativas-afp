@@ -34,9 +34,12 @@ docker compose up -d db embeddings          # first start builds the DB image, d
 # 1. Fetch the corpus of a case (fastapi_es: FastAPI docs in Spanish, pinned commit)
 uv run --no-project --python 3.12 python -I case/fastapi_es/fetch/fetch.py
 
-# 2. Ingest it (the case dir is mounted at /app/case; CASE defaults to fastapi_es)
+# 2. Ingest it (the case dir is mounted at /app/case; CASE defaults to fastapi_es), then create
+#    the metadata indexes of the fields its profiles flag `indexed` (none in fastapi_es: no-op)
 docker compose --profile app run --rm app python -m agintis.cli.ingest \
     --profiles /app/case/profiles --index /app/case/index/documents.jsonl --samples /app/case/samples
+docker compose --profile app run --rm app python -m agintis.cli.indexes \
+    --profiles /app/case/profiles --apply
 
 # 3. Start the app. A one-shot `migrate` service first runs `alembic upgrade head` and
 #    `python -m agintis.cli.checkpointer_setup`; the app never migrates at boot.
@@ -136,7 +139,16 @@ plus the other extras you use (`--all-extras` includes it); Docker:
 2. Corpus: `index/documents.jsonl` (one row per document, titles from `document_metadata.title`
    or the parser's H1) and the files under `samples/` with `samples/_manifest.json`. Write a
    `fetch/` script that produces both. After a re-fetch that changed or dropped sources, ingest
-   with `--prune` (full index, no `--limit`).
+   with `--prune` (full index, no `--limit`); after ingesting, run
+   `cli.indexes --profiles case/<name>/profiles --apply` for the fields flagged `indexed`.
+   `case/spensiones` has no `fetch/`: its gitignored index comes from `crawler/`. From a fresh
+   clone run
+   `mkdir -p case/spensiones/raw_html case/spensiones/index`, then
+   `case/spensiones/crawler/run.sh case/spensiones/crawler/<step>.py` for `phase_normativa`,
+   `phase_cms`, `phase_cms_detail`, `phase_compendio`, `phase_stats` and `build`, in that order
+   (about 600 requests at least 0.6 s apart, pages cached in `raw_html/`; `run.sh` calls
+   `~/.local/bin/uv`), then `uv run python case/spensiones/fetch_samples.py` (downloads only the
+   files of `samples/_manifest.json`, 3.5 s apart).
 3. `agents/*.yaml`: the agent spec (see below).
 4. `calibration/in_dev.jsonl` and `ood.jsonl`: in-domain and out-of-domain dev questions, with
    near-domain traps checked against the corpus. Calibrate the evidence thresholds:
