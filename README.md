@@ -122,11 +122,14 @@ plus the other extras you use (`--all-extras` includes it); Docker:
    project's Postgres image (`docker/postgres`, used by compose and CI); managed Postgres such as
    RDS or Cloud SQL lacks the extension, so the app refuses to boot with such a profile there.
    A compose DB created before that image must be rebuilt (`docker compose up -d --build db`)
-   before `alembic upgrade head`, otherwise revision 0005 skips the BM25 index (logged warning).
-   The shipped cases do not use it: measured as MRR@10 vs dense, a fresh spensiones dev set
-   gained (.7304 -> .7708) but the older one dropped past the -0.01 limit (.7937 -> .7780;
-   fastapi_es .7917 -> .7900). The BM25 index is shared by every tenant, so term statistics
-   (IDF) mix tenants; an offline run with per-tenant indexes had stayed within it (.7879, fastapi_es .7861).
+   before `alembic upgrade head`, otherwise revisions 0005/0006 skip the BM25 indexes (logged
+   warning). Each tenant has its own BM25 index, so term statistics (IDF) never mix tenants;
+   ingest creates it for a new tenant when a profile uses `bm25_hybrid`, which needs the app's
+   database role to own `chunks` (otherwise ingest logs a warning). Both shipped cases use it
+   on every profile. Measured as MRR@10 vs dense with per-tenant indexes, a fresh spensiones
+   dev set gained (.7304 -> .7694) and the older sets stayed within the -0.01 limit (spensiones
+   .7937 -> .7879, fastapi_es .7917 -> .7861). With one index shared by every tenant the older
+   spensiones set had dropped past it (.7780).
 2. Corpus: `index/documents.jsonl` (one row per document, titles from `document_metadata.title`
    or the parser's H1) and the files under `samples/` with `samples/_manifest.json`. Write a
    `fetch/` script that produces both. After a re-fetch that changed or dropped sources, ingest

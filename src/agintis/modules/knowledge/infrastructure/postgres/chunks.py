@@ -1,5 +1,6 @@
 """Postgres `ChunkRepository`: pgvector HNSW search, tenant-scoped, READY documents only."""
 
+import logging
 import math
 import re
 from collections.abc import Sequence
@@ -7,10 +8,14 @@ from typing import Any
 
 from psycopg import errors as pg_errors
 from sqlalchemy import (
+    BindParameter,
     Float,
     RowMapping,
+    Select,
+    String,
     TextClause,
     and_,
+    bindparam,
     cast,
     delete,
     func,
@@ -19,7 +24,7 @@ from sqlalchemy import (
     text,
 )
 from sqlalchemy.dialects.postgresql import REGCONFIG
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from agintis.modules.knowledge.domain import (
@@ -33,16 +38,20 @@ from agintis.modules.knowledge.domain import (
     ensure_single_tenant,
 )
 from agintis.modules.knowledge.infrastructure.postgres.fields import chunk_fields
+from agintis.modules.knowledge.infrastructure.postgres.indexes import DEFAULT_LOCK_TIMEOUT_SECONDS
 from agintis.modules.knowledge.infrastructure.postgres.tables import (
-    BM25_INDEX,
     DOCUMENT_FK,
     TEXT_SEARCH_CONFIG,
+    bm25_index_name,
     chunks,
     documents,
 )
+from agintis.modules.knowledge.infrastructure.postgres.text_search import TextSearchConfigError
 from agintis.platform.db import UnitOfWork, compile_filter
 from agintis.shared_kernel.criteria import FilterExpr, ensure_fields, tenant_scoped
 from agintis.shared_kernel.ids import ChunkId, DocumentId, TenantId
+
+logger = logging.getLogger(__name__)
 
 # pgvector defaults, overridable per deployment (DATABASE_HNSW_EF_SEARCH / _MAX_SCAN_TUPLES).
 DEFAULT_EF_SEARCH = 40
@@ -91,6 +100,59 @@ def lexical_settings_statement() -> TextClause:
     return text("SELECT set_config('statement_timeout', :statement_timeout, true)")
 
 
+# First ingest of a tenant: is its BM25 index missing while pg_textsearch is installed AND loaded?
+# The same statement hands the DO block below its inputs as transaction-local settings: a DO block
+# takes no bind parameters, and the tenant id is never spliced into SQL in Python.
+# shortcut: a plain CREATE INDEX scans the whole chunks table and blocks the writes of EVERY
+# tenant while it runs; move to CREATE INDEX CONCURRENTLY (outside a transaction) when chunks
+# gets large. And one partial index per tenant: planning and insert cost grow with the tenant
+# count (every index predicate is checked) and the index of a tenant left without chunks is
+# never dropped; partition chunks by tenant beyond a few hundred tenants.
+_BM25_INDEX_NEEDED = text(
+    "SELECT set_config('agintis.bm25_index', :index, true), "
+    "set_config('agintis.bm25_tenant', :tenant, true), "
+    "to_regclass(:index) IS NULL "
+    "AND current_setting('pg_textsearch.library_version', true) IS NOT NULL "
+    "AND EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'pg_textsearch') AS needed"
+)
+_BM25_SKIP_REASON = "agintis.bm25_skip_reason"
+# The build may outlast a role's default statement_timeout (a timeout would fail every retry),
+# but waiting for the SHARE lock stays bounded: a queued lock request blocks every later writer
+# of chunks. Past `lock_timeout` the ingest fails with a retryable OperationalError.
+_BUILD_TIMEOUTS = text(
+    "SELECT set_config('statement_timeout', '0', true), "
+    "set_config('lock_timeout', :lock_timeout, true)"
+)
+_CREATE_BM25_INDEX = text(f"""
+DO $$
+BEGIN
+    EXECUTE format(
+        'CREATE INDEX IF NOT EXISTS %I ON chunks USING bm25 (text) '
+        'WITH (text_config = %L) WHERE tenant_id = %L',
+        current_setting('agintis.bm25_index'), '{TEXT_SEARCH_CONFIG}',
+        current_setting('agintis.bm25_tenant'));
+EXCEPTION
+    -- A concurrent first ingest of the same tenant created it first.
+    WHEN duplicate_table OR unique_violation THEN NULL;
+    -- Not the owner of chunks: ingest goes on (reported in Python, psycopg drops NOTICEs).
+    WHEN insufficient_privilege THEN
+        PERFORM set_config('{_BM25_SKIP_REASON}',
+            format('role %s does not own chunks', current_user), true);
+END
+$$
+""")
+_SKIP_REASON = text(f"SELECT current_setting('{_BM25_SKIP_REASON}', true)")
+_BM25_INDEX_AND_CHUNKS = text(
+    "SELECT to_regclass(:index) IS NOT NULL AS has_index, "
+    "EXISTS (SELECT 1 FROM chunks WHERE tenant_id = :tenant) AS has_chunks"
+)
+
+
+def _sql_literal(value: str) -> BindParameter[str]:
+    """`value` rendered as a quoted SQL literal at execution (the dialect escapes it)."""
+    return bindparam(None, value, type_=String, unique=True, literal_execute=True)
+
+
 def _is_document_fk_violation(exc: IntegrityError) -> bool:
     orig = exc.orig
     return (
@@ -133,7 +195,12 @@ class PgChunkRepository(ChunkRepository):
         max_scan_tuples: int = DEFAULT_MAX_SCAN_TUPLES,
         text_search_config: str = TEXT_SEARCH_CONFIG,
         search_timeout_ms: int = DEFAULT_SEARCH_TIMEOUT_MS,
+        bm25_indexes: bool = False,
+        bm25_lock_timeout_seconds: float = DEFAULT_LOCK_TIMEOUT_SECONDS,
     ) -> None:
+        """`bm25_indexes`: create a tenant's BM25 index at its first ingest (set when a profile
+        uses `bm25_hybrid`; otherwise ingest never pays for the index build), waiting at most
+        `bm25_lock_timeout_seconds` for the lock on chunks."""
         if not 1 <= ef_search <= MAX_EF_SEARCH:
             raise ValueError(f"ef_search must be between 1 and {MAX_EF_SEARCH}")
         if search_timeout_ms <= 0:
@@ -142,17 +209,25 @@ class PgChunkRepository(ChunkRepository):
             raise ValueError("max_scan_tuples must be greater than 0")
         if _TEXT_SEARCH_CONFIG.fullmatch(text_search_config) is None:
             raise ValueError(f"Invalid text search configuration {text_search_config!r}")
+        if bm25_lock_timeout_seconds <= 0:
+            raise ValueError("bm25_lock_timeout_seconds must be greater than 0")
         self._factory = session_factory
         self._text_search_config = text_search_config
         self._ef_search = ef_search
         self._max_scan_tuples = max_scan_tuples
         self._search_timeout = str(search_timeout_ms)
+        self.creates_bm25_indexes = bm25_indexes
+        self._bm25_lock_timeout = str(max(1, int(bm25_lock_timeout_seconds * 1000)))
+        self._bm25_skips_logged: set[TenantId] = set()
 
     async def add_many(self, chunks_: Sequence[Chunk], vectors: Sequence[Sequence[float]]) -> None:
         if len(chunks_) != len(vectors):
             raise ValueError("chunks and vectors must have the same length")
-        if ensure_single_tenant(chunks_) is None:
+        tenant_id = ensure_single_tenant(chunks_)
+        if tenant_id is None:
             return
+        if self.creates_bm25_indexes:
+            await self._ensure_bm25_index(tenant_id)
         rows: list[dict[str, Any]] = [
             {
                 "id": chunk.id,
@@ -174,6 +249,33 @@ class PgChunkRepository(ChunkRepository):
                 # One error for "missing" and "foreign tenant/profile": no existence oracle.
                 raise DocumentNotFoundError(chunks_[0].document_id) from exc
             raise
+
+    async def _ensure_bm25_index(self, tenant_id: TenantId) -> None:
+        """Create the tenant's BM25 index (see `tables.bm25_index_name`) before its first chunks.
+
+        A no-op without pg_textsearch, so every other retrieval mode keeps working on any
+        Postgres. Checked by name first: once the index exists no lock is taken. Its own short
+        transaction, before the insert: CREATE INDEX blocks writes to chunks while it runs.
+        """
+        index = bm25_index_name(tenant_id)
+        async with UnitOfWork(self._factory) as uow:
+            found = await uow.session.execute(
+                _BM25_INDEX_NEEDED, {"index": index, "tenant": tenant_id}
+            )
+            if not found.mappings().one()["needed"]:
+                return
+            await uow.session.execute(_BUILD_TIMEOUTS, {"lock_timeout": self._bm25_lock_timeout})
+            await uow.session.execute(_CREATE_BM25_INDEX)
+            reason = await uow.session.scalar(_SKIP_REASON)
+        if reason and tenant_id not in self._bm25_skips_logged:
+            self._bm25_skips_logged.add(tenant_id)  # once per tenant, not once per document
+            logger.warning(
+                "BM25 index %s of tenant %r not created (%s): bm25_hybrid searches of this "
+                "tenant fail until the owner of chunks creates it (see revision 0006)",
+                index,
+                tenant_id,
+                reason,
+            )
 
     async def search(
         self,
@@ -291,19 +393,25 @@ class PgChunkRepository(ChunkRepository):
         *,
         metadata_fields: Sequence[MetadataField] = (),
     ) -> list[ScoredChunk]:
-        """BM25 branch (pg_textsearch): `text <@> to_bm25query(q, index)`, best first.
+        """BM25 branch (pg_textsearch): `text <@> to_bm25query(q, tenant's index)`, best first.
 
-        `<@>` returns the NEGATED BM25 score (ascending = best first), which lets the bm25 index
-        serve the ORDER BY ... LIMIT (an incremental sort adds the id tiebreak); filters are
-        applied after scoring and the scan keeps going until LIMIT rows survive. Only chunks
+        Each tenant has its own partial index (`tables.bm25_index_name`), so BM25 statistics are
+        the tenant's own. `<@>` returns the NEGATED BM25 score (ascending = best first), which
+        lets the index serve the ORDER BY ... LIMIT (an incremental sort adds the id tiebreak);
+        the other filters are applied after scoring and the scan keeps going until LIMIT rows
+        survive. The tenant and the index name are rendered as SQL literals: a partial index
+        serves a plan only when the planner can prove `tenant_id = '<tenant>'`, which a generic
+        plan (a statement prepared after a few runs) cannot do from a bound parameter. Only chunks
         matching some query term are kept, in Python: a non-matching row scores 0 when the
         planner does not use the index, and 0 sorts after every match, so dropping it after the
         LIMIT is the same result. Not in SQL: a `<@>` condition in WHERE is evaluated per
-        scanned row (EXPLAIN shows it as a Filter re-scoring every row the index returns, other
-        tenants included). The selected score is still computed per RETURNED row: pg_textsearch
-        reuses the index's cached score only for an ORDER BY expression that is not selected.
-        The index (revision 0005) fixes the text configuration; tenant, filter, READY-only and
-        the statement timeout as in `search_lexical`.
+        scanned row (EXPLAIN shows it as a Filter re-scoring every row the index returns). The
+        selected score is still computed per RETURNED row: pg_textsearch reuses the index's
+        cached score only for an ORDER BY expression that is not selected.
+        The index fixes the text configuration; tenant, filter, READY-only and the statement
+        timeout as in `search_lexical`. A tenant without an index returns [] when it has no
+        chunks and raises `TextSearchConfigError` when it has some (ingested before pg_textsearch
+        was loaded, or by a role that does not own chunks).
         """
         if k <= 0:
             raise ValueError("k must be greater than 0")
@@ -311,8 +419,13 @@ class PgChunkRepository(ChunkRepository):
         if not query_text.strip():
             return []
         where = compile_filter(tenant_scoped(tenant_id, filter), chunk_fields(metadata_fields))
+        index = bm25_index_name(tenant_id)
+        # shortcut: the index covers ALL the tenant's rows, so IDF counts every profile and the
+        # pending/superseded versions too, and profile/metadata/READY filters apply after
+        # scoring (bounded by the tenant's rows and statement_timeout). Move to indexes per
+        # (tenant, profile) or partitioning when a tenant's profiles differ a lot in vocabulary.
         distance = chunks.c.text.op("<@>", return_type=Float)(
-            func.to_bm25query(query_text, BM25_INDEX)
+            func.to_bm25query(query_text, _sql_literal(index))
         )
         score = distance.label("score")
         stmt = (
@@ -324,19 +437,51 @@ class PgChunkRepository(ChunkRepository):
                     documents.c.tenant_id == chunks.c.tenant_id,
                 ),
             )
-            .where(documents.c.status == DocumentStatus.READY.value, where)
+            .where(
+                documents.c.status == DocumentStatus.READY.value,
+                chunks.c.tenant_id == _sql_literal(tenant_id),
+                where,
+            )
             .order_by(score, _ID_ORDER)
             .limit(k)
         )
-        async with UnitOfWork(self._factory) as uow:
-            await uow.session.execute(
-                lexical_settings_statement(), {"statement_timeout": self._search_timeout}
-            )
-            rows = (await uow.session.execute(stmt)).mappings().all()
+        try:
+            rows = await self._bm25_rows(stmt)
+        except DBAPIError as exc:
+            # to_bm25query fails at plan time on a missing index (undefined_object), rows or not.
+            if not isinstance(exc.orig, pg_errors.UndefinedObject):
+                raise
+            async with UnitOfWork(self._factory) as uow:
+                found = await uow.session.execute(
+                    _BM25_INDEX_AND_CHUNKS, {"index": index, "tenant": tenant_id}
+                )
+                state = found.mappings().one()
+            if state["has_index"]:  # a first ingest committed it meanwhile: retry once
+                rows = await self._bm25_rows(stmt)
+            elif state["has_chunks"]:
+                quoted = tenant_id.replace("'", "''")
+                raise TextSearchConfigError(
+                    f"Tenant {tenant_id!r} has chunks but no BM25 index {index} (ingested before "
+                    "a profile used bm25_hybrid or pg_textsearch was loaded, or by a role that "
+                    "does not own chunks): as the owner of chunks run `CREATE INDEX IF NOT "
+                    f"EXISTS {index} ON chunks USING bm25 (text) WITH (text_config = "
+                    f"'{TEXT_SEARCH_CONFIG}') WHERE tenant_id = '{quoted}'`, or re-ingest a "
+                    "changed document while a profile uses bm25_hybrid"
+                ) from exc
+            else:
+                return []
         # Defense in depth: best (most negative) first, ties by id (code points).
         matching = [row for row in rows if float(row["score"]) < 0]
         ordered = sorted(matching, key=lambda r: (float(r["score"]), str(r["id"])))
         return [ScoredChunk(_to_chunk(row), -float(row["score"])) for row in ordered]
+
+    async def _bm25_rows(self, stmt: Select[Any]) -> Sequence[RowMapping]:
+        async with UnitOfWork(self._factory) as uow:
+            await uow.session.execute(
+                lexical_settings_statement(), {"statement_timeout": self._search_timeout}
+            )
+            rows: Sequence[RowMapping] = (await uow.session.execute(stmt)).mappings().all()
+        return rows
 
     async def delete_by_document(self, tenant_id: TenantId, document_id: DocumentId) -> None:
         stmt = delete(chunks).where(

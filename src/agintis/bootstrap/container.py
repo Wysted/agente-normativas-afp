@@ -85,7 +85,7 @@ from agintis.modules.knowledge.infrastructure.postgres import (
     TextSearchConfigError,
     expected_metadata_indexes,
     metadata_index_problems,
-    verify_bm25_index,
+    verify_pg_textsearch,
     verify_text_search_config,
 )
 from agintis.modules.knowledge.infrastructure.registry import (
@@ -125,7 +125,7 @@ MIN_VECTOR_VERSION = (0, 8, 4)
 
 # Alembic head this build was written for. Bump together with every new migration (a unit test
 # compares it with the script directory); the startup check refuses any other schema revision.
-SCHEMA_HEAD_REVISION = "0005"
+SCHEMA_HEAD_REVISION = "0006"
 
 logger = logging.getLogger(__name__)
 
@@ -272,6 +272,9 @@ class Container:
             max_scan_tuples=db.hnsw_max_scan_tuples,
             text_search_config=knowledge.text_search_config,
             search_timeout_ms=db.search_timeout_ms,
+            bm25_indexes=any(
+                p.retrieval_mode == BM25_HYBRID_RETRIEVAL_MODE for p in profiles.all()
+            ),
         )
         ingest_lock = PgIngestLock(
             lock_engine,
@@ -453,7 +456,7 @@ class Container:
             raise StartupError(str(exc)) from exc
         # Optional extension: checked only when a profile needs it.
         if any(p.retrieval_mode == BM25_HYBRID_RETRIEVAL_MODE for p in self.profiles.all()):
-            await self.require_bm25_index()
+            await self.require_pg_textsearch()
         await self._warn_metadata_index_problems()
         if self.checkpointer is not None:
             try:
@@ -467,10 +470,10 @@ class Container:
         except LlmError as exc:
             raise StartupError(str(exc)) from exc
 
-    async def require_bm25_index(self) -> None:
-        """StartupError unless pg_textsearch and the BM25 index exist (`bm25_hybrid` needs them)."""
+    async def require_pg_textsearch(self) -> None:
+        """StartupError unless pg_textsearch is installed and loaded (`bm25_hybrid` needs it)."""
         try:
-            await verify_bm25_index(self.engine)
+            await verify_pg_textsearch(self.engine)
         except TextSearchConfigError as exc:
             raise StartupError(str(exc)) from exc
 

@@ -139,6 +139,20 @@ def test_build_loads_yaml_profiles_next_to_the_default(tmp_path: Path) -> None:
     assert container.profiles.get("legal").cleaners[0].key == "normalize_whitespace"
 
 
+def test_ingest_creates_bm25_indexes_only_when_a_profile_uses_bm25_hybrid(tmp_path: Path) -> None:
+    def creates_indexes(settings: Settings) -> bool:
+        chunks = Container.build(settings).chunks
+        assert isinstance(chunks, PgChunkRepository)
+        return chunks.creates_bm25_indexes
+
+    assert not creates_indexes(make_settings())
+    (tmp_path / "bm.yaml").write_text(
+        "key: bm\ntop_k: 4\nchunk_max_tokens: 300\nparser_key: simple\n"
+        "chunker_key: structured\nretrieval_mode: bm25_hybrid\n"
+    )
+    assert creates_indexes(make_settings(knowledge={"profiles_dir": tmp_path}))
+
+
 @pytest.mark.parametrize(
     ("body", "error"),
     [
@@ -389,10 +403,10 @@ async def test_the_bm25_index_is_checked_only_when_a_profile_uses_bm25_hybrid(
 
     async def missing(engine: object) -> None:
         checked.append(engine)
-        raise TextSearchConfigError("needs the BM25 index ix_chunks_text_bm25")
+        raise TextSearchConfigError("needs the pg_textsearch extension")
 
     monkeypatch.setattr("agintis.bootstrap.container.check_database", database_ok)
-    monkeypatch.setattr("agintis.bootstrap.container.verify_bm25_index", missing)
+    monkeypatch.setattr("agintis.bootstrap.container.verify_pg_textsearch", missing)
     settings = make_settings(
         startup_checks=True,
         embeddings={"tokenizer": str(_tokenizer_file(tmp_path)), "url": "http://127.0.0.1:9"},
@@ -405,7 +419,7 @@ async def test_the_bm25_index_is_checked_only_when_a_profile_uses_bm25_hybrid(
     container.profiles.register(
         RagProfile("bm", 3, 100, "simple", "structured", retrieval_mode=BM25_HYBRID_RETRIEVAL_MODE)
     )
-    with pytest.raises(StartupError, match="BM25 index"):
+    with pytest.raises(StartupError, match="pg_textsearch"):
         async with container:
             pass
     assert checked == [container.engine]
