@@ -8,7 +8,9 @@ Two signals, deterministic and cheap:
    citing when it does not know), at most `MAX_REFUSAL_CHARS` characters (a long answer with a
    caveat sentence is an answer, not a blanket refusal) and a match of one of the
    `REFUSAL_PATTERNS` (Spanish "I don't know / I can't answer / it is not in the sources" forms,
-   compared lowercase and without accents, with word boundaries).
+   compared lowercase and without accents, with word boundaries; for a `citations: none` agent
+   the match must start the answer, after an optional courtesy or "en las fuentes" lead-in,
+   since a missing marker says nothing there).
 
 Where the patterns come from, honestly: the synthesis prompt's contract ("say you do not know",
 no citations on a refusal), the fixed out-of-scope message style of a case's agent ("solo puedo
@@ -41,6 +43,7 @@ import unicodedata
 from agintis.agent_kit.judge.citations import citation_numbers
 from agintis.agent_kit.judge.guard import strip_markers
 from agintis.agent_kit.judge.records import AnswerRecord
+from agintis.agent_kit.source_text import CitationStyle
 
 MAX_REFUSAL_CHARS = 600
 # Nouns for "the sources": deliberately NOT `normativa` (legal text says "la normativa no permite
@@ -100,6 +103,15 @@ REFUSAL_PATTERNS: tuple[str, ...] = (
     r"\bfuera del alcance\b",
 )
 _COMPILED = tuple(re.compile(p) for p in REFUSAL_PATTERNS)
+# What may precede the anchored refusal of a `citations: none` agent: a courtesy ("lo siento,
+# pero", "lamentablemente") and/or a place ("en las fuentes proporcionadas").
+# shortcut: closed list, any other preamble ("Gracias por tu pregunta. No lo se.") is a false
+# negative; widen it when `cli.agreement` shows misses on uncited agents.
+_LEAD_IN = re.compile(
+    r"(?:(?:lo siento|lamentablemente|desafortunadamente|disculpa|disculpe|perdon|me temo que)"
+    r"(?:,? pero)?[,.:;!]?\s*)?"
+    rf"(?:(?:en|segun) (?:las|los|el|la|esas?|estos?) {_SOURCES_NOUN}{_ADJECTIVES},?\s*)?"
+)
 _SPACES = re.compile(r"\s+")
 
 
@@ -120,14 +132,23 @@ def _reads_as_missing(normalized: str) -> bool:
     return contrast is None or _OFFER.search(after[contrast.start() :]) is not None
 
 
-def looks_like_refusal(answer: str) -> bool:
-    """The text heuristic alone (signal 2)."""
+def looks_like_refusal(answer: str, *, citations: CitationStyle) -> bool:
+    """The text heuristic alone (signal 2). With `citations: none` no answer carries markers, so
+    their absence says nothing: a refusal pattern must then START the answer, after an optional
+    `_LEAD_IN` ("Se renueva en el mostrador; no hay informacion sobre el costo" is a partial
+    answer, "Lo siento, no tengo informacion" a refusal)."""
     # shortcut: the text cannot tell an adjacent-topic cited answer from a partial one, so any
     # cited answer is "not a refusal"; deterministic-only runs undercount refusals, rely on hybrid
     # or add a topic check before using deterministic mode for decisions.
     if not answer.strip() or len(answer) > MAX_REFUSAL_CHARS or citation_numbers(answer):
         return False
-    return _reads_as_missing(normalize(answer))
+    normalized = normalize(answer)
+    if citations == "none":
+        lead_in = _LEAD_IN.match(normalized)
+        assert lead_in is not None  # every group is optional
+        if not any(p.match(normalized, lead_in.end()) for p in _COMPILED):
+            return False
+    return _reads_as_missing(normalized)
 
 
 def states_missing_information(sentence: str) -> bool:
@@ -145,6 +166,7 @@ def parameters() -> dict[str, object]:
         "max_chars": MAX_REFUSAL_CHARS,
         "contrast": _CONTRAST.pattern,
         "offer": _OFFER.pattern,
+        "lead_in": _LEAD_IN.pattern,
     }
 
 
@@ -158,4 +180,4 @@ def refused_by_scope(record: AnswerRecord) -> bool:
 
 def is_refusal(record: AnswerRecord) -> bool:
     """The agent refused (scope `out`) or said it does not know (text heuristic)."""
-    return refused_by_scope(record) or looks_like_refusal(record.answer)
+    return refused_by_scope(record) or looks_like_refusal(record.answer, citations=record.citations)

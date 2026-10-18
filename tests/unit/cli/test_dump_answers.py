@@ -158,6 +158,7 @@ async def test_the_dump_records_answer_sources_and_models_of_a_real_graph_run() 
         limits=SPEC.limits,
         models=labels,
         meta={"git": "abc1234"},
+        citations="inline",
     )
 
     record = records[0]
@@ -183,6 +184,7 @@ async def test_the_judge_renders_the_sources_exactly_like_the_synthesis_showed_t
             limits=SPEC.limits,
             models={},
             meta={},
+            citations="inline",
         )
     )[0]
 
@@ -209,6 +211,7 @@ async def test_a_refusal_without_any_evidence_keeps_its_scope_with_a_null_score(
         limits=SourceLimits(),
         models={},
         meta={},
+        citations="inline",
     )
 
     assert record.scope == ScopeVerdict("out", None)
@@ -234,6 +237,7 @@ async def test_the_rewrite_then_synthesize_path_dumps_the_sources_the_model_saw(
         limits=SourceLimits(),
         models={},
         meta={},
+        citations="inline",
     )
 
     assert record.error is None
@@ -255,6 +259,7 @@ async def test_a_weak_score_keeps_its_value() -> None:
         limits=SourceLimits(),
         models={},
         meta={},
+        citations="inline",
     )
     assert record.scope == ScopeVerdict("out", pytest.approx(0.1))  # type: ignore[arg-type]
 
@@ -269,6 +274,7 @@ async def test_the_dump_survives_the_jsonl_roundtrip_into_the_judge_loader(tmp_p
         limits=SPEC.limits,
         models={},
         meta={},
+        citations="inline",
     )
     path = tmp_path / "answers.jsonl"
     write_dump(path, records)
@@ -312,6 +318,7 @@ async def test_the_scope_event_and_the_sources_the_synthesis_saw_are_recorded() 
         limits=SourceLimits(max_source_chars=10),
         models={},
         meta={},
+        citations="inline",
     )
 
     assert record.scope is not None
@@ -326,7 +333,7 @@ async def test_a_refused_turn_has_scope_out_and_no_sources() -> None:
     )
     record = await answer_question(
         graph, Question("q", "Q?", "out"), tenant=TENANT, agent="a",
-        limits=SourceLimits(), models={}, meta={},
+        limits=SourceLimits(), models={}, meta={}, citations="inline",
     )  # fmt: skip
     assert record.answer == "Fixed message."
     assert record.sources == ()
@@ -338,7 +345,7 @@ async def test_the_refusal_reason_is_recorded_and_old_dumps_without_it_still_loa
     graph = FakeGraph(lambda _q: _state(answer="Hola.", refusal_reason="social"))
     record = await answer_question(
         graph, Question("q", "Hola"), tenant=TENANT, agent="a",
-        limits=SourceLimits(), models={}, meta={},
+        limits=SourceLimits(), models={}, meta={}, citations="inline",
     )  # fmt: skip
     row = record.to_json()
     assert (record.refusal_reason, row["refusal_reason"]) == ("social", "social")
@@ -352,7 +359,7 @@ async def test_the_answer_falls_back_to_the_last_ai_message() -> None:
     graph = FakeGraph(lambda _q: {"messages": [AIMessage("From history.")]})
     record = await answer_question(
         graph, Question("q", "Q?"), tenant=TENANT, agent="a",
-        limits=SourceLimits(), models={}, meta={},
+        limits=SourceLimits(), models={}, meta={}, citations="inline",
     )  # fmt: skip
     assert record.answer == "From history."
 
@@ -372,12 +379,33 @@ async def test_a_failing_question_is_recorded_and_the_others_still_run() -> None
         limits=SourceLimits(),
         models={},
         meta={},
+        citations="inline",
         concurrency=3,
     )
 
     assert [r.id for r in records] == ["a", "b", "c"]  # file order
     assert [r.error for r in records] == [None, "RateLimitError (status 429)", None]
     assert records[1].answer == ""
+
+
+async def test_every_record_carries_the_agents_citation_style() -> None:
+    def respond(question: str) -> dict[str, Any]:
+        if question == "boom":
+            raise rate_limit_error()
+        return _state()
+
+    records = await run_dump(
+        FakeGraph(respond),
+        [Question("a", "ok"), Question("b", "boom")],
+        tenant=TENANT,
+        agent="a",
+        limits=SourceLimits(),
+        models={},
+        meta={},
+        citations="none",
+    )
+
+    assert [r.citations for r in records] == ["none", "none"]  # the failed one too
 
 
 async def test_each_run_gets_its_own_context_and_a_dump_tag() -> None:
@@ -390,6 +418,7 @@ async def test_each_run_gets_its_own_context_and_a_dump_tag() -> None:
         limits=SourceLimits(),
         models={},
         meta={},
+        citations="inline",
     )
     assert {c.tenant_id for c in graph.contexts} == {TENANT}
     assert len({c.run_id for c in graph.contexts}) == 2
@@ -458,7 +487,14 @@ def test_an_unexpected_failure_aborts_with_exit_3(
 
 
 def _record(ident: str, error: str | None = None) -> AnswerRecord:
-    return AnswerRecord(id=ident, question="q", answer="" if error else "a", agent="a", error=error)
+    return AnswerRecord(
+        id=ident,
+        question="q",
+        answer="" if error else "a",
+        agent="a",
+        error=error,
+        citations="inline",
+    )
 
 
 def test_the_writer_appends_flushed_lines_to_a_private_partial_and_renames_on_commit(
@@ -531,6 +567,7 @@ async def test_the_dump_aborts_when_the_same_failure_repeats_keeping_what_was_wr
             limits=SourceLimits(),
             models={},
             meta={},
+            citations="inline",
             sink=sunk.append,
         )
 
@@ -549,6 +586,7 @@ async def test_records_reach_the_sink_in_file_order_even_with_concurrency() -> N
         limits=SourceLimits(),
         models={},
         meta={},
+        citations="inline",
         concurrency=3,
         sink=lambda r: sunk.append(r.id),
     )
