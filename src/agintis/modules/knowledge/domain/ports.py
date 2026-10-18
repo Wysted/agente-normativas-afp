@@ -254,5 +254,11 @@ class ChunkRepository(ABC):
             dense, lexical, k=rrf_k, limit=k, lexical_weight=lexical_weight
         )
 
+    async def repair_bm25_index(self, tenant_id: TenantId) -> None:
+        """Rebuild what `search_bm25` needs for a tenant that already has chunks, where the
+        backend keeps per-tenant structures (`add_many` builds them for new tenants). An ingest
+        run calls it once, so documents skipped as unchanged still get it. Default: nothing."""
+        return None
+
     @abstractmethod
     async def delete_by_document(self, tenant_id: TenantId, document_id: DocumentId) -> None: ...

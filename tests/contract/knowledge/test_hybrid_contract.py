@@ -8,12 +8,14 @@ index at its first ingest.
 """
 
 import asyncio
+import json
 import logging
 import re
 import secrets
 from collections.abc import AsyncIterator, Iterator
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
@@ -24,6 +26,8 @@ from sqlalchemy.engine import URL
 from sqlalchemy.exc import DBAPIError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
+from agintis.cli import ingest as ingest_cli
+from agintis.modules.knowledge.api import BatchOutcome
 from agintis.modules.knowledge.domain import (
     Chunk,
     Document,
@@ -44,6 +48,7 @@ from tests.conftest import skip_or_fail
 from tests.contract.knowledge.conftest import Repos
 from tests.fakes.knowledge import InMemoryChunkRepository, InMemoryDocumentRepository
 from tests.support.postgres import BM25_INDEXES_SQL, truncate_all
+from tests.support.settings import FakeSettings
 
 A = TenantId("tenant-a")
 B = TenantId("tenant-b")
@@ -487,11 +492,83 @@ class TestBm25TenantIndexes:
         with pytest.raises(TextSearchConfigError, match="no BM25 index") as info:
             await repos.chunks.search_bm25(tenant, QUERY, None, 10)
         assert "downgrade" not in str(info.value)  # never an outage as the remedy
+        assert "re-run the ingest of this tenant as the owner of chunks" in str(info.value)
         # The statement in the message is the fix, as written.
         (statement,) = re.findall(r"`(CREATE INDEX[^`]+)`", str(info.value))
         async with engine.begin() as conn:
             await conn.exec_driver_sql(statement.replace("%", "%%"))
         assert len(await repos.chunks.search_bm25(tenant, QUERY, None, 10)) == 1
+
+    async def test_an_ingest_run_of_unchanged_documents_builds_a_missing_index(
+        self,
+        pg_bm25: tuple[Repos, AsyncEngine],
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+    ) -> None:
+        """The remedy the error names: re-running the ingest, even with nothing to re-ingest."""
+        repos, engine = pg_bm25
+        tenant = TenantId(f"t-{uuid4().hex}")
+        await repos.documents.save(_doc(tenant, f"{tenant}-d"))
+        await repos.chunks.add_many([_chunk(tenant, f"{tenant}-d", "c1", EXACT_TEXT)], [NEAR])
+        async with engine.begin() as conn:  # e.g. ingested while no profile used bm25_hybrid
+            await conn.execute(text(f'DROP INDEX "{bm25_index_name(tenant)}"'))
+
+        seen: list[object] = []
+
+        class EveryDocumentUnchanged:
+            async def stream(self, tenant: object, items: Any, **kw: object) -> Any:
+                for item in items:
+                    seen.append(item)
+                    yield BatchOutcome(item.uri, "skipped")  # unchanged: add_many never runs
+
+        class IngestContainer:
+            ingest_batch = EveryDocumentUnchanged()
+            chunks = repos.chunks
+
+            @classmethod
+            def build(cls, settings: object, *, for_ingest: bool) -> "IngestContainer":
+                return cls()
+
+            async def __aenter__(self) -> "IngestContainer":
+                return self
+
+            async def __aexit__(self, *exc: object) -> None:
+                return None
+
+        index = tmp_path / "index" / "documents.jsonl"
+        index.parent.mkdir()
+        index.write_text('{"id": "d", "title": "D"}\n', encoding="utf-8")
+        samples = tmp_path / "samples"
+        (samples / "docs").mkdir(parents=True)
+        (samples / "docs" / "d.txt").write_text(EXACT_TEXT, encoding="utf-8")
+        manifest = [
+            {
+                "id": "d",
+                "family": "docs",
+                "path": "docs/d.txt",
+                "url": "https://example.test/d",
+                "content_type": "text/plain",
+            }
+        ]
+        (samples / "_manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+        monkeypatch.setattr(ingest_cli, "get_settings", FakeSettings)
+        monkeypatch.setattr(ingest_cli, "Container", IngestContainer)
+
+        async def ingest(run_tenant: str) -> None:
+            argv = ["--profiles", "p", "--index", str(index), "--samples", str(samples)]
+            args = ingest_cli.build_parser().parse_args([*argv, "--tenant", run_tenant])
+            await ingest_cli.run(args, lambda outcome: None)
+
+        await ingest(tenant)
+        assert seen  # the documents arrived, all unchanged
+        assert not any(isinstance(item, BatchOutcome) for item in seen)
+        assert bm25_index_name(tenant) in await _bm25_indexes(engine)
+        assert len(await repos.chunks.search_bm25(tenant, QUERY, None, 10)) == 1
+
+        # A tenant without chunks (a typo, an empty run) gets no full-table build, no orphan.
+        empty = TenantId(f"t-{uuid4().hex}")
+        await ingest(empty)
+        assert bm25_index_name(empty) not in await _bm25_indexes(engine)
 
     async def test_the_index_build_waits_for_the_lock_on_chunks_only_so_long(
         self, pg_bm25: tuple[Repos, AsyncEngine]
