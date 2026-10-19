@@ -84,6 +84,34 @@ Results (2026-10-19, tenant with Libro II, `evidence_margin` 0.05, generator gpt
 routed hit@1 20/20 and MRR@10 .742; live hit 18/20. Ingesting Libro II did not move the afiliación
 live hit (18/20, 12/19); the scope bands were recalibrated on this corpus (`report.json`).
 
+## Merge tie-break (`merge_tiebreak: llm`)
+
+The evidence router ranks topics by max probe cosine, and that score is biased towards the
+compendio: right and wrong compendio wins look alike, so no score transform (margin, bias, lexical
+overlap, a cross-encoder score per topic) fixed the primary choice offline. Most of the routed MRR
+loss came from gold that was selected but merged as secondary. The tie-break lets the ROUTER model
+read the top 2 passages of each group (labelled by letter, topic names hidden) and pick the primary
+group of the merge.
+
+Offline, routed MRR@10 (simulated from the hybrid hits, 2026-10-19):
+
+| variant | `routing_dev2` | `retrieval_dev` | `afiliacion_dev` | `cotizaciones_dev` |
+|---|---|---|---|---|
+| router order (before) | .522 | .659 | .564 | .742 |
+| LLM tie-break | .605 | .669 | .564 | .742 |
+| cross-encoder rerank of the merged top 8 | .657 | .709 | .626 | .950 |
+
+- The pre-registered floor also asked that compendio hit@1 drop by at most one question per set.
+  The tie-break misses it on `afiliacion_dev` only (34 against 36), and was accepted as an
+  exception: MRR does not move there.
+- The cross-encoder rerank wins everywhere but took 21 s per question on CPU; it needs a GPU.
+- Live guard (same commands and models as the Libro II run): live hit 18/20, 12/19 and 18/20,
+  unchanged; in-dev judge faithfulness 35/37, refusal 38/40, citation 39/39; ood refusal 78/80.
+  The primary source changed in 10 of 179 questions. The three judge regressions had identical
+  sources in both runs, so they come from the generator, not from the tie-break.
+- Not measured: the `low` scope band, where the tie-break picks among 3 candidates.
+  `cli.eval --route` ignores the tie-break.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36

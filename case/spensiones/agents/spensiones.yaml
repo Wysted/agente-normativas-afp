@@ -7,8 +7,9 @@
 # Enable it by pointing the app at this directory (it must be run together with the profiles):
 #   KNOWLEDGE_PROFILES_DIR=case/spensiones/profiles
 #   AGENTS_DIR=case/spensiones/agents
-#   LLM_PROVIDER=... LLM_MODEL=... (+ LLM_API_KEY)     # analyzer + synthesis models (the evidence
-#                                                      # router needs no model; `router: llm` adds one)
+#   LLM_PROVIDER=... LLM_MODEL=... (+ LLM_API_KEY)     # analyzer, synthesis and router models (the
+#                                                      # evidence router needs none; the ROUTER role
+#                                                      # serves `merge_tiebreak: llm` below)
 # The agent then shows up in GET /v1/agents as `spensiones-rag`.
 #
 # Filters: ALWAYS list `filters` per topic (the allowlist, one precise hint per field). Without the
@@ -87,6 +88,10 @@ clarification:
   # so the best 3 topics are searched whatever evidence_margin says.
   low_scope_max_topics: 3
 primary_weight: 2               # merge: the primary topic contributes 2 hits per round, others 1
+# Merge tie-break: on every merge with 2+ topics with sources, the ROUTER model reads their top
+# passages and picks the primary (the max cosine favours the big compendio). Measurements, the
+# accepted exception and what is unmeasured: calibration/README.md, "Merge tie-break".
+merge_tiebreak: llm
 sufficiency: relevance          # judge the hits' own evidence (rerank score only; no reranker = no signal = always sufficient)
 min_rerank_score: 0.1           # relevance threshold when a reranker scored the hits (uncalibrated)
 min_sources: 1                  # relevant sources needed before answering
