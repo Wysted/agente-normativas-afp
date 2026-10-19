@@ -38,17 +38,19 @@ description: >-
 # Router: `evidence` embeds the question once and probes every topic's profile with a dense search;
 # the best topic is always searched, another one only when its score is within `evidence_margin` of
 # the best (up to max_topics). Live eval (n=29): hit@1 .966 vs .862 for the LLM router, 0 LLM calls.
-# `evidence_margin` was 0.02, PRE-REGISTERED before looking at the eval. It is 0.03 since a
-# pre-registered dev-set comparison (routing_dev2 decides; retrieval_dev and afiliacion_dev guard):
-# the expected topic is selected in 42/49 instead of 39/49 on routing_dev2, no guard drops, hit@1 is
-# unchanged, at +0.10..0.21 topics per question. `mean_top_k` was rejected there (39 -> 33). It was
+# `evidence_margin` was 0.02, PRE-REGISTERED before looking at the eval. It went to 0.03 after a
+# pre-registered dev-set comparison (routing_dev2 decides; retrieval_dev and afiliacion_dev guard;
+# 39 -> 42/49 expected topic selected), and to 0.05 once Libro II was ingested (the bigger compendio
+# wins more top-1s: 42 -> 39/49 at 0.03, 43/49 at 0.05, with cotizaciones_dev as the Libro II guard
+# and at most 1.53 topics per question). `mean_top_k`, margin 0.08 (too many topics) and a compendio
+# `evidence_bias` of -0.02 (hurts Libro I/II questions) were rejected on the same sets. It was
 # NOT tuned on eval_questions.jsonl (held-out). Any change, and any per-topic `evidence_bias`, must be
 # calibrated on a separate dev set (`--route --router evidence` reports the margin sweep and each
 # topic's background score, to JUDGE the offsets, not to tune them on this set). Biases stay 0.
 router: evidence
 max_topics: 2                   # most topics searched in parallel per question
 evidence_aggregate: max         # max (best passage) | mean_top_k (mean of the probe_k best)
-evidence_margin: 0.03           # cosine units, 0..1; wider = more second topics searched
+evidence_margin: 0.05           # cosine units, 0..1; wider = more second topics searched
 probe_k: 3                      # passages per topic the probe keeps (1..20)
 # Switching back to the LLM router: `router: auto` (or llm) and the knob below, removing the
 # evidence_* / probe_k lines above (the boot warns about knobs the router ignores) AND the
@@ -60,15 +62,15 @@ probe_k: 3                      # passages per topic the probe keeps (1..20)
 # out_of_scope_below (or no evidence at all): the fixed message below, no retrieval and no
 # synthesis call (the analyzer still runs). The two thresholds come from
 # case/spensiones/calibration/report.json (pre-registered rules: p95 and p50 of the out-of-domain
-# dev set; see the README there). 0.6103 / 0.4442 are the report values (0.61034 / 0.44424)
-# rounded DOWN; rounding `out` down is the safe direction (fewer refusals). Valid ONLY for that corpus
+# dev set; see the README there). 0.6103 / 0.4557 are the report values (0.61034 / 0.45579, tenant
+# spensiones with Libro II, analyzed queries) rounded DOWN; rounding `out` down is the safe direction (fewer refusals). Valid ONLY for that corpus
 # snapshot, tenant, embedding model and profiles: recalibrate with cli.calibrate_evidence after any
 # re-ingest. They separate DOMAIN, not answerability (near-domain questions the corpus does not
 # cover still score above them and rely on the synthesis prompt's refusal).
 clarification:
   policy: evidence
   low_confidence_below: 0.6103
-  out_of_scope_below: 0.4442
+  out_of_scope_below: 0.4557
   out_of_scope_message: >-
     Solo puedo responder preguntas sobre la normativa del Sistema de Pensiones y del Seguro de
     Cesantia de Chile (Compendio de Normas, NCG, circulares, resoluciones y jurisprudencia), y no

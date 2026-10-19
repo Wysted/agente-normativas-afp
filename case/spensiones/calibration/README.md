@@ -66,6 +66,24 @@ The two `operativa` gains (af-27, af-28) were retrieved before too: their answer
 1500 of the chunk. In-dev judge results did not regress (faithfulness 37/37, refusal 38/40); ood
 refusal went from 80/80 to 79/80.
 
+## Cotizaciones dev set (`cotizaciones_dev.jsonl`)
+
+20 `in` questions in the same format, all answered by the compendio Libro II (Cotizaciones
+Previsionales), all in `operativa` voice (10 of 20 cite a real norm, Título or Capítulo). It is the
+dev set of the cotizaciones area and the Libro II guard for routing changes: the other dev sets
+only have Libro I gold, so a change that penalizes the compendio looks free on them.
+
+- Writing: three blind writers, one question per window of 20 consecutive chunks, windows spread
+  evenly over Títulos I, II, IV-X and XIII-XV (quota roughly by chunk count; III, XI and XII have
+  1-9 chunks and were skipped).
+- Checks: every snippet is in a Libro II chunk; no question is within token Jaccard 0.5 of
+  `eval_questions.jsonl`, `in_dev.jsonl`, `routing_dev2.jsonl`, `retrieval_dev.jsonl`,
+  `afiliacion_dev.jsonl` or another row of this set. Nothing was dropped.
+
+Results (2026-10-19, tenant with Libro II, `evidence_margin` 0.05, generator gpt-5.4-mini): offline
+routed hit@1 20/20 and MRR@10 .742; live hit 18/20. Ingesting Libro II did not move the afiliación
+live hit (18/20, 12/19); the scope bands were recalibrated on this corpus (`report.json`).
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36

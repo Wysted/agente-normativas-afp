@@ -44,6 +44,17 @@
   "doc_type": "compendio_libro"
  },
  {
+  "id": "compendio-sp-libro-ii",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2748.pdf",
+  "path": "compendio/compendio-sp-libro-ii.pdf",
+  "bytes": 9856835,
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro II Cotizaciones Previsionales",
+  "doc_type": "compendio_libro"
+ },
+ {
   "id": "compendio-sp-libro-i-titulo-i",
   "family": "compendio",
   "url": "https://www.spensiones.cl/portal/compendio/596/w3-propertyvalue-2541.html",
