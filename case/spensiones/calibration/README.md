@@ -80,6 +80,10 @@ only have Libro I gold, so a change that penalizes the compendio looks free on t
   `eval_questions.jsonl`, `in_dev.jsonl`, `routing_dev2.jsonl`, `retrieval_dev.jsonl`,
   `afiliacion_dev.jsonl` or another row of this set. Nothing was dropped.
 
+Results (2026-10-19, tenant with Libro II, `evidence_margin` 0.05, generator gpt-5.4-mini): offline
+routed hit@1 20/20 and MRR@10 .742; live hit 18/20. Ingesting Libro II did not move the afiliación
+live hit (18/20, 12/19); the scope bands were recalibrated on this corpus (`report.json`).
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
