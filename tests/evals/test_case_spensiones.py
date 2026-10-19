@@ -134,12 +134,14 @@ def test_every_chunk_fits_its_profile_budget(
 
 def test_every_chunk_reaches_the_model_uncut(results: dict[str, SampleResult]) -> None:
     """The agent cuts each source to `max_source_chars` before the model sees it: a longer chunk
-    hides its tail (answers past the cut are retrieved but never read, engram #1416)."""
+    hides its tail (answers past the cut are retrieved but never read), and the total budget must
+    not cut the later sources either."""
     (spec,) = [s for s in load_agent_specs(PROFILES_DIR.parent / "agents") if s.id == AGENT_ID]
     longest = max(
         (len(c.text), r.sample_id) for r in results.values() if r.profile for c in r.chunks
     )
     assert longest[0] <= spec.max_source_chars, f"{longest} > {spec.max_source_chars}"
+    assert spec.max_sources * spec.max_source_chars <= spec.max_context_chars
 
 
 def test_compendio_token_distribution_is_close_to_the_reference(

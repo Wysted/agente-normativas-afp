@@ -86,9 +86,11 @@ sufficiency: relevance          # judge the hits' own evidence (rerank score onl
 min_rerank_score: 0.1           # relevance threshold when a reranker scored the hits (uncalibrated)
 min_sources: 1                  # relevant sources needed before answering
 max_rewrites: 1                 # one broader query when they are not enough
-# Sources reach the model uncut: the longest chunk of this corpus is 3311 chars, and with the
-# 1500 default 76% of the NCG chunks lost their tail (answers past char 1500 were retrieved but
-# never seen). 27200 = max_sources (8) x 3400, so the total budget never cuts either.
+# Sources reach the model uncut: the longest chunk of this corpus is about 3300 chars, and with
+# the 1500 default 76% of the NCG chunks lost their tail (answers past char 1500 were retrieved
+# but never seen). 27200 = max_sources x 3400, so the total budget never cuts either
+# (tests/evals/test_case_spensiones.py checks both).
+max_sources: 8
 max_source_chars: 3400
 max_context_chars: 27200
 topics:
