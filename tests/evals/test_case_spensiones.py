@@ -18,6 +18,7 @@ from typing import Any
 import pytest
 
 from agintis.cli.eval_metrics import chunk_body, locator_matches, normalize
+from agintis.modules.agents.rag_chat.loader import load_agent_specs
 from agintis.modules.knowledge.domain import Chunk
 from agintis.modules.knowledge.infrastructure.chunkers import HfTokenCounter
 from agintis.modules.knowledge.infrastructure.chunkers.splitting import SPECIAL_TOKENS_RESERVE
@@ -33,6 +34,7 @@ pytestmark = [
     pytest.mark.skipif(not samples_available(), reason="case samples are not downloaded"),
 ]
 
+AGENT_ID = "spensiones-rag"
 EVAL_FILE = PROFILES_DIR / "eval_questions.jsonl"
 QUESTIONS: list[dict[str, Any]] = (
     [json.loads(line) for line in EVAL_FILE.read_text(encoding="utf-8").splitlines() if line]
@@ -128,6 +130,18 @@ def test_every_chunk_fits_its_profile_budget(
         sizes = [counter.count(c.text) for c in result.chunks]
         assert max(sizes) <= limit, f"{result.sample_id}: {max(sizes)} > {limit}"
         assert all(c.text.strip() for c in result.chunks)
+
+
+def test_every_chunk_reaches_the_model_uncut(results: dict[str, SampleResult]) -> None:
+    """The agent cuts each source to `max_source_chars` before the model sees it: a longer chunk
+    hides its tail (answers past the cut are retrieved but never read), and the total budget must
+    not cut the later sources either."""
+    (spec,) = [s for s in load_agent_specs(PROFILES_DIR.parent / "agents") if s.id == AGENT_ID]
+    longest = max(
+        (len(c.text), r.sample_id) for r in results.values() if r.profile for c in r.chunks
+    )
+    assert longest[0] <= spec.max_source_chars, f"{longest} > {spec.max_source_chars}"
+    assert spec.max_sources * spec.max_source_chars <= spec.max_context_chars
 
 
 def test_compendio_token_distribution_is_close_to_the_reference(

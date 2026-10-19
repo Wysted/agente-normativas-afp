@@ -37,6 +37,35 @@ The bias variant failed two of the five criteria (compendio and the old set may 
 one question), so the router keeps `max` without biases. The set confirms the size bias: 10 of the
 15 misses of the current router go to compendio.
 
+## Afiliación dev set (`afiliacion_dev.jsonl`)
+
+39 `in` questions in the same format, all answered by the compendio Libro I (Afiliación); `locator`
+is empty on purpose (a hit is the snippet). It is a dev set for retrieval and answer experiments.
+
+- Two slices, field `phrasing`: `v1_mixed` (af-01..19, about 60% citizen wording) and `operativa`
+  (af-20..39, the target user: AFP operations or compliance staff who cite norms, Títulos and
+  processes). `cites_identifier` exists only in `operativa` (12 of 20). Decisions use `operativa`.
+- Writing: blind writers worked from the chunk text of each Título, without the router, the probes
+  or any score. Some facts are asked once per slice (af-05/af-22, af-06/af-24, af-08/af-26).
+- Checks: every snippet is in a Libro I chunk; no question is within token Jaccard 0.5 of
+  `eval_questions.jsonl`, `in_dev.jsonl`, `routing_dev2.jsonl` or another row of this set.
+- Known metadata issue: the bodies of Títulos XI and XII are tagged as Título X, Anexo 2 (the
+  `seccion` pattern of `compendio.yaml` expects the "Libro I, Título" breadcrumb), so a `titulo`
+  filter on XI/XII misses them.
+- Live hit = the snippet, with all whitespace removed, appears in a source the model saw (the
+  parser splits some words, e.g. "en lace").
+
+Results (2026-10-18, tenant with the 34-document corpus, generator gpt-5.4-mini):
+
+| Sources reach the model | `operativa` live hit | `v1_mixed` live hit |
+|---|---|---|
+| cut at 1500 chars (template default) | 16/20 | 11/19 |
+| uncut (`max_source_chars` 3400) | 18/20 | 12/19 |
+
+The two `operativa` gains (af-27, af-28) were retrieved before too: their answer sat past char
+1500 of the chunk. In-dev judge results did not regress (faithfulness 37/37, refusal 38/40); ood
+refusal went from 80/80 to 79/80.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
