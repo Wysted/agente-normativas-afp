@@ -62,15 +62,15 @@ probe_k: 3                      # passages per topic the probe keeps (1..20)
 # out_of_scope_below (or no evidence at all): the fixed message below, no retrieval and no
 # synthesis call (the analyzer still runs). The two thresholds come from
 # case/spensiones/calibration/report.json (pre-registered rules: p95 and p50 of the out-of-domain
-# dev set; see the README there). 0.6103 / 0.4442 are the report values (0.61034 / 0.44424)
-# rounded DOWN; rounding `out` down is the safe direction (fewer refusals). Valid ONLY for that corpus
+# dev set; see the README there). 0.6103 / 0.4557 are the report values (0.61034 / 0.45579, tenant
+# spensiones with Libro II, analyzed queries) rounded DOWN; rounding `out` down is the safe direction (fewer refusals). Valid ONLY for that corpus
 # snapshot, tenant, embedding model and profiles: recalibrate with cli.calibrate_evidence after any
 # re-ingest. They separate DOMAIN, not answerability (near-domain questions the corpus does not
 # cover still score above them and rely on the synthesis prompt's refusal).
 clarification:
   policy: evidence
   low_confidence_below: 0.6103
-  out_of_scope_below: 0.4442
+  out_of_scope_below: 0.4557
   out_of_scope_message: >-
     Solo puedo responder preguntas sobre la normativa del Sistema de Pensiones y del Seguro de
     Cesantia de Chile (Compendio de Normas, NCG, circulares, resoluciones y jurisprudencia), y no

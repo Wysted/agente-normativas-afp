@@ -1,8 +1,8 @@
 {
   "meta": {
-    "git": "1649e88",
+    "git": "56ffbcb",
     "agent": "spensiones-rag",
-    "tenant": "default",
+    "tenant": "spensiones",
     "query_input": "analyzed",
     "evidence_aggregate": "max",
     "probe_k": 3,
@@ -25,12 +25,12 @@
       "spensiones_jurisprudencia_indice"
     ],
     "ready_chunks": {
-      "spensiones_compendio": 1413,
-      "spensiones_ncg": 17,
-      "spensiones_circular": 13,
-      "spensiones_resolucion": 1,
+      "spensiones_compendio": 2400,
+      "spensiones_ncg": 198,
+      "spensiones_circular": 107,
+      "spensiones_resolucion": 114,
       "spensiones_jurisprudencia_nota": 0,
-      "spensiones_articulo_faq": 1,
+      "spensiones_articulo_faq": 8,
       "spensiones_jurisprudencia_indice": 57
     },
     "profile_fingerprints": {
@@ -43,15 +43,15 @@
       "spensiones_jurisprudencia_indice": "e8f72e7f8269a76077fca833f3bb1b5566d46fdee8fd3c279e61174bec1f09bb"
     },
     "profiles_files": {
-      "sha256": "4e5e06ce4584e15a4a596df2fb2e338e0c0a092f5108388bb99aa9a004eff11f",
+      "sha256": "b3fd2a59b40e366b621ac9ba1b3b8a0b893f58c595caaa680e8f2980574fcf84",
       "files": {
-        "articulo_faq.yaml": "af7ffe7b874acecede6e4d8fcc7eb3e4ef5c2c0d6255935d2e80cd0e260dcc8c",
-        "circular.yaml": "46ff3f8314721419e258e0441ac0f6e5f7890d6e5173c4d7ca6beb8a889ce99c",
-        "compendio.yaml": "85065c7c00fd3be3304e9e31d18c36180a93079c154b5408e2f926fdaef5d2a4",
-        "guia_jurisprudencia.yaml": "02662109a378ad78bd30171ad2ba8c4720b6ba1c8b546023dc08d56210b1c699",
-        "guia_jurisprudencia_nota.yaml": "1f1fdae9154e5b707d6556bf5b831f352ed4ffba76fc34a172897690875d1b0d",
-        "ncg.yaml": "5df8348a71de75dcd43a2ef2f20bcc732aabfb4941feb70aa3113d3e0571051e",
-        "resolucion.yaml": "0e9e14ade77d95dc61a642d0efdd3bfa4fb17aaf625e227bc21326259d267273"
+        "articulo_faq.yaml": "ca07ce613068a227abf950bf84575fc0861832e3d92557e225bfe8d69d7dc915",
+        "circular.yaml": "cdf655094ea73ec0f2921c858a7cef9c300aaab38f0127f6fd0c86d4444807c3",
+        "compendio.yaml": "b67c9fb49bf11cc21e29d0311c86e45897962d010c86bc0f4424f3b7582b59e5",
+        "guia_jurisprudencia.yaml": "5df06ebde1f3371b94932e6c6502c9452c2da1418880c88f1fa8f62be8c565a1",
+        "guia_jurisprudencia_nota.yaml": "6cab48c7b197be8452a9a019ed1c622574f00770797ac5c818428356b70499b5",
+        "ncg.yaml": "b22396c8e632600fd26f4b829d85c7bef65609091822dd1ea8a559584b989945",
+        "resolucion.yaml": "047cdf206b1d04c381e1f5a4ce5dc1d8ff70d851501fd5f2f3e66db4109d2c04"
       }
     },
     "embeddings_model": "BAAI/bge-m3",
@@ -62,7 +62,7 @@
       "case/spensiones/calibration/ood.jsonl": "c089f2570d8ef7256ae4730b2a815a0f434bd4afb98003eb47638338a80c448d",
       "case/spensiones/calibration/in_dev.jsonl": "cd172d837d9a19fe9a2a385ae5c41fe080a9de05e50a4557bac94b0301c57556"
     },
-    "analyzer_model": "gpt-5.4-mini"
+    "analyzer_model": "default (openai:gpt-5.4-mini)"
   },
   "score": "max over ALL the agent's topics of TopicEvidence.raw_score (the topic's evidence_aggregate of its probe_k similarities, without evidence_bias)",
   "caveats": [
@@ -75,10 +75,10 @@
   "distributions": {
     "in": {
       "n": 40.0,
-      "min": 0.5297841149439889,
+      "min": 0.5409767354116888,
       "max": 0.8083369503422974,
-      "mean": 0.6758094751808559,
-      "p5": 0.5856636485852996,
+      "mean": 0.6766533703631911,
+      "p5": 0.5867918079265849,
       "p25": 0.6503259535646477,
       "p50": 0.6803858590946386,
       "p75": 0.7064364578463771,
@@ -87,23 +87,23 @@
     },
     "out": {
       "n": 80.0,
-      "min": 0.2475859001998345,
-      "max": 0.6565143652575451,
-      "mean": 0.4446862335588636,
-      "p5": 0.2799405941349447,
-      "p25": 0.3852541710512094,
-      "p50": 0.444241853343252,
-      "p75": 0.5084629172190609,
+      "min": 0.2625769156985557,
+      "max": 0.6670985221862793,
+      "mean": 0.457370898345293,
+      "p5": 0.3120967480433302,
+      "p25": 0.39167329214693714,
+      "p50": 0.45579198266315646,
+      "p75": 0.5303594680021465,
       "p95": 0.6103444246681006,
-      "p99": 0.6388551089606304
+      "p99": 0.6630822732739078
     }
   },
-  "auroc": 0.9828125,
+  "auroc": 0.97875,
   "threshold": 0.6103444246681006,
   "threshold_interval": {
     "confidence": 0.95,
-    "lower": 0.5732638835906982,
-    "upper": 0.6565143652575451,
+    "lower": 0.5831554631180124,
+    "upper": 0.6670985221862793,
     "lower_rank": 72,
     "upper_rank": 80,
     "n": 80,
@@ -129,8 +129,14 @@
   },
   "out_above": [
     {
+      "id": "out-pens-03",
+      "score": 0.6670985221862793,
+      "topic": "compendio",
+      "question": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?"
+    },
+    {
       "id": "out-pens-01",
-      "score": 0.6565143652575451,
+      "score": 0.6620146628035306,
       "topic": "compendio",
       "question": "¿A qué edad me puedo jubilar si soy hombre?"
     },
@@ -141,12 +147,6 @@
       "question": "¿Cuántos días de aviso previo debo dar si renuncio a mi trabajo?"
     },
     {
-      "id": "out-pens-03",
-      "score": 0.6280718036911432,
-      "topic": "compendio",
-      "question": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?"
-    },
-    {
       "id": "out-labor-02",
       "score": 0.6273660028606085,
       "topic": "compendio",
@@ -155,16 +155,16 @@
   ],
   "in_below": [
     {
-      "id": "in-idx-38",
-      "score": 0.5297841149439889,
-      "topic": "compendio",
-      "question": "¿Qué criterios hay sobre las cuotas mortuorias?"
-    },
-    {
       "id": "in-idx-37",
       "score": 0.5409767354116888,
       "topic": "compendio",
       "question": "¿Dónde encuentro dictámenes sobre la posesión efectiva y las pensiones?"
+    },
+    {
+      "id": "in-idx-38",
+      "score": 0.5635399222373962,
+      "topic": "resolucion",
+      "question": "¿Qué criterios hay sobre las cuotas mortuorias?"
     },
     {
       "id": "in-idx-35",
@@ -175,11 +175,11 @@
   ],
   "out_of_scope": {
     "rule": "p50 of the 'out' scores (pre-registered); 'in' only reports",
-    "threshold": 0.444241853343252,
+    "threshold": 0.45579198266315646,
     "threshold_interval": {
       "confidence": 0.95,
-      "lower": 0.4108871343996269,
-      "upper": 0.4769455506238022,
+      "lower": 0.42499005794525146,
+      "upper": 0.4943729927014704,
       "lower_rank": 31,
       "upper_rank": 50,
       "n": 80,
@@ -201,8 +201,8 @@
       "out": {
         "n": 6,
         "min": 0.43892157077789307,
-        "median": 0.5332728195681768,
-        "max": 0.5815322745759661,
+        "median": 0.5386379068093209,
+        "max": 0.59252382427738,
         "above_low_confidence": 0,
         "below_out_of_scope": 1
       }
@@ -210,8 +210,8 @@
     "bank": {
       "out": {
         "n": 6,
-        "min": 0.4049437344074249,
-        "median": 0.4943030992952145,
+        "min": 0.41096532344818115,
+        "median": 0.49924784893840135,
         "max": 0.5922914743423462,
         "above_low_confidence": 0,
         "below_out_of_scope": 1
@@ -220,8 +220,8 @@
     "chat": {
       "out": {
         "n": 10,
-        "min": 0.3889730092577044,
-        "median": 0.42227636047163747,
+        "min": 0.392150342464447,
+        "median": 0.43084970116615295,
         "max": 0.4769455506238022,
         "above_low_confidence": 0,
         "below_out_of_scope": 7
@@ -250,8 +250,8 @@
     "code": {
       "out": {
         "n": 10,
-        "min": 0.35376719511942956,
-        "median": 0.4455426675138803,
+        "min": 0.36508296832195164,
+        "median": 0.4500565593812345,
         "max": 0.5269495719924189,
         "above_low_confidence": 0,
         "below_out_of_scope": 5
@@ -270,9 +270,9 @@
     "gen": {
       "out": {
         "n": 12,
-        "min": 0.24812210334439022,
-        "median": 0.3053095311550035,
-        "max": 0.4526754752598895,
+        "min": 0.2625769156985557,
+        "median": 0.3331542411496242,
+        "max": 0.46401226520538663,
         "above_low_confidence": 0,
         "below_out_of_scope": 11
       }
@@ -280,7 +280,7 @@
     "idx": {
       "in": {
         "n": 6,
-        "min": 0.5297841149439889,
+        "min": 0.5409767354116888,
         "median": 0.6041733407333525,
         "max": 0.7015509636596735,
         "above_low_confidence": 3,
@@ -291,7 +291,7 @@
       "out": {
         "n": 6,
         "min": 0.3499886602156562,
-        "median": 0.48408060376600137,
+        "median": 0.48860063259557596,
         "max": 0.53264221743597,
         "above_low_confidence": 0,
         "below_out_of_scope": 2
@@ -300,8 +300,8 @@
     "labor": {
       "out": {
         "n": 6,
-        "min": 0.44043994304895817,
-        "median": 0.5226110891570371,
+        "min": 0.45540318158846094,
+        "median": 0.5386003104979831,
         "max": 0.6341608762741089,
         "above_low_confidence": 2,
         "below_out_of_scope": 1
@@ -320,9 +320,9 @@
     "other": {
       "out": {
         "n": 12,
-        "min": 0.2475859001998345,
-        "median": 0.35415959440126277,
-        "max": 0.4285175885424859,
+        "min": 0.2910491612866273,
+        "median": 0.38457141133284944,
+        "max": 0.4361550639913997,
         "above_low_confidence": 0,
         "below_out_of_scope": 12
       }
@@ -330,9 +330,9 @@
     "pens": {
       "out": {
         "n": 6,
-        "min": 0.4962501221150387,
+        "min": 0.5302439015958377,
         "median": 0.5828955173492432,
-        "max": 0.6565143652575451,
+        "max": 0.6670985221862793,
         "above_low_confidence": 2,
         "below_out_of_scope": 0
       }
@@ -350,9 +350,9 @@
     "tax": {
       "out": {
         "n": 6,
-        "min": 0.45365945580537403,
-        "median": 0.524972238205183,
-        "max": 0.577868640422821,
+        "min": 0.5208886861801147,
+        "median": 0.5458923525504717,
+        "max": 0.6073712706565857,
         "above_low_confidence": 0,
         "below_out_of_scope": 0
       }
@@ -417,7 +417,7 @@
     "out-tax-06": "¿Qué es el impuesto territorial y cómo se calcula?",
     "out-labor-01": "¿Cuántos días de aviso previo debo dar si renuncio a mi trabajo?",
     "out-labor-02": "¿Cómo se calcula la indemnización por años de servicio en un despido por necesidades de la empresa?",
-    "out-labor-03": "¿Cuántos días de vacaciones me corresponden por ley al año en el Sistema de Pensiones de Chile?",
+    "out-labor-03": "¿Cuántos días de vacaciones me corresponden por ley al año?",
     "out-labor-04": "¿Cuál es la jornada laboral máxima semanal en Chile?",
     "out-labor-05": "¿Cómo se pagan las horas extra y qué recargo tienen?",
     "out-labor-06": "¿Puedo ser despedido durante el fuero maternal?",
@@ -433,7 +433,7 @@
     "out-bank-04": "¿Qué es el CAE de un crédito universitario?",
     "out-bank-05": "¿Cómo abro una cuenta corriente en un banco?",
     "out-bank-06": "¿Qué significa estar en DICOM y cómo salgo?",
-    "out-pens-01": "¿A qué edad me puedo jubilar si soy hombre en el Sistema de Pensiones de Chile?",
+    "out-pens-01": "¿A qué edad me puedo jubilar si soy hombre?",
     "out-pens-02": "¿Cuáles son los requisitos para recibir la Pensión Garantizada Universal?",
     "out-pens-03": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?",
     "out-pens-04": "¿Cuál es el monto de la pensión de alimentos que debo pagar a mi hijo?",
@@ -650,6 +650,20 @@
       "label": "in"
     },
     {
+      "id": "out-pens-03",
+      "score": 0.6670985221862793,
+      "topic": "compendio",
+      "question": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?",
+      "label": "out"
+    },
+    {
+      "id": "out-pens-01",
+      "score": 0.6620146628035306,
+      "topic": "compendio",
+      "question": "¿A qué edad me puedo jubilar si soy hombre?",
+      "label": "out"
+    },
+    {
       "id": "in-ncg-17",
       "score": 0.6609202022183125,
       "topic": "ncg",
@@ -669,13 +683,6 @@
       "topic": "ncg",
       "question": "¿Qué se agrega a la masa hereditaria cuando no quedan beneficiarios con derecho a pensión de sobrevivencia?",
       "label": "in"
-    },
-    {
-      "id": "out-pens-01",
-      "score": 0.6565143652575451,
-      "topic": "compendio",
-      "question": "¿A qué edad me puedo jubilar si soy hombre?",
-      "label": "out"
     },
     {
       "id": "in-idx-40",
@@ -741,13 +748,6 @@
       "label": "in"
     },
     {
-      "id": "out-pens-03",
-      "score": 0.6280718036911432,
-      "topic": "compendio",
-      "question": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?",
-      "label": "out"
-    },
-    {
       "id": "out-labor-02",
       "score": 0.6273660028606085,
       "topic": "compendio",
@@ -776,6 +776,20 @@
       "label": "out"
     },
     {
+      "id": "out-tax-01",
+      "score": 0.6073712706565857,
+      "topic": "compendio",
+      "question": "¿Cómo declaro el impuesto a la renta en la Operación Renta?",
+      "label": "out"
+    },
+    {
+      "id": "out-abroad-04",
+      "score": 0.59252382427738,
+      "topic": "compendio",
+      "question": "¿Cuánto se necesita cotizar para jubilarse en México con el IMSS?",
+      "label": "out"
+    },
+    {
       "id": "out-bank-03",
       "score": 0.5922914743423462,
       "topic": "compendio",
@@ -791,16 +805,16 @@
     },
     {
       "id": "out-abroad-03",
-      "score": 0.5815322745759661,
-      "topic": "compendio",
+      "score": 0.5831554631180124,
+      "topic": "articulo_faq",
       "question": "¿Cómo se calcula la pensión del Seguro Social en Estados Unidos?",
       "label": "out"
     },
     {
-      "id": "out-tax-01",
-      "score": 0.577868640422821,
-      "topic": "compendio",
-      "question": "¿Cómo declaro el impuesto a la renta en la Operación Renta?",
+      "id": "out-tax-04",
+      "score": 0.5785660664945327,
+      "topic": "ncg",
+      "question": "¿Cuándo vence el plazo para pagar el IVA mensual?",
       "label": "out"
     },
     {
@@ -811,18 +825,25 @@
       "label": "out"
     },
     {
+      "id": "out-labor-05",
+      "score": 0.5709840655326843,
+      "topic": "compendio",
+      "question": "¿Cómo se pagan las horas extra y qué recargo tienen?",
+      "label": "out"
+    },
+    {
       "id": "out-abroad-01",
-      "score": 0.5623588040302758,
+      "score": 0.5689480304718058,
       "topic": "compendio",
       "question": "¿Cuál es la edad de jubilación en España y cuántos años hay que cotizar?",
       "label": "out"
     },
     {
-      "id": "out-abroad-04",
-      "score": 0.561648640730897,
-      "topic": "compendio",
-      "question": "¿Cuánto se necesita cotizar para jubilarse en México con el IMSS?",
-      "label": "out"
+      "id": "in-idx-38",
+      "score": 0.5635399222373962,
+      "topic": "resolucion",
+      "question": "¿Qué criterios hay sobre las cuotas mortuorias?",
+      "label": "in"
     },
     {
       "id": "out-pens-06",
@@ -832,10 +853,10 @@
       "label": "out"
     },
     {
-      "id": "out-tax-04",
-      "score": 0.5516234533450137,
+      "id": "out-tax-03",
+      "score": 0.5541649195054136,
       "topic": "compendio",
-      "question": "¿Cuándo vence el plazo para pagar el IVA mensual?",
+      "question": "¿Cómo emito una boleta de honorarios electrónica en el SII?",
       "label": "out"
     },
     {
@@ -846,17 +867,17 @@
       "label": "in"
     },
     {
-      "id": "out-labor-05",
-      "score": 0.538090705871582,
-      "topic": "compendio",
-      "question": "¿Cómo se pagan las horas extra y qué recargo tienen?",
+      "id": "out-tax-02",
+      "score": 0.53761978559553,
+      "topic": "ncg",
+      "question": "¿Qué gastos puedo rebajar de mi declaración de impuestos como empresa?",
       "label": "out"
     },
     {
-      "id": "out-tax-02",
-      "score": 0.537487224861599,
+      "id": "out-tax-06",
+      "score": 0.5328449010848999,
       "topic": "compendio",
-      "question": "¿Qué gastos puedo rebajar de mi declaración de impuestos como empresa?",
+      "question": "¿Qué es el impuesto territorial y cómo se calcula?",
       "label": "out"
     },
     {
@@ -874,18 +895,18 @@
       "label": "out"
     },
     {
+      "id": "out-pens-02",
+      "score": 0.5307061672210731,
+      "topic": "compendio",
+      "question": "¿Cuáles son los requisitos para recibir la Pensión Garantizada Universal?",
+      "label": "out"
+    },
+    {
       "id": "out-pens-05",
       "score": 0.5302439015958377,
       "topic": "compendio",
       "question": "¿Qué AFP tiene mejor rentabilidad este año según los analistas?",
       "label": "out"
-    },
-    {
-      "id": "in-idx-38",
-      "score": 0.5297841149439889,
-      "topic": "compendio",
-      "question": "¿Qué criterios hay sobre las cuotas mortuorias?",
-      "label": "in"
     },
     {
       "id": "out-code-09",
@@ -895,17 +916,24 @@
       "label": "out"
     },
     {
-      "id": "out-tax-06",
-      "score": 0.5124572515487671,
-      "topic": "circular",
-      "question": "¿Qué es el impuesto territorial y cómo se calcula?",
+      "id": "out-tax-05",
+      "score": 0.5208886861801147,
+      "topic": "compendio",
+      "question": "¿Cómo inicio actividades en el SII para mi emprendimiento?",
       "label": "out"
     },
     {
-      "id": "out-labor-03",
-      "score": 0.5071314724424922,
-      "topic": "compendio",
-      "question": "¿Cuántos días de vacaciones me corresponden por ley al año?",
+      "id": "out-isapre-04",
+      "score": 0.5094777941703796,
+      "topic": "circular",
+      "question": "¿Cómo reclamo ante la Superintendencia de Salud por una cobertura negada?",
+      "label": "out"
+    },
+    {
+      "id": "out-abroad-02",
+      "score": 0.508327783146836,
+      "topic": "ncg",
+      "question": "¿Cómo funciona el sistema de jubilaciones de ANSES en Argentina?",
       "label": "out"
     },
     {
@@ -916,24 +944,10 @@
       "label": "out"
     },
     {
-      "id": "out-abroad-02",
-      "score": 0.5048969984054565,
+      "id": "out-labor-03",
+      "score": 0.5036365239728553,
       "topic": "compendio",
-      "question": "¿Cómo funciona el sistema de jubilaciones de ANSES en Argentina?",
-      "label": "out"
-    },
-    {
-      "id": "out-tax-03",
-      "score": 0.5029596390104087,
-      "topic": "circular",
-      "question": "¿Cómo emito una boleta de honorarios electrónica en el SII?",
-      "label": "out"
-    },
-    {
-      "id": "out-isapre-04",
-      "score": 0.5004377365112305,
-      "topic": "compendio",
-      "question": "¿Cómo reclamo ante la Superintendencia de Salud por una cobertura negada?",
+      "question": "¿Cuántos días de vacaciones me corresponden por ley al año?",
       "label": "out"
     },
     {
@@ -944,10 +958,17 @@
       "label": "out"
     },
     {
-      "id": "out-pens-02",
-      "score": 0.4962501221150387,
+      "id": "out-bank-01",
+      "score": 0.4983498453110373,
       "topic": "compendio",
-      "question": "¿Cuáles son los requisitos para recibir la Pensión Garantizada Universal?",
+      "question": "¿Cómo solicito un crédito hipotecario a 30 años?",
+      "label": "out"
+    },
+    {
+      "id": "out-abroad-05",
+      "score": 0.49546623175933746,
+      "topic": "articulo_faq",
+      "question": "¿Cómo funciona la Seguridad Social en Alemania para los jubilados?",
       "label": "out"
     },
     {
@@ -955,20 +976,6 @@
       "score": 0.4943729927014704,
       "topic": "compendio",
       "question": "Muéstrame una consulta SQL con un LEFT JOIN entre dos tablas.",
-      "label": "out"
-    },
-    {
-      "id": "out-bank-01",
-      "score": 0.4884603460246636,
-      "topic": "compendio",
-      "question": "¿Cómo solicito un crédito hipotecario a 30 años?",
-      "label": "out"
-    },
-    {
-      "id": "out-abroad-05",
-      "score": 0.4870729736729258,
-      "topic": "compendio",
-      "question": "¿Cómo funciona la Seguridad Social en Alemania para los jubilados?",
       "label": "out"
     },
     {
@@ -980,7 +987,7 @@
     },
     {
       "id": "out-code-01",
-      "score": 0.4748385548591614,
+      "score": 0.47486151679937616,
       "topic": "compendio",
       "question": "¿Cómo invierto una lista en Python?",
       "label": "out"
@@ -1001,7 +1008,7 @@
     },
     {
       "id": "out-chat-06",
-      "score": 0.4690173286785295,
+      "score": 0.47121907684860387,
       "topic": "compendio",
       "question": "¿Qué puedes hacer?",
       "label": "out"
@@ -1021,17 +1028,24 @@
       "label": "out"
     },
     {
-      "id": "out-tax-05",
-      "score": 0.45365945580537403,
+      "id": "out-gen-03",
+      "score": 0.46401226520538663,
       "topic": "compendio",
-      "question": "¿Cómo inicio actividades en el SII para mi emprendimiento?",
+      "question": "Explícame cómo funciona la fotosíntesis.",
       "label": "out"
     },
     {
-      "id": "out-gen-03",
-      "score": 0.4526754752598895,
-      "topic": "compendio",
-      "question": "Explícame cómo funciona la fotosíntesis.",
+      "id": "out-chat-04",
+      "score": 0.456180783737852,
+      "topic": "circular",
+      "question": "¿Cómo te llamas?",
+      "label": "out"
+    },
+    {
+      "id": "out-labor-04",
+      "score": 0.45540318158846094,
+      "topic": "resolucion",
+      "question": "¿Cuál es la jornada laboral máxima semanal en Chile?",
       "label": "out"
     },
     {
@@ -1042,17 +1056,31 @@
       "label": "out"
     },
     {
-      "id": "out-labor-04",
-      "score": 0.44043994304895817,
-      "topic": "compendio",
-      "question": "¿Cuál es la jornada laboral máxima semanal en Chile?",
-      "label": "out"
-    },
-    {
       "id": "out-abroad-06",
       "score": 0.43892157077789307,
       "topic": "compendio",
       "question": "¿Qué es la AFORE y cómo elijo una en México?",
+      "label": "out"
+    },
+    {
+      "id": "out-other-01",
+      "score": 0.4361550639913997,
+      "topic": "compendio",
+      "question": "Dame una receta de empanadas de pino.",
+      "label": "out"
+    },
+    {
+      "id": "out-code-03",
+      "score": 0.43582318531939956,
+      "topic": "compendio",
+      "question": "¿Qué diferencia hay entre una lista y una tupla en Python?",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-08",
+      "score": 0.43290263414382935,
+      "topic": "circular",
+      "question": "¿Eres una persona o un robot?",
       "label": "out"
     },
     {
@@ -1063,6 +1091,13 @@
       "label": "out"
     },
     {
+      "id": "out-chat-02",
+      "score": 0.42862187965177057,
+      "topic": "compendio",
+      "question": "Buenos días",
+      "label": "out"
+    },
+    {
       "id": "out-other-09",
       "score": 0.4285175885424859,
       "topic": "compendio",
@@ -1070,38 +1105,24 @@
       "label": "out"
     },
     {
-      "id": "out-code-03",
-      "score": 0.4267954015846911,
-      "topic": "compendio",
-      "question": "¿Qué diferencia hay entre una lista y una tupla en Python?",
+      "id": "out-code-08",
+      "score": 0.42499005794525146,
+      "topic": "circular",
+      "question": "¿Para qué sirve el comando docker compose up?",
       "label": "out"
     },
     {
-      "id": "out-chat-08",
-      "score": 0.42265298501569015,
-      "topic": "compendio",
-      "question": "¿Eres una persona o un robot?",
+      "id": "out-other-02",
+      "score": 0.4194507098852771,
+      "topic": "resolucion",
+      "question": "¿Quién ganó la Copa América de 2015?",
       "label": "out"
     },
     {
-      "id": "out-chat-04",
-      "score": 0.4218997359275848,
-      "topic": "compendio",
-      "question": "¿Cómo te llamas?",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-02",
-      "score": 0.4191319000203557,
-      "topic": "compendio",
-      "question": "Buenos días",
-      "label": "out"
-    },
-    {
-      "id": "out-other-01",
-      "score": 0.4184233199610312,
-      "topic": "compendio",
-      "question": "Dame una receta de empanadas de pino.",
+      "id": "out-bank-06",
+      "score": 0.41096532344818115,
+      "topic": "ncg",
+      "question": "¿Qué significa estar en DICOM y cómo salgo?",
       "label": "out"
     },
     {
@@ -1113,23 +1134,30 @@
     },
     {
       "id": "out-gen-07",
-      "score": 0.40794517374202255,
-      "topic": "compendio",
+      "score": 0.4101816767345867,
+      "topic": "resolucion",
       "question": "¿Qué significa la palabra efímero?",
       "label": "out"
     },
     {
-      "id": "out-bank-06",
-      "score": 0.4049437344074249,
-      "topic": "jurisprudencia_indice",
-      "question": "¿Qué significa estar en DICOM y cómo salgo?",
+      "id": "out-code-05",
+      "score": 0.40726372599601746,
+      "topic": "resolucion",
+      "question": "¿Cómo creo una rama nueva en git?",
       "label": "out"
     },
     {
       "id": "out-other-11",
-      "score": 0.4018867553405028,
-      "topic": "compendio",
+      "score": 0.40490598620105245,
+      "topic": "circular",
       "question": "Ayúdame a redactar un saludo de cumpleaños para mi hermana.",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-01",
+      "score": 0.401825213541104,
+      "topic": "ncg",
+      "question": "Hola, ¿cómo estás?",
       "label": "out"
     },
     {
@@ -1140,31 +1168,17 @@
       "label": "out"
     },
     {
-      "id": "out-code-08",
-      "score": 0.3988140285722007,
-      "topic": "compendio",
-      "question": "¿Para qué sirve el comando docker compose up?",
-      "label": "out"
-    },
-    {
-      "id": "out-code-05",
-      "score": 0.39807937128061555,
-      "topic": "compendio",
-      "question": "¿Cómo creo una rama nueva en git?",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-01",
-      "score": 0.394213008190752,
-      "topic": "ncg",
-      "question": "Hola, ¿cómo estás?",
-      "label": "out"
-    },
-    {
       "id": "out-code-10",
       "score": 0.3929311633110074,
       "topic": "compendio",
       "question": "¿Qué es la complejidad algorítmica O(n log n)?",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-10",
+      "score": 0.392150342464447,
+      "topic": "resolucion",
+      "question": "jajaja qué bueno",
       "label": "out"
     },
     {
@@ -1175,15 +1189,15 @@
       "label": "out"
     },
     {
-      "id": "out-chat-10",
-      "score": 0.3889730092577044,
+      "id": "out-other-08",
+      "score": 0.3861407088763158,
       "topic": "compendio",
-      "question": "jajaja qué bueno",
+      "question": "¿Qué ejercicios sirven para fortalecer la espalda?",
       "label": "out"
     },
     {
       "id": "out-other-07",
-      "score": 0.37409765643172443,
+      "score": 0.3830021137893831,
       "topic": "compendio",
       "question": "¿Cómo cuido una planta suculenta?",
       "label": "out"
@@ -1196,6 +1210,13 @@
       "label": "out"
     },
     {
+      "id": "out-code-07",
+      "score": 0.36508296832195164,
+      "topic": "compendio",
+      "question": "¿Cómo hago un servidor HTTP simple en Go?",
+      "label": "out"
+    },
+    {
       "id": "out-other-12",
       "score": 0.36166889553275405,
       "topic": "compendio",
@@ -1203,17 +1224,17 @@
       "label": "out"
     },
     {
-      "id": "out-code-07",
-      "score": 0.35376719511942956,
-      "topic": "compendio",
-      "question": "¿Cómo hago un servidor HTTP simple en Go?",
+      "id": "out-gen-10",
+      "score": 0.3551218807697296,
+      "topic": "resolucion",
+      "question": "¿Cuál es la diferencia entre un virus y una bacteria?",
       "label": "out"
     },
     {
-      "id": "out-gen-10",
-      "score": 0.35345888137817383,
-      "topic": "compendio",
-      "question": "¿Cuál es la diferencia entre un virus y una bacteria?",
+      "id": "out-other-04",
+      "score": 0.35443854331970215,
+      "topic": "resolucion",
+      "question": "¿Cómo se juega al ajedrez?",
       "label": "out"
     },
     {
@@ -1224,24 +1245,38 @@
       "label": "out"
     },
     {
-      "id": "out-other-08",
-      "score": 0.3466502932697715,
-      "topic": "compendio",
-      "question": "¿Qué ejercicios sirven para fortalecer la espalda?",
+      "id": "out-gen-11",
+      "score": 0.3450521940055149,
+      "topic": "resolucion",
+      "question": "¿Cuántos kilómetros mide el ecuador terrestre?",
       "label": "out"
     },
     {
-      "id": "out-other-04",
-      "score": 0.3439448866877033,
-      "topic": "compendio",
-      "question": "¿Cómo se juega al ajedrez?",
+      "id": "out-gen-12",
+      "score": 0.33614182472229004,
+      "topic": "resolucion",
+      "question": "¿Por qué el cielo es azul?",
+      "label": "out"
+    },
+    {
+      "id": "out-gen-04",
+      "score": 0.3301666575769584,
+      "topic": "resolucion",
+      "question": "¿Cuántos planetas tiene el sistema solar?",
       "label": "out"
     },
     {
       "id": "out-gen-08",
-      "score": 0.32173017626196687,
-      "topic": "compendio",
+      "score": 0.32560559067759454,
+      "topic": "circular",
       "question": "¿Cómo se forma un arcoíris?",
+      "label": "out"
+    },
+    {
+      "id": "out-other-10",
+      "score": 0.323772797696972,
+      "topic": "resolucion",
+      "question": "¿Cuál es el clima típico de Santiago en verano?",
       "label": "out"
     },
     {
@@ -1252,31 +1287,17 @@
       "label": "out"
     },
     {
-      "id": "out-gen-04",
-      "score": 0.3122276160784847,
-      "topic": "compendio",
-      "question": "¿Cuántos planetas tiene el sistema solar?",
+      "id": "out-gen-06",
+      "score": 0.3132045157673672,
+      "topic": "resolucion",
+      "question": "¿Cuál es el río más largo del mundo?",
       "label": "out"
     },
     {
-      "id": "out-other-02",
-      "score": 0.30329478324149006,
+      "id": "out-other-03",
+      "score": 0.2910491612866273,
       "topic": "compendio",
-      "question": "¿Quién ganó la Copa América de 2015?",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-11",
-      "score": 0.29839144623152225,
-      "topic": "compendio",
-      "question": "¿Cuántos kilómetros mide el ecuador terrestre?",
-      "label": "out"
-    },
-    {
-      "id": "out-other-10",
-      "score": 0.287444378803168,
-      "topic": "compendio",
-      "question": "¿Cuál es el clima típico de Santiago en verano?",
+      "question": "¿Cuál es el mejor lugar para visitar en la Patagonia?",
       "label": "out"
     },
     {
@@ -1287,38 +1308,17 @@
       "label": "out"
     },
     {
-      "id": "out-gen-12",
-      "score": 0.2810081327261966,
-      "topic": "compendio",
-      "question": "¿Por qué el cielo es azul?",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-01",
-      "score": 0.259657360901158,
-      "topic": "compendio",
-      "question": "¿Cuál es la capital de Australia?",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-06",
-      "score": 0.2551919373984304,
-      "topic": "compendio",
-      "question": "¿Cuál es el río más largo del mundo?",
-      "label": "out"
-    },
-    {
       "id": "out-gen-02",
-      "score": 0.24812210334439022,
-      "topic": "compendio",
+      "score": 0.2701845249588647,
+      "topic": "circular",
       "question": "¿Quién escribió Cien años de soledad?",
       "label": "out"
     },
     {
-      "id": "out-other-03",
-      "score": 0.2475859001998345,
-      "topic": "compendio",
-      "question": "¿Cuál es el mejor lugar para visitar en la Patagonia?",
+      "id": "out-gen-01",
+      "score": 0.2625769156985557,
+      "topic": "resolucion",
+      "question": "¿Cuál es la capital de Australia?",
       "label": "out"
     }
   ]
