@@ -19,6 +19,7 @@ from agintis.modules.agents.rag_chat import (
     load_agent_specs,
     parse_agent_spec,
     rag_chat_runners,
+    roles_used,
     validate_agent_specs,
 )
 from agintis.modules.knowledge.api import (
@@ -28,6 +29,7 @@ from agintis.modules.knowledge.api import (
     RagProfileRegistry,
     load_profiles_dir,
 )
+from agintis.platform.llm import ChatRole
 from tests.fakes.knowledge import InMemoryChunkRepository
 from tests.fakes.llm import chat_models_for
 from tests.fakes.retrieval import FakeRetrieval
@@ -496,8 +498,10 @@ class TestSpensionesAgent:
         assert "SOLO el valor SC" in hint
         assert "nunca uses SP" in hint
 
-    def test_it_builds_the_runner_with_the_evidence_router_and_no_router_model(self) -> None:
+    def test_it_builds_the_runner_with_the_evidence_router_and_the_merge_tiebreak(self) -> None:
         spec, registry = self._load()
+        assert spec.merge_tiebreak == "llm"
+        assert ChatRole.ROUTER in roles_used(spec)  # the tie-break, not the router
         probe = ProbeProfiles(InMemoryChunkRepository(), DeterministicFakeEmbedding(size=4))
         deps = RagChatDeps(chat_models_for(), FakeRetrieval(), probe=probe)
 
