@@ -88,17 +88,9 @@ clarification:
   # so the best 3 topics are searched whatever evidence_margin says.
   low_scope_max_topics: 3
 primary_weight: 2               # merge: the primary topic contributes 2 hits per round, others 1
-# Merge tie-break: on EVERY merge with 2+ topics with sources, the ROUTER model reads their top
-# passages and picks the primary (up to 1 + max_rewrites ROUTER calls per turn). In the normal bands
-# the candidates are within evidence_margin (near-tied); in the low scope band up to
-# low_scope_max_topics (3) are sent and they are not near-tied. Why: the max cosine favours the big
-# compendio profile and no score transform fixed it. Offline on the dev sets, with gpt-5.4-mini as
-# the ROUTER model (default temperature): routed MRR routing_dev2 .522 -> .605, retrieval_dev .659 ->
-# .669, afiliacion and cotizaciones unchanged. That measurement covered only 2-topic selections on
-# the first attempt: the low band with 3 candidates and the rewrite rounds are unmeasured, and the
-# live guard covers them. `cli.eval --route` ignores merge_tiebreak (routed retrieval and the
-# routing cost): that step was measured offline. Accepted as a documented exception: afiliacion
-# compendio hit@1 34/39 vs the floor of 35 (two questions whose answer no topic retrieves).
+# Merge tie-break: on every merge with 2+ topics with sources, the ROUTER model reads their top
+# passages and picks the primary (the max cosine favours the big compendio). Measurements, the
+# accepted exception and what is unmeasured: calibration/README.md, "Merge tie-break".
 merge_tiebreak: llm
 sufficiency: relevance          # judge the hits' own evidence (rerank score only; no reranker = no signal = always sufficient)
 min_rerank_score: 0.1           # relevance threshold when a reranker scored the hits (uncalibrated)
