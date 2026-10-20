@@ -49,9 +49,14 @@ is empty on purpose (a hit is the snippet). It is a dev set for retrieval and an
   or any score. Some facts are asked once per slice (af-05/af-22, af-06/af-24, af-08/af-26).
 - Checks: every snippet is in a Libro I chunk; no question is within token Jaccard 0.5 of
   `eval_questions.jsonl`, `in_dev.jsonl`, `routing_dev2.jsonl` or another row of this set.
-- Known metadata issue: the bodies of Títulos XI and XII are tagged as Título X, Anexo 2 (the
-  `seccion` pattern of `compendio.yaml` expects the "Libro I, Título" breadcrumb), so a `titulo`
-  filter on XI/XII misses them.
+- Fixed metadata issue (2026-10-20): some Títulos have no "Libro I, Título" breadcrumb, only a
+  bare "Título XI ..." heading, so their bodies were tagged as the previous Título. In Libro I,
+  V went from 4 to 70 chunks (66 had been tagged IV), XI from 0 to 79 and XII from 3 to 19. In
+  Libro II, III went from 1 to 11. No other chunk changed Título.
+  - Accepted as a documented exception: routed MRR@10 (router order, no tie-break) dropped on
+    `routing_dev2` (.522 -> .508) and `afiliacion_dev` (.564 -> .548), below the floor of -0.01.
+  - Two questions explain it (d2-ncg-02, af-37): compendio now ranks above ncg, and the
+    matching source moves from 1st to 3rd of the 8 the model sees. Total hit@1 is unchanged.
 - Live hit = the snippet, with all whitespace removed, appears in a source the model saw (the
   parser splits some words, e.g. "en lace").
 
