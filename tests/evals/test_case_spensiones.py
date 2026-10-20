@@ -42,10 +42,11 @@ QUESTIONS: list[dict[str, Any]] = (
     else []
 )
 
-# sample id -> (profile, chunks in the reference report). The only divergence is documented in
-# `test_resolution_card_carries_the_heading_prefix_the_reference_left_out`.
+# sample id -> (profile, chunks in the reference report). One divergence is documented in
+# `test_resolution_card_carries_the_heading_prefix_the_reference_left_out`; the other is Libro I,
+# 1413 -> 1412 once the bare "Título XI ..." headings open their own section.
 REFERENCE_CHUNK_COUNTS = {
-    "compendio-sp-libro-i": ("spensiones_compendio", 1413),
+    "compendio-sp-libro-i": ("spensiones_compendio", 1412),
     "circular-2425": ("spensiones_circular", 9),
     "circular-cafp-100": ("spensiones_circular", 4),
     "ncg-sp-372": ("spensiones_ncg", 17),

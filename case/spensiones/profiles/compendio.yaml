@@ -38,8 +38,11 @@ chunker_params:
   levels:
     - name: seccion
       depth: 0
-      # Breadcrumb printed at the start of each section page: Titulo / Letra / Anexos.
-      pattern: '^Libro (?P<bc_libro>[IVX]+)\.?, T[ií]tulo (?P<titulo>[IVXL]+)\.?(?:, Letra (?P<letra>[A-Z](?:\.\d)?))?(?:, Cap[ií]tulo (?P<bc_capitulo>[IVXL]+))?(?P<anexos>, Anexos)?(?:,?\s+(?P<seccion_nombre>\S.*?))?\s*$'
+      # Breadcrumb printed at the start of each section page: Titulo / Letra / Anexos. Some
+      # Títulos have no breadcrumb, only a bare "Título XI Recaudación ..." heading (Libro I V,
+      # XI, XII; Libro II III, XI, XII): without the "Libro X, " prefix, a capital must follow
+      # the numeral and the line must not be a cross-reference ("..., del Libro V del presente").
+      pattern: '^(?:Libro (?P<bc_libro>[IVX]+)\.?, |(?=T[ií]tulo [IVXL]+ [A-ZÁÉÍÓÚÑ])(?!.*\b(?:de este|de esta|del presente|de la presente|del Libro)\b))T[ií]tulo (?P<titulo>[IVXL]+)\.?(?:, Letra (?P<letra>[A-Z](?:\.\d)?))?(?:, Cap[ií]tulo (?P<bc_capitulo>[IVXL]+))?(?P<anexos>, Anexos)?(?:,?\s+(?P<seccion_nombre>\S.*?))?\s*$'
       heading_template: 'Título {titulo}{letra?, Letra {letra}}{seccion_nombre? {seccion_nombre:70}}'
       role: context              # sets Título/Letra for what follows; repeated on every section page
       reset_on_change: [titulo, letra, anexos]   # closes the open Capítulo only when these change
