@@ -105,6 +105,14 @@ Offline, routed MRR@10 (simulated from the hybrid hits, 2026-10-19):
   The tie-break misses it on `afiliacion_dev` only (34 against 36), and was accepted as an
   exception: MRR does not move there.
 - The cross-encoder rerank wins everywhere but took 21 s per question on CPU; it needs a GPU.
+- Reruns (2026-10-20): two more tie-break runs gave identical picks, at .592 / .676 / .564 / .742
+  with compendio hit@1 35 on `afiliacion_dev`, so the gain holds. They differ from the first run
+  by a few picks: treat one LLM run as good to about one or two questions per set.
+- Rejected variants:
+  - a 3rd candidate (the next topic by router score): it recovers missed topics but loses
+    cotizaciones, and with it every question costs a call;
+  - `deepseek-flash` as the tie-break model (thinking off, temperature 0): below the floor on
+    `retrieval_dev`, and not deterministic (51 of 56 picks agree between two runs).
 - Live guard (same commands and models as the Libro II run): live hit 18/20, 12/19 and 18/20,
   unchanged; in-dev judge faithfulness 35/37, refusal 38/40, citation 39/39; ood refusal 78/80.
   The primary source changed in 10 of 179 questions. The three judge regressions had identical
