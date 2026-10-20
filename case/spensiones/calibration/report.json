@@ -1,6 +1,6 @@
 {
   "meta": {
-    "git": "56ffbcb",
+    "git": "a522d8b",
     "agent": "spensiones-rag",
     "tenant": "spensiones",
     "query_input": "analyzed",
@@ -34,7 +34,7 @@
       "spensiones_jurisprudencia_indice": 57
     },
     "profile_fingerprints": {
-      "spensiones_compendio": "6e832ac6587b322bd12fb776eb419e3987fb3ac86b31c33e03d3d138b07e58e4",
+      "spensiones_compendio": "e7991051d536dd3f238fe785a9dfafbbd19403b64d5b08ee6bd5c779499cff19",
       "spensiones_ncg": "937d9db1c0437be443d12ffe89eb5815217a1cf3f2a344febaf0883ea5c74903",
       "spensiones_circular": "62803ad70d4651b243b08345e20f1de15f83945a61a92f56d0406c65a1b39275",
       "spensiones_resolucion": "2e335e73383c663f3229bbd2298fe6a7160e378d733f31d13dd06eb480fab93f",
@@ -43,11 +43,11 @@
       "spensiones_jurisprudencia_indice": "e8f72e7f8269a76077fca833f3bb1b5566d46fdee8fd3c279e61174bec1f09bb"
     },
     "profiles_files": {
-      "sha256": "b3fd2a59b40e366b621ac9ba1b3b8a0b893f58c595caaa680e8f2980574fcf84",
+      "sha256": "6b7c1e394ae9a60cbcfbbe5286f4df5055d50342156826baa5adf0b28c4ea0a3",
       "files": {
         "articulo_faq.yaml": "ca07ce613068a227abf950bf84575fc0861832e3d92557e225bfe8d69d7dc915",
         "circular.yaml": "cdf655094ea73ec0f2921c858a7cef9c300aaab38f0127f6fd0c86d4444807c3",
-        "compendio.yaml": "b67c9fb49bf11cc21e29d0311c86e45897962d010c86bc0f4424f3b7582b59e5",
+        "compendio.yaml": "db3d5aecf0b9af892dc7cfe851274dc99784ced6aba34f3c4a10a7420bdc21f1",
         "guia_jurisprudencia.yaml": "5df06ebde1f3371b94932e6c6502c9452c2da1418880c88f1fa8f62be8c565a1",
         "guia_jurisprudencia_nota.yaml": "6cab48c7b197be8452a9a019ed1c622574f00770797ac5c818428356b70499b5",
         "ncg.yaml": "b22396c8e632600fd26f4b829d85c7bef65609091822dd1ea8a559584b989945",
@@ -59,8 +59,8 @@
     "hnsw_ef_search": 40,
     "max_query_chars": 2000,
     "files": {
-      "case/spensiones/calibration/ood.jsonl": "c089f2570d8ef7256ae4730b2a815a0f434bd4afb98003eb47638338a80c448d",
-      "case/spensiones/calibration/in_dev.jsonl": "cd172d837d9a19fe9a2a385ae5c41fe080a9de05e50a4557bac94b0301c57556"
+      "case/spensiones/calibration/in_dev.jsonl": "cd172d837d9a19fe9a2a385ae5c41fe080a9de05e50a4557bac94b0301c57556",
+      "case/spensiones/calibration/ood.jsonl": "c089f2570d8ef7256ae4730b2a815a0f434bd4afb98003eb47638338a80c448d"
     },
     "analyzer_model": "default (openai:gpt-5.4-mini)"
   },
@@ -89,17 +89,17 @@
       "n": 80.0,
       "min": 0.2625769156985557,
       "max": 0.6670985221862793,
-      "mean": 0.457370898345293,
+      "mean": 0.45754907928784416,
       "p5": 0.3120967480433302,
       "p25": 0.39167329214693714,
       "p50": 0.45579198266315646,
-      "p75": 0.5303594680021465,
-      "p95": 0.6103444246681006,
+      "p75": 0.5277731543932735,
+      "p95": 0.6103338437315403,
       "p99": 0.6630822732739078
     }
   },
   "auroc": 0.97875,
-  "threshold": 0.6103444246681006,
+  "threshold": 0.6103338437315403,
   "threshold_interval": {
     "confidence": 0.95,
     "lower": 0.5831554631180124,
@@ -148,7 +148,7 @@
     },
     {
       "id": "out-labor-02",
-      "score": 0.6273660028606085,
+      "score": 0.6271543841294029,
       "topic": "compendio",
       "question": "¿Cómo se calcula la indemnización por años de servicio en un despido por necesidades de la empresa?"
     }
@@ -359,6 +359,46 @@
     }
   },
   "standalone_queries": {
+    "in-cmp-01": "Si pierdo mi carnet de identidad, ¿qué debo hacerle saber a mi AFP y cómo?",
+    "in-cmp-02": "¿Qué plazo tiene la AFP para entregar la cartola cuatrimestral a los afiliados?",
+    "in-cmp-03": "¿Puede una AFP negarse a afiliar a una persona por alguna característica personal?",
+    "in-cmp-04": "¿Cómo se actualiza el tope imponible y con qué valor de la UF se convierte a pesos?",
+    "in-cmp-05": "¿Qué pasa con el traspaso de fondos si el afiliado muere justo antes de que se transfieran?",
+    "in-cmp-06": "¿Cuándo se entiende devengada la comisión de una cuenta nueva creada dentro del mes?",
+    "in-cmp-07": "¿Cómo se hace efectiva la bonificación fiscal por ahorro previsional voluntario?",
+    "in-cmp-08": "¿Qué debe hacer un trabajador independiente para dar un mandato a un tercero sobre su cuenta de ahorro voluntario?",
+    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
+    "in-cmp-10": "¿Se puede repartir el saldo de la cuenta entre dos tipos de fondo?",
+    "in-cmp-11": "¿Cuánto tiempo tiene la AFP nueva para revisar el archivo de traspasos el día de la transferencia?",
+    "in-cmp-12": "¿Cómo repara la AFP a un afiliado cuando su cuenta perdió rentabilidad por un error de la administradora?",
+    "in-cmp-13": "¿Qué requisitos deben cumplir los respaldos de documentos del archivo previsional para poder destruir los originales?",
+    "in-cmp-14": "¿Qué informe se debe emitir al resolver una solicitud por un pago en exceso?",
+    "in-cmp-15": "¿Cómo se registra una orden de traspaso firmada por un afiliado cesante?",
+    "in-cmp-16": "¿Qué renta mínima se usa para cotizar un afiliado independiente?",
+    "in-ncg-17": "¿Cómo se excluye de una pensión de sobrevivencia a un beneficiario condenado por un delito contra el causante?",
+    "in-ncg-18": "¿Desde qué fecha rige la exclusión del beneficiario condenado en las pensiones de sobrevivencia?",
+    "in-ncg-19": "¿Qué debe hacer la compañía de seguros con una renta vitalicia cuando se excluye a un beneficiario condenado?",
+    "in-ncg-20": "¿En qué plazo deben los tribunales informar a la Superintendencia de Pensiones una sentencia ejecutoriada que condena a un beneficiario de pensión de sobrevivencia por un delito contra el causante?",
+    "in-ncg-21": "¿Qué ocurre con un certificado de saldo ya emitido si se notifica la condena de un beneficiario?",
+    "in-ncg-22": "¿Qué se agrega a la masa hereditaria cuando no quedan beneficiarios con derecho a pensión de sobrevivencia?",
+    "in-cir-23": "¿Con qué frecuencia debían las administradoras informar sobre los bonos de reconocimiento pagados por las cajas?",
+    "in-cir-24": "¿En qué cuenta se deposita el documento de pago de un bono de reconocimiento?",
+    "in-cir-25": "¿Cómo se calcula la tasa de interés que se usa para los retiros programados y rentas temporales?",
+    "in-cir-26": "¿Con qué valor de cuota se abona a la cuenta individual el pago de un bono de reconocimiento recibido de la institución previsional?",
+    "in-cir-27": "¿Qué fondos de pensiones se consideran para el retorno anual promedio de la tasa de interés?",
+    "in-cir-28": "¿Qué es la curva cero real y cómo se usa en el vector de tasas?",
+    "in-res-29": "¿Qué complementa la resolución sobre funcionarios sujetos pasivos de la ley del lobby?",
+    "in-res-30": "¿Quién es considerado sujeto pasivo de la ley de lobby en la Superintendencia de Pensiones?",
+    "in-faq-31": "¿Qué porcentaje de mi sueldo se descuenta para el seguro de cesantía si tengo contrato indefinido?",
+    "in-faq-32": "Tengo contrato por obra o faena, ¿quién paga el seguro de cesantía?",
+    "in-faq-33": "¿Cómo se reparte entre la cuenta individual y el fondo solidario el aporte del empleador por cesantía?",
+    "in-faq-34": "¿Qué parte de la cotización de cesantía va a mi cuenta individual cuando mi contrato es a plazo fijo?",
+    "in-idx-35": "¿Qué oficios existen sobre el tope imponible de las cotizaciones?",
+    "in-idx-36": "¿Hay jurisprudencia sobre pensiones de exonerados políticos?",
+    "in-idx-37": "¿Dónde encuentro dictámenes sobre la posesión efectiva y las pensiones?",
+    "in-idx-38": "¿Qué criterios hay sobre las cuotas mortuorias?",
+    "in-idx-39": "Busco instrucciones sobre cotizaciones de trabajadores con más de un empleo para el seguro de cesantía.",
+    "in-idx-40": "¿Existen oficios sobre convenios internacionales de seguridad social?",
     "out-gen-01": "¿Cuál es la capital de Australia?",
     "out-gen-02": "¿Quién escribió Cien años de soledad?",
     "out-gen-03": "Explícame cómo funciona la fotosíntesis.",
@@ -438,47 +478,7 @@
     "out-pens-03": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?",
     "out-pens-04": "¿Cuál es el monto de la pensión de alimentos que debo pagar a mi hijo?",
     "out-pens-05": "¿Qué AFP tiene mejor rentabilidad este año según los analistas?",
-    "out-pens-06": "¿Cómo postulo al bono por hijo para las mujeres?",
-    "in-cmp-01": "Si pierdo mi carnet de identidad, ¿qué debo hacerle saber a mi AFP y cómo?",
-    "in-cmp-02": "¿Qué plazo tiene la AFP para entregar la cartola cuatrimestral a los afiliados?",
-    "in-cmp-03": "¿Puede una AFP negarse a afiliar a una persona por alguna característica personal?",
-    "in-cmp-04": "¿Cómo se actualiza el tope imponible y con qué valor de la UF se convierte a pesos?",
-    "in-cmp-05": "¿Qué pasa con el traspaso de fondos si el afiliado muere justo antes de que se transfieran?",
-    "in-cmp-06": "¿Cuándo se entiende devengada la comisión de una cuenta nueva creada dentro del mes?",
-    "in-cmp-07": "¿Cómo se hace efectiva la bonificación fiscal por ahorro previsional voluntario?",
-    "in-cmp-08": "¿Qué debe hacer un trabajador independiente para dar un mandato a un tercero sobre su cuenta de ahorro voluntario?",
-    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
-    "in-cmp-10": "¿Se puede repartir el saldo de la cuenta entre dos tipos de fondo?",
-    "in-cmp-11": "¿Cuánto tiempo tiene la AFP nueva para revisar el archivo de traspasos el día de la transferencia?",
-    "in-cmp-12": "¿Cómo repara la AFP a un afiliado cuando su cuenta perdió rentabilidad por un error de la administradora?",
-    "in-cmp-13": "¿Qué requisitos deben cumplir los respaldos de documentos del archivo previsional para poder destruir los originales?",
-    "in-cmp-14": "¿Qué informe se debe emitir al resolver una solicitud por un pago en exceso?",
-    "in-cmp-15": "¿Cómo se registra una orden de traspaso firmada por un afiliado cesante?",
-    "in-cmp-16": "¿Qué renta mínima se usa para cotizar un afiliado independiente?",
-    "in-ncg-17": "¿Cómo se excluye de una pensión de sobrevivencia a un beneficiario condenado por un delito contra el causante?",
-    "in-ncg-18": "¿Desde qué fecha rige la exclusión del beneficiario condenado en las pensiones de sobrevivencia?",
-    "in-ncg-19": "¿Qué debe hacer la compañía de seguros con una renta vitalicia cuando se excluye a un beneficiario condenado?",
-    "in-ncg-20": "¿En qué plazo deben los tribunales informar a la Superintendencia de Pensiones una sentencia ejecutoriada que condena a un beneficiario de pensión de sobrevivencia por un delito contra el causante?",
-    "in-ncg-21": "¿Qué ocurre con un certificado de saldo ya emitido si se notifica la condena de un beneficiario?",
-    "in-ncg-22": "¿Qué se agrega a la masa hereditaria cuando no quedan beneficiarios con derecho a pensión de sobrevivencia?",
-    "in-cir-23": "¿Con qué frecuencia debían las administradoras informar sobre los bonos de reconocimiento pagados por las cajas?",
-    "in-cir-24": "¿En qué cuenta se deposita el documento de pago de un bono de reconocimiento?",
-    "in-cir-25": "¿Cómo se calcula la tasa de interés que se usa para los retiros programados y rentas temporales?",
-    "in-cir-26": "¿Con qué valor de cuota se abona a la cuenta individual el pago de un bono de reconocimiento recibido de la institución previsional?",
-    "in-cir-27": "¿Qué fondos de pensiones se consideran para el retorno anual promedio de la tasa de interés?",
-    "in-cir-28": "¿Qué es la curva cero real y cómo se usa en el vector de tasas?",
-    "in-res-29": "¿Qué complementa la resolución sobre funcionarios sujetos pasivos de la ley del lobby?",
-    "in-res-30": "¿Quién es considerado sujeto pasivo de la ley de lobby en la Superintendencia de Pensiones?",
-    "in-faq-31": "¿Qué porcentaje de mi sueldo se descuenta para el seguro de cesantía si tengo contrato indefinido?",
-    "in-faq-32": "Tengo contrato por obra o faena, ¿quién paga el seguro de cesantía?",
-    "in-faq-33": "¿Cómo se reparte entre la cuenta individual y el fondo solidario el aporte del empleador por cesantía?",
-    "in-faq-34": "¿Qué parte de la cotización de cesantía va a mi cuenta individual cuando mi contrato es a plazo fijo?",
-    "in-idx-35": "¿Qué oficios existen sobre el tope imponible de las cotizaciones?",
-    "in-idx-36": "¿Hay jurisprudencia sobre pensiones de exonerados políticos?",
-    "in-idx-37": "¿Dónde encuentro dictámenes sobre la posesión efectiva y las pensiones?",
-    "in-idx-38": "¿Qué criterios hay sobre las cuotas mortuorias?",
-    "in-idx-39": "Busco instrucciones sobre cotizaciones de trabajadores con más de un empleo para el seguro de cesantía.",
-    "in-idx-40": "¿Existen oficios sobre convenios internacionales de seguridad social?"
+    "out-pens-06": "¿Cómo postulo al bono por hijo para las mujeres?"
   },
   "scores": [
     {
@@ -749,7 +749,7 @@
     },
     {
       "id": "out-labor-02",
-      "score": 0.6273660028606085,
+      "score": 0.6271543841294029,
       "topic": "compendio",
       "question": "¿Cómo se calcula la indemnización por años de servicio en un despido por necesidades de la empresa?",
       "label": "out"
@@ -819,7 +819,7 @@
     },
     {
       "id": "out-bank-05",
-      "score": 0.5732638835906982,
+      "score": 0.5739126801490784,
       "topic": "compendio",
       "question": "¿Cómo abro una cuenta corriente en un banco?",
       "label": "out"
@@ -888,13 +888,6 @@
       "label": "out"
     },
     {
-      "id": "out-isapre-01",
-      "score": 0.5317378798645161,
-      "topic": "compendio",
-      "question": "¿Cómo me cambio de Isapre sin perder la cobertura?",
-      "label": "out"
-    },
-    {
       "id": "out-pens-02",
       "score": 0.5307061672210731,
       "topic": "compendio",
@@ -923,6 +916,13 @@
       "label": "out"
     },
     {
+      "id": "out-isapre-01",
+      "score": 0.5200135397903011,
+      "topic": "ncg",
+      "question": "¿Cómo me cambio de Isapre sin perder la cobertura?",
+      "label": "out"
+    },
+    {
       "id": "out-isapre-04",
       "score": 0.5094777941703796,
       "topic": "circular",
@@ -945,8 +945,8 @@
     },
     {
       "id": "out-labor-03",
-      "score": 0.5036365239728553,
-      "topic": "compendio",
+      "score": 0.503190010595918,
+      "topic": "articulo_faq",
       "question": "¿Cuántos días de vacaciones me corresponden por ley al año?",
       "label": "out"
     },
@@ -1084,6 +1084,13 @@
       "label": "out"
     },
     {
+      "id": "out-other-09",
+      "score": 0.43285382283535956,
+      "topic": "compendio",
+      "question": "¿Cómo cambio la rueda pinchada de un auto?",
+      "label": "out"
+    },
+    {
       "id": "out-chat-07",
       "score": 0.42879676818847656,
       "topic": "compendio",
@@ -1095,13 +1102,6 @@
       "score": 0.42862187965177057,
       "topic": "compendio",
       "question": "Buenos días",
-      "label": "out"
-    },
-    {
-      "id": "out-other-09",
-      "score": 0.4285175885424859,
-      "topic": "compendio",
-      "question": "¿Cómo cambio la rueda pinchada de un auto?",
       "label": "out"
     },
     {
@@ -1204,9 +1204,16 @@
     },
     {
       "id": "out-gen-05",
-      "score": 0.37242408826494744,
+      "score": 0.37815223671820664,
       "topic": "compendio",
       "question": "¿En qué año terminó la Segunda Guerra Mundial?",
+      "label": "out"
+    },
+    {
+      "id": "out-gen-10",
+      "score": 0.37104564905166626,
+      "topic": "compendio",
+      "question": "¿Cuál es la diferencia entre un virus y una bacteria?",
       "label": "out"
     },
     {
@@ -1221,13 +1228,6 @@
       "score": 0.36166889553275405,
       "topic": "compendio",
       "question": "Traduce al inglés: me gusta caminar por la playa.",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-10",
-      "score": 0.3551218807697296,
-      "topic": "resolucion",
-      "question": "¿Cuál es la diferencia entre un virus y una bacteria?",
       "label": "out"
     },
     {
