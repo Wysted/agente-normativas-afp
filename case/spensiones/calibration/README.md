@@ -204,9 +204,12 @@ order and no tie-break:
 
 The 117 "Nota Interna N° ..." rows (index doc_type `guia_faq`) had never been downloaded, and
 their profile was a `draft`, so the `jurisprudencia_nota` topic was empty.
-- Activated after checking the 101 notes with text: 556 chunks, 0 failures. 16 are scans and
-  fail until OCR is enabled. That is 86% with text, below the pre-registered 95%; accepting it is
-  your call.
+- Activated after checking the 101 notes with text: 556 chunks, 0 failures.
+- 16 are scans with no text layer. The profile uses `ocr_index_card`, which parses text-layer
+  PDFs exactly like `simple` and runs RapidOCR on the scans. All 117 now ingest (636 chunks), and
+  the OCR text has the same non-word share as the text-layer notes (median 0.14 against 0.12).
+  - Ingest needs the `ocr` extra (`uv sync --inexact --extra ocr`; Docker: `UV_EXTRAS` with
+    `ocr`). CI already installs every extra.
 - `nota_dev.jsonl`: 10 blind questions. MRR@10 .850 on the topic and .850 routed. The router picks
   `jurisprudencia_nota` for 10 of 10, as primary for 9.
 - Routed MRR@10 on the other 5 sets: pooled .737 against .739 without notes; routing_dev2 drops
