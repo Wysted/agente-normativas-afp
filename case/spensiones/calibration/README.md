@@ -168,6 +168,38 @@ Offline (2026-10-20), MRR@10 on the 147 dev questions:
   in parallel. Otherwise every rerank fails and `FallbackReranker` silently keeps the vector
   order. The compose `reranker` service (CPU image, batch 16) does not meet this yet.
 
+## New Libros dev set (`compendio_new_dev.jsonl`)
+
+40 `in` questions on the compendio Libros added on 2026-10-21: SP III (10), SP IV (8), SP V (8)
+and SC I-V (14). All are in `operativa` voice, and 21 of 40 cite a structural identifier.
+
+- Writing: four blind writers (one per 10 windows) saw only chunk text, never the router, probes
+  or scores. Each window is 20 consecutive chunks inside one Título, spread round-robin over the
+  Títulos with at least 10 chunks.
+- Checks: every snippet is relevant to its source chunk under the eval rule; no question is within
+  token Jaccard 0.5 of another set or row. Nothing was dropped. 13 snippets also match a second
+  chunk (repeated text), and either one counts as a hit.
+- `profile` is `spensiones_compendio` for SP and `spensiones_compendio_sc` for SC, from a split
+  that was measured and dropped. The single-profile runs map SC to `spensiones_compendio`.
+
+Results (2026-10-21, reranker on, raw question). The routed column is MRR with the router
+order and no tie-break:
+
+| setup | new set, gold topic | new set, routed | existing 4 sets, routed |
+|---|---|---|---|
+| 1 compendio profile, 40 candidates | .891 | .891 | .607 / .699 / .710 / .888 |
+| SP and SC split, 40 candidates | .913 | .896 | .607 / .691 / .693 / .863 |
+| before the new Libros (R1) | n/a, not in the corpus | n/a | .626 / .724 / .715 / .967 |
+
+- The split was dropped: it gained +0.005 routed on the new set, against a pre-registered +0.03,
+  and lost 0.010 on the existing sets.
+- Adding the Libros costs the existing sets up to about 0.08 routed MRR on cotizaciones. The new
+  SP III-V chunks crowd Libro I and II answers out of the rerank candidates; 40 candidates
+  recover part of it. It is an open trade-off, not a passed guard.
+- The scope bands move with the corpus. On raw questions with all 10 Libros, at the current
+  thresholds, `ood` items at or above `low_confidence_below` go from 4 to 8, and the p95 rule
+  would put the threshold at 0.662 (0.610 now). Recalibrate with `--analyze` before shipping.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
