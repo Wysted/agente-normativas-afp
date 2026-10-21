@@ -550,9 +550,10 @@ class TestSpensionesCase:
             "spensiones_articulo_faq": "dense",
         }
 
-    def test_only_the_unvalidated_note_profile_is_a_draft(self) -> None:
+    def test_no_profile_is_a_draft(self) -> None:
+        # The note profile was validated on the downloaded notes and activated (calibration README).
         drafts = [p.name for p in load_profiles_dir(CASE_PROFILES) if p.status == "draft"]
-        assert drafts == ["spensiones_jurisprudencia_nota"]
+        assert drafts == []
 
     def test_profile_fingerprints_are_stable_across_loads(self) -> None:
         first = {p.name: p.fingerprint for p in load_profiles_dir(CASE_PROFILES)}

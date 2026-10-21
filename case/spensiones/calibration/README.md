@@ -200,6 +200,19 @@ order and no tie-break:
   thresholds, `ood` items at or above `low_confidence_below` go from 4 to 8, and the p95 rule
   would put the threshold at 0.662 (0.610 now). Recalibrate with `--analyze` before shipping.
 
+## Notas Internas (`guia_jurisprudencia_nota.yaml`, `nota_dev.jsonl`)
+
+The 117 "Nota Interna N° ..." rows (index doc_type `guia_faq`) had never been downloaded, and
+their profile was a `draft`, so the `jurisprudencia_nota` topic was empty.
+- Activated after checking the 101 notes with text: 556 chunks, 0 failures. 16 are scans and
+  fail until OCR is enabled. That is 86% with text, below the pre-registered 95%; accepting it is
+  your call.
+- `nota_dev.jsonl`: 10 blind questions. MRR@10 .850 on the topic and .850 routed. The router picks
+  `jurisprudencia_nota` for 10 of 10, as primary for 9.
+- Routed MRR@10 on the other 5 sets: pooled .737 against .739 without notes; routing_dev2 drops
+  .007. The topic is selected for 13 of 187 other questions, as primary for 2.
+- Unlike oficios, the notes are distinct enough for the evidence router.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36

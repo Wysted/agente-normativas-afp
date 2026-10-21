@@ -181,7 +181,10 @@ class TestYamlRouting:
             {"doc_type": "guia_faq", "title": '"Libro de Jurisprudencia de la Superintendencia"'},
             "spensiones_jurisprudencia_indice",
         ),
-        ({"doc_type": "guia_faq", "title": "Nota Interna N° 1, del 2 de mayo"}, None),  # draft
+        (
+            {"doc_type": "guia_faq", "title": "Nota Interna N° 1, del 2 de mayo"},
+            "spensiones_jurisprudencia_nota",
+        ),
         ({"doc_type": "oficio"}, None),
         # Lower-priority broad rules never beat a narrower one, in any file order.
         (

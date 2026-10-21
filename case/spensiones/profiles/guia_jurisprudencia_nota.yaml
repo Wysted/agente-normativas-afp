@@ -1,10 +1,11 @@
 # Individual dictamenes published as "Nota Interna N° <n>, del <fecha>" (117 rows,
 # index doc_type=guia_faq, section "Libro de Jurisprudencia de la SP", 2021-2024).
-# NOT SAMPLED: structure unknown. Draft profile = conservative generic legal-opinion
-# layout; validate on 3-5 downloaded notes before ingesting (see DESIGN.md, next steps).
+# Validated on 2026-10-21 against the 101 notes with a text layer: memo header (ANT. / MAT. /
+# CONC.) + prose, 556 chunks, 0 failures, <= 591 tokens. 16 of the 117 are scans with no text
+# layer: they fail with the simple parser until an OCR parser is enabled.
 key: spensiones_jurisprudencia_nota
 schema_version: 1
-status: draft               # loads and validates, but the profile router never selects it
+status: active
 routing:
   - match: {doc_type: [guia_faq, articulo_html], title: {regex: '^\s*Nota Interna'}}
     priority: 10     # narrower than the generic article rule of articulo_faq
