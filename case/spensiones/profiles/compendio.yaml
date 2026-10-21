@@ -1,12 +1,16 @@
-# Compendio de Normas del Sistema de Pensiones / Seguro de Cesantia (consolidated norm).
-# Input: one PDF per Libro (index doc_type=compendio_libro, 10 rows). The 113
-# compendio_titulo HTML rows are navigation hubs (glossary + links, no normative body):
-# they are NOT ingested (see DESIGN.md).
+# Compendio de Normas del Sistema de Pensiones (consolidated norm), Libros I-V.
+# Input: one PDF per Libro (index doc_type=compendio_libro, area pensiones). The Seguro de
+# Cesantia Libros (area cesantia) go to compendio_sc.yaml: their texts run parallel to these
+# ("Archivo de Respaldo": day 25 for the AFC, day 20 for an AFP), so one profile mixed the two
+# systems in one ranking. The 113 compendio_titulo HTML rows are navigation hubs (glossary +
+# links, no normative body): they are NOT ingested (see DESIGN.md).
+# shortcut: compendio_sc.yaml is a copy of this file below `routing` (profiles cannot extend
+# one another), change both together; upgrade when profiles get inheritance.
 # Validated against samples/compendio/compendio-sp-libro-i.txt (453 pages).
 key: spensiones_compendio
 schema_version: 1
 routing:
-  - match: {doc_type: [compendio_libro]}
+  - match: {doc_type: [compendio_libro], area: [pensiones]}
 top_k: 6
 chunk_max_tokens: 700
 parser_key: simple            # FOP-generated PDFs have a clean text layer
