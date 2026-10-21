@@ -672,8 +672,5 @@ class TestSpensiones:
         assert clarification.out_of_scope_message.startswith("Solo puedo responder")
         assert clarification.low_scope_max_topics == 3
         assert clarification.social_message != DEFAULT_SOCIAL_MESSAGE
-        # Only the known no-reranker warning: the new block adds none.
-        assert [r.getMessage() for r in caplog.records if r.levelname == "WARNING"] == [
-            "agent 'spensiones-rag': sufficiency 'relevance' with max_rewrites=1 but no topic "
-            "profile has a reranker: the rewrite loop never fires without a reranker"
-        ]
+        # The clarification block adds no warning (and the case has none left).
+        assert [r.getMessage() for r in caplog.records if r.levelname == "WARNING"] == []

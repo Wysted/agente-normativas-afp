@@ -73,5 +73,5 @@ metadata_fields:
       default: institucional
     filterable: true
 default_filter: null
-reranker_key: none
+reranker_key: tei
 # bm25_hybrid measured, not adopted (old dev set -0.0116 isolated), see README.

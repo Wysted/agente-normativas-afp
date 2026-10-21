@@ -170,7 +170,7 @@ metadata_fields:
     indexed: true
   - {name: cited_laws,     type: 'list[str]', source: 'extractor:legal_refs', filterable: true}
 default_filter: null
-reranker_key: none
+reranker_key: tei
 # Hybrid: NCG questions cite numbers, dates and legal references ("NCG N° 372") that a lexical
 # match pins down. Neutral on the current eval (hit@3 and MRR unchanged, 7 questions); the
 # lexical branch only adds candidates when ALL query terms match, otherwise it is a no-op.

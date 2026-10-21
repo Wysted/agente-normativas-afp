@@ -21,6 +21,8 @@ from agintis.modules.knowledge.api import (
 )
 from agintis.modules.knowledge.infrastructure.parsers import SimpleParser
 from agintis.modules.knowledge.infrastructure.registry import (
+    NO_RERANKER_KEY,
+    TEI_RERANKER_KEY,
     build_chunkers,
     build_cleaners,
     build_extractors,
@@ -492,6 +494,8 @@ def _case_validate(registry: RagProfileRegistry) -> None:
         extractor_schemas=extractor_param_schemas(),
         transform_schemas=transform_param_schemas(),
         retrieval_mode_keys=build_retrieval_modes(branch_depth=50, rrf_k=60).keys(),
+        # spensiones reranks (`tei`), registered in the app whenever RERANKER_URL is set.
+        reranker_keys=(NO_RERANKER_KEY, TEI_RERANKER_KEY),
     )
 
 

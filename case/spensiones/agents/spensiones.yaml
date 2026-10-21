@@ -95,7 +95,9 @@ merge_tiebreak: llm
 sufficiency: relevance          # judge the hits' own evidence (rerank score only; no reranker = no signal = always sufficient)
 min_rerank_score: 0.1           # relevance threshold when a reranker scored the hits (uncalibrated)
 min_sources: 1                  # relevant sources needed before answering
-max_rewrites: 1                 # one broader query when they are not enough
+# 0 while min_rerank_score is uncalibrated: with the tei reranker on, `relevance` would start
+# rewriting at 0.1; without a reranker the loop never fired, so 0 keeps that behaviour.
+max_rewrites: 0
 # Sources reach the model uncut: the longest chunk of this corpus is about 3300 chars, and with
 # the 1500 default 76% of the NCG chunks lost their tail (answers past char 1500 were retrieved
 # but never seen). 27200 = max_sources x 3400, so the total budget never cuts either
