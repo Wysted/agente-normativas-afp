@@ -1,10 +1,3 @@
-      # Breadcrumb printed at the start of each section page: Titulo / Letra / Anexos. Some
-      # Títulos have no breadcrumb, only a bare heading: lower case with its name on the line
-      # ("Título XI Recaudación ...", "Título XIX. Sitio Web ...": Libro I V/XI/XII, Libro IV XIV,
-      # Libro V XIX, Libro II III/XI/XII) or, in the Seguro de Cesantia Libros, upper case alone on
-      # its line ("TÍTULO II", "TITULO IV"). The bare lower-case form must not be a body sentence
-      # ("Título I. La Administradora deberá ...") nor a cross-reference cut over two lines
-      # ("... del presente" / "Título III."): keep_heading_line false would delete that text.
 # Compendio de Normas del Sistema de Pensiones / Seguro de Cesantia (consolidated norm).
 # Input: one PDF per Libro (index doc_type=compendio_libro, 10 rows). The 113
 # compendio_titulo HTML rows are navigation hubs (glossary + links, no normative body):
@@ -53,12 +46,15 @@ chunker_params:
     - name: seccion
       depth: 0
       # Breadcrumb printed at the start of each section page: Titulo / Letra / Anexos. Some
-      # Títulos have no breadcrumb, only a bare "Título XI Recaudación ..." heading (Libro I V,
-      # XI, XII; Libro II III, XI, XII; Libro V XIX, with a dot) or, in the Seguro de Cesantia
-      # Libros, an upper-case "TÍTULO II" alone on its line: without the "Libro X, " prefix, a
-      # capital or the end of the line must follow the numeral and the line must not be a
-      # cross-reference ("..., del Libro V del presente").
-      pattern: '^(?:Libro (?P<bc_libro>[IVX]+)\.?, |(?=T[ií]tulo [IVXL]+\.? [A-ZÁÉÍÓÚÑ])(?!.*\b(?:de este|de esta|del presente|de la presente|del Libro|deber[áa]n?|podr[áa]n?|fuese|ser[áa]n?|se)\b)|(?=T[IÍ]TULO [IVXL]+\s*$))T(?:[ií]tulo|[IÍ]TULO) (?P<titulo>[IVXL]+)\.?(?:, Letra (?P<letra>[A-Z](?:\.\d)?))?(?:, Cap[ií]tulo (?P<bc_capitulo>[IVXL]+))?(?P<anexos>, Anexos)?(?:,?\s+(?P<seccion_nombre>\S.*?))?\s*$'
+      # Títulos have no breadcrumb, only a bare heading: lower case with its name on the line
+      # ("Título XI Recaudación ...", "Título XIX. Sitio Web ...": Libro I V/XI/XII, Libro IV XIV,
+      # Libro V XIX, Libro II III/XI/XII) or, in the Seguro de Cesantia Libros, upper case alone on
+      # its line ("TÍTULO II", "TITULO IV"). The bare lower-case form must not be a body sentence
+      # ("Título I. La Administradora deberá ...") nor a cross-reference cut over two lines
+      # ("... del presente" / "Título III."): keep_heading_line false would delete that text. A
+      # real heading starts with a noun or "De"; a sentence with an article, a pronoun or an
+      # adverb ("La", "Esta", "Si", "Simultáneamente").
+      pattern: '^(?:Libro (?P<bc_libro>[IVX]+)\.?, |(?=T[ií]tulo [IVXL]+\.? (?!(?:El|La|Los|Las|Lo|Esta|Este|Estos|Estas|Ambas|Ambos|Si|Simultáneamente|En|Para|Por|Con|Cuando|Dicha|Dicho|Dichas|Dichos|Sin|Se|Su|Sus|Al|A|Una|Un|Tal|Tales)\b)[A-ZÁÉÍÓÚÑ])(?!.*\b(?:de este|de esta|del presente|de la presente|del Libro)\b)|(?=T[IÍ]TULO [IVXL]+\s*$))T(?:[ií]tulo|[IÍ]TULO) (?P<titulo>[IVXL]+)\.?(?:, Letra (?P<letra>[A-Z](?:\.\d)?))?(?:, Cap[ií]tulo (?P<bc_capitulo>[IVXL]+))?(?P<anexos>, Anexos)?(?:,?\s+(?P<seccion_nombre>\S.*?))?\s*$'
       heading_template: 'Título {titulo}{letra?, Letra {letra}}{seccion_nombre? {seccion_nombre:70}}'
       role: context              # sets Título/Letra for what follows; repeated on every section page
       reset_on_change: [titulo, letra, anexos]   # closes the open Capítulo only when these change

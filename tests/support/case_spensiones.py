@@ -68,7 +68,8 @@ async def ingest_samples(counter: TokenCounter) -> dict[str, SampleResult]:
     limits = ParseLimits(max_bytes=100 * MIB)
     # The Notas Internas profile OCRs scans (`ocr_index_card`): without the `ocr` extra the
     # parser would fail at the first scanned note, so skip like any missing optional service.
-    pytest.importorskip("rapidocr", reason="the spensiones samples need the `ocr` extra")
+    for module in ("rapidocr", "onnxruntime", "pypdfium2"):  # the `ocr` extra (parsers/ocr.py)
+        pytest.importorskip(module, reason="the spensiones samples need the `ocr` extra")
     profiles = load_profiles_dir(PROFILES_DIR)
     router = ProfileRouter(profiles)
     manifest = load_manifest(SAMPLES_DIR)

@@ -559,6 +559,8 @@ class TestSpensionesCase:
         "Título XIX. Sitio Web del Administrador del Fondo Autónomo de",
         "TÍTULO II",
         "TITULO IV",
+        "Título XIV. De las comisiones que pueden ser",
+        "Título V. Procedimiento que se aplica a los reclamos",  # a verb later in the name
     )
     SECCION_IGNORES = (
         "Título III.",  # tail of "... en el Capítulo V de la Letra A del presente"
@@ -569,6 +571,9 @@ class TestSpensionesCase:
         "Título V. Si fuese necesario utilizar más de un disco, al nombre de cada archivo",
         "Título XI, del Libro IV de este Compendio. En estos casos",
         "Título XVII Instrucciones sobre Administración de Riesgo en el Instituto, del Libro",
+        "Título II. El Fondo de Cesantía Solidario tendrá por objeto",
+        "Título III. Las Administradoras informarán mensualmente",
+        "Título I. Esta norma establece",
     )
 
     def test_the_compendio_seccion_opens_on_headings_only(self) -> None:
