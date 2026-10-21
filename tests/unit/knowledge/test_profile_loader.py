@@ -523,6 +523,7 @@ class TestSpensionesCase:
         by_name = {p.name: p for p in load_profiles_dir(CASE_PROFILES)}
         compendio = by_name["spensiones_compendio"]
         assert [c.key for c in compendio.cleaners] == [
+            "normalize_quotes",  # carriage returns between words (Seguro de Cesantia PDFs)
             "drop_toc_pages",
             "strip_running_headers",
             "dedupe_heading_echo",

@@ -61,7 +61,9 @@ class SampleResult:
 
 async def ingest_samples(counter: TokenCounter) -> dict[str, SampleResult]:
     """Ingest every downloaded sample with the profile the router picks; results by sample id."""
-    limits = ParseLimits()
+    # The compendio SP Libro III is 67 MB, over the 50 MiB default: the case ingests with
+    # PARSER_MAX_BYTES=104857600.
+    limits = ParseLimits(max_bytes=100 * 2**20)
     profiles = load_profiles_dir(PROFILES_DIR)
     router = ProfileRouter(profiles)
     manifest = load_manifest(SAMPLES_DIR)

@@ -357,5 +357,95 @@
   "date": "2026-09-01",
   "title": "Resolución Exenta N° 1195, del 1 de septiembre de 2026, que establece el Régimen de Inversión de los Fondos de Pensiones, vigente a partir del 1 de abril de 2027.",
   "doc_type": "resolucion"
+ },
+ {
+  "id": "compendio-sp-libro-iii",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2815.pdf",
+  "path": "compendio/compendio-sp-libro-iii.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro III Beneficios Previsionales",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sp-libro-iv",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2538.pdf",
+  "path": "compendio/compendio-sp-libro-iv.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro IV Fondos de Pensiones y Regulación de Conflictos de Intereses",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sp-libro-v",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2539.pdf",
+  "path": "compendio/compendio-sp-libro-v.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro V Aspectos Administrativos y Operacionales de las Administradoras de Fondos de Pensiones, Administrador del Fondo Autónomo de Protección Previsional y del Instituto de Previsión Social",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-i",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroI.pdf",
+  "path": "compendio/compendio-sc-libro-i.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro I. Afiliación al Seguro de Cesantía de la Ley N° 19.728",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-ii",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroII.pdf",
+  "path": "compendio/compendio-sc-libro-ii.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro II. Cotizaciones al Seguro de Cesantía",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-iii",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroIII.pdf",
+  "path": "compendio/compendio-sc-libro-iii.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro III. Beneficios del Seguro de Cesantía",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-iv",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroIV.pdf",
+  "path": "compendio/compendio-sc-libro-iv.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro IV. Fondos de Cesantía y Regulación de Conflictos de Intereses",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-v",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroV.pdf",
+  "path": "compendio/compendio-sc-libro-v.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro V. Aspectos Administrativos y Operacionales de la Administradora de Fondos de Cesantía",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-completo",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-afc/data/pdf/compendio_normas_seguro_cesantia.pdf",
+  "path": "compendio/compendio-sc-completo.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Compendio de Normas del Seguro de Cesantia (PDF completo)",
+  "doc_type": "compendio_completo"
  }
 ]
