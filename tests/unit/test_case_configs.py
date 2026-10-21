@@ -10,6 +10,10 @@ from agintis.platform.yaml_config import yaml_files
 from tests.support.postgres import PROJECT_ROOT
 from tests.support.settings import make_settings
 
+# A case may rerank (`reranker_key: tei`), which is only registered with a reranker URL; the
+# compose app always sets one. Building is network-free: the URL is never called here.
+RERANKER_URL = "http://reranker:80"
+
 CASES = sorted(
     path.parent
     for path in (PROJECT_ROOT / "case").glob("*/profiles")
@@ -27,7 +31,9 @@ def test_case_profiles_and_agents_load(case: Path) -> None:
     # against them (unknown profile, filter field the profile does not offer, router knobs).
     container = Container.build(
         make_settings(
-            knowledge={"profiles_dir": case / "profiles"}, agents={"dir": case / "agents"}
+            knowledge={"profiles_dir": case / "profiles"},
+            agents={"dir": case / "agents"},
+            reranker={"url": RERANKER_URL},
         )
     )
     # Exact counts: a lost profile/agent file (or one silently skipped) must fail. The built-ins
@@ -43,7 +49,9 @@ def test_eval_questions_name_loaded_profiles(case: Path) -> None:
         pytest.skip("no eval questions")
     container = Container.build(
         make_settings(
-            knowledge={"profiles_dir": case / "profiles"}, agents={"dir": case / "agents"}
+            knowledge={"profiles_dir": case / "profiles"},
+            agents={"dir": case / "agents"},
+            reranker={"url": RERANKER_URL},
         )
     )
     known = {profile.name for profile in container.profiles.all()}

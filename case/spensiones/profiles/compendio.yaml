@@ -124,7 +124,7 @@ metadata_fields:
   - {name: cited_laws,     type: 'list[str]', source: 'extractor:legal_refs', filterable: true}
   - {name: validity,       type: str,  source: 'const:consolidated_current', filterable: true}
 default_filter: null
-reranker_key: none
+reranker_key: tei
 # Hybrid: the compendio is a numbered legal text (Libro/Titulo/Letra/Capitulo/numero). Exact
 # terms ("afiliacion automatica", ncg numbers) are lost by dense embeddings. Measured on the
 # eval questions: hit@1 0.64 -> 0.73, MRR 0.70 -> 0.76, no question got worse.

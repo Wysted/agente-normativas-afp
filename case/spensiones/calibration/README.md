@@ -125,6 +125,49 @@ Offline, routed MRR@10 (simulated from the hybrid hits, 2026-10-19):
 - Not measured: the `low` scope band, where the tie-break picks among 3 candidates.
   `cli.eval --route` ignores the tie-break.
 
+## Cross-encoder rerank (`reranker_key: tei`)
+
+Every profile reranks its candidates with `BAAI/bge-reranker-v2-m3` (TEI), at
+`RERANKER_MAX_CANDIDATES=20`. On CPU it took about 20 s per question; on a GPU (RTX 5060 Ti, TEI
+image `120-1.9.4`, `--max-batch-tokens 4096` so the GPU is not used flat out) 20 passages take
+about 190 ms.
+
+Offline (2026-10-20), MRR@10 on the 147 dev questions:
+
+| | before | 20 candidates | 40 candidates |
+|---|---|---|---|
+| search on the gold topic (all sets) | .702 | .842 | .852 |
+| — `afiliacion_dev` | .573 | .740 | .790 |
+| — `cotizaciones_dev` | .750 | .967 | .963 |
+| — `operativa` / `v1_mixed` | .711 / .469 | .946 / .546 | .969 / .595 |
+| routed, router order (all sets) | .590 | .722 | .734 |
+| retrieval p95 | 246 ms | 481 ms | 816 ms |
+
+20 candidates was chosen: 40 adds less than the pre-registered +0.02.
+
+- `max_rewrites` went to 0. With a reranker, `sufficiency: relevance` would start rewriting at
+  the uncalibrated `min_rerank_score` 0.1; before the reranker the loop never fired.
+- Live guard (against the tie-break run):
+  - live hit went from 18/20, 12/19 and 18/20 to 19/20, 12/19 and 19/20;
+  - in-dev faithfulness went from 35/37 to 37/38, and refusal stayed at 38/40;
+  - ood refusal went from 78/80 to 79/80.
+- Accepted as a documented exception: in-dev `citation_support` fell from 39/39 to 33/39, below
+  the floor of 38.
+  - In five of the six, the answer omits a condition its cited source states (in-cmp-08,
+    in-cmp-09, in-ncg-17, in-cir-24, in-idx-37); in-cmp-12 is a quote that is not verbatim.
+  - None states a fact the sources lack, and all six got different sources with the reranker.
+  - The metric is noisy: between two earlier runs it moved from 33 to 39 with 36 of 40 source
+    lists identical, so a floor of -1 was tighter than its run-to-run noise.
+  - The operators' view: the cases that matter here concentrate in the compendio, where
+    retrieval gained the most.
+  - Next step: a synthesis prompt that keeps the conditions of the cited norm.
+- The router probes are dense only, so the scope bands did not move.
+- Deployment: set `RERANKER_MAX_CANDIDATES=20` (the app default is 8). The TEI server must
+  accept 20 texts per request: `--max-client-batch-size` of at least 20, and
+  `--max-concurrent-requests` of at least 40, since TEI counts each text and two topics rerank
+  in parallel. Otherwise every rerank fails and `FallbackReranker` silently keeps the vector
+  order. The compose `reranker` service (CPU image, batch 16) does not meet this yet.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36

@@ -88,7 +88,12 @@ def test_build_wires_strategies_from_settings() -> None:
 
 def test_build_wires_the_spensiones_case_profiles_router_and_batch_ingest() -> None:
     profiles_dir = PROJECT_ROOT / "case" / "spensiones" / "profiles"
-    container = Container.build(make_settings(knowledge={"profiles_dir": profiles_dir}))
+    # The case reranks (`tei`): registered only with a reranker URL, never called at build.
+    container = Container.build(
+        make_settings(
+            knowledge={"profiles_dir": profiles_dir}, reranker={"url": "http://reranker:80"}
+        )
+    )
     assert len(container.profiles.all()) == 8  # the default profile + the seven of the case
     selection = container.profile_router.select({"doc_type": "ncg"})
     assert selection.profile is not None

@@ -443,12 +443,8 @@ class TestSpensionesAgent:
             spec, registry = self._load()
             validate_agent_specs([spec], registry)
 
-        # Every topic has an explicit allowlist and no knob of the other router is set; the only
-        # warning is the known one: no reranker deployed, so its single rewrite never fires.
-        assert [r.getMessage() for r in caplog.records if r.levelname == "WARNING"] == [
-            "agent 'spensiones-rag': sufficiency 'relevance' with max_rewrites=1 but no topic "
-            "profile has a reranker: the rewrite loop never fires without a reranker"
-        ]
+        # Every topic has an explicit allowlist and no knob of the other router is set.
+        assert [r.getMessage() for r in caplog.records if r.levelname == "WARNING"] == []
         assert spec.id == "spensiones-rag"
         assert spec.uses_evidence_router
         assert not spec.uses_llm_router
