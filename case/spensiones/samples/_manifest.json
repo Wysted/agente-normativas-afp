@@ -439,16 +439,6 @@
   "doc_type": "compendio_libro"
  },
  {
-  "id": "compendio-sc-completo",
-  "family": "compendio",
-  "url": "https://www.spensiones.cl/compendio-afc/data/pdf/compendio_normas_seguro_cesantia.pdf",
-  "path": "compendio/compendio-sc-completo.pdf",
-  "content_type": "application/pdf",
-  "date": null,
-  "title": "Compendio de Normas del Seguro de Cesantia (PDF completo)",
-  "doc_type": "compendio_completo"
- },
- {
   "id": "cms-aid-16298",
   "family": "notas",
   "url": "https://www.spensiones.cl/portal/institucional/594/articles-16298_recurso_1.pdf",

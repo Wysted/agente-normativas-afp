@@ -1,3 +1,4 @@
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -549,6 +550,33 @@ class TestSpensionesCase:
             "spensiones_jurisprudencia_indice": "dense",
             "spensiones_articulo_faq": "dense",
         }
+
+    # Real lines of the compendio Libros (parsed text). The seccion level drops its heading line
+    # from the chunk text, so a body sentence or a cut cross-reference must never match it.
+    SECCION_OPENS = (
+        "Libro I, Título III, Letra A Administración de Cuentas Personales",
+        "Título XI Recaudación de las cotizaciones al Fondo Autónomo de",
+        "Título XIX. Sitio Web del Administrador del Fondo Autónomo de",
+        "TÍTULO II",
+        "TITULO IV",
+    )
+    SECCION_IGNORES = (
+        "Título III.",  # tail of "... en el Capítulo V de la Letra A del presente"
+        "Título V.",
+        "Título I. Simultáneamente se deberá notificar de su emisión al afiliado",
+        "Título I. La Administradora deberá acreditar con el Servicio de Registro Civil",
+        "Título I. Ambas entidades deberán resguardar que se efectúe la exclusión",
+        "Título V. Si fuese necesario utilizar más de un disco, al nombre de cada archivo",
+        "Título XI, del Libro IV de este Compendio. En estos casos",
+        "Título XVII Instrucciones sobre Administración de Riesgo en el Instituto, del Libro",
+    )
+
+    def test_the_compendio_seccion_opens_on_headings_only(self) -> None:
+        by_name = {p.name: p for p in load_profiles_dir(CASE_PROFILES)}
+        levels = by_name["spensiones_compendio"].chunker_params["levels"]
+        seccion = re.compile(levels[0]["pattern"])
+        assert [line for line in self.SECCION_OPENS if not seccion.match(line)] == []
+        assert [line for line in self.SECCION_IGNORES if seccion.match(line)] == []
 
     def test_no_profile_is_a_draft(self) -> None:
         # The note profile was validated on the downloaded notes and activated (calibration README).

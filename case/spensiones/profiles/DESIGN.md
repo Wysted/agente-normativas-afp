@@ -7,7 +7,7 @@ Caso: documentos de la Superintendencia de Pensiones (índice del crawler: 8.174
 | archivo | qué es |
 |---|---|
 | `compendio.yaml`, `circular.yaml`, `ncg.yaml`, `articulo_faq.yaml`, `guia_jurisprudencia.yaml`, `resolucion.yaml` | un perfil por familia, validados con las muestras |
-| `guia_jurisprudencia_nota.yaml` | borrador para las 117 "Nota Interna" (sin muestra, `status: draft_unvalidated`) |
+| `guia_jurisprudencia_nota.yaml` | las 117 "Nota Interna": validado con las 101 que tienen texto y activo; las 16 escaneadas pasan por OCR (`ocr_index_card`) |
 | `validation/validate_profiles.py` | prototipo de referencia de cleaners, chunkers y extractores. Lee los YAML y genera `validation_report.md` y `chunks_preview.jsonl` |
 | `validation/check_eval.py` | comprueba que cada pregunta de eval cae en un solo chunk cuyo metadata coincide con su localizador (`eval_locator_check.md`) |
 | `validation/index_estimates.py` | estimaciones de volumen y tiempo de embedding a partir del índice (`index_estimates.md`) |
@@ -180,12 +180,12 @@ Límites conocidos:
 |---|---|---:|---:|---|
 | 1 (MVP) | Compendio SP+SC (10 Libros), FAQ (204), índice de jurisprudencia, fichas de resoluciones (287), NCG ≥ 2020 (159) | ~660 | ~17k (Compendio ±2×) | ~1,2–2,4 h |
 | 2 | resto de las NCG (326), circulares ≥ 2015 (521) | ~850 | ~10–21k | ~1,5–3 h |
-| 3 | Notas Internas (validar perfil antes), OCR de las 185 resoluciones normativas, circulares históricas < 2015 | ~2.300 | ~20–60k | horas; OCR aparte |
+| 3 | Notas Internas (hecho: validado, OCR de las 16 escaneadas), OCR de las 185 resoluciones normativas, circulares históricas < 2015 | ~2.300 | ~20–60k | horas; OCR aparte |
 
 La razón del orden: el Compendio es la norma consolidada y vigente, y responde la mayoría de las preguntas de afiliados con ~14k chunks. Las FAQ aportan el lenguaje del ciudadano y las NCG recientes cubren el rezago de consolidación. Las circulares (estimadas en 23k–75k chunks porque el tamaño medio es de 640 KB) son caras y en su mayoría históricas o periódicas.
 
 ## 7. Próximos pasos
 
-1. Descargar 3–5 Notas Internas y 2–3 resoluciones normativas para validar `guia_jurisprudencia_nota` y el OCR.
+1. ~~Descargar y validar las Notas Internas~~ (hecho, ver calibration/README.md). Falta: 2–3 resoluciones normativas para validar su OCR.
 2. Implementar las features 1–9 del §4 en el template, usando el prototipo como oráculo de comportamiento: sus casos de `validation_report.md` sirven como fixtures de test.
 3. Medir el retrieval con `eval_questions.jsonl` comparando el perfil estructural contra `recursive` de 256–512 tokens, como recomienda el reporte.
