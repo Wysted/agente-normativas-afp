@@ -10,6 +10,8 @@
 #   LLM_PROVIDER=... LLM_MODEL=... (+ LLM_API_KEY)     # analyzer, synthesis and router models (the
 #                                                      # evidence router needs none; the ROUTER role
 #                                                      # serves `merge_tiebreak: llm` below)
+#   RERANKER_URL=... RERANKER_MAX_CANDIDATES=20        # REQUIRED: every profile reranks (`tei`);
+#                                                      # without a URL the profiles do not load
 # The agent then shows up in GET /v1/agents as `spensiones-rag`.
 #
 # Filters: ALWAYS list `filters` per topic (the allowlist, one precise hint per field). Without the
