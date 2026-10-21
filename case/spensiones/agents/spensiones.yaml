@@ -110,8 +110,8 @@ max_context_chars: 28800
 topics:
   - name: compendio
     description: >-
-      Compendio de Normas del Sistema de Pensiones (AFP): texto consolidado y vigente de la
-      normativa, organizado en Libros, Titulos, Letras y Capitulos. Elegir cuando
+      Compendio de Normas del Sistema de Pensiones y del Seguro de Cesantia: texto consolidado y
+      vigente de la normativa, organizado en Libros, Titulos, Letras y Capitulos. Elegir cuando
       la pregunta apunta a una ubicacion estructural del texto o a una regla de fondo
       establecida de forma estable (afiliacion, cotizaciones, comisiones, retiros, traspasos), y
       cuando se pregunta que norma modifico una parte concreta del texto. NO para el contenido
@@ -121,26 +121,11 @@ topics:
     # extractor needs, hybrid retrieval, and most of the eval questions (11 of 29, incl. cmp-01
     # and cmp-05, which no retrieval mode finds without filters).
     profile: spensiones_compendio
-    # No `system` filter: the Seguro de Cesantia Libros are their own topic (compendio_sc).
+    # `system` stays, but its hint now only ever asks for SC: with the old wording ("only if the
+    # question names the system") the model filled SP whenever the question said "Sistema de
+    # Pensiones" (the Compendio's own name). SP is the normal case and needs no filter.
     filters:
-      libro: "Numero romano del Libro (por ejemplo I, II, III). Solo el numero romano, sin la palabra Libro."
-      titulo: "Numero romano del Titulo (por ejemplo I, II, III). Solo el numero romano, sin la palabra Titulo."
-      letra: "Letra del Titulo (por ejemplo A, B, D.1). Solo la letra en mayuscula."
-      capitulo: "Numero romano del Capitulo (por ejemplo I, II, V). Solo el numero romano."
-      anexo: "Numero o identificador del Anexo (por ejemplo 6). Solo si la pregunta nombra un Anexo."
-      numeros: "Numero de item dentro del Capitulo, como texto (por ejemplo 3). Un solo numero, solo si la pregunta cita 'el numero N'."
-      amended_by_ncg: "Numero de la Norma de Caracter General (NCG) que modifico el texto, como entero. Solo si la pregunta nombra esa NCG."
-  - name: compendio_sc
-    description: >-
-      Compendio de Normas del Seguro de Cesantia (AFC, Ley 19.728): texto consolidado y vigente
-      de la normativa de la cuenta individual de cesantia y del Fondo de Cesantia Solidario,
-      organizado en Libros, Titulos y Capitulos. Elegir cuando la pregunta trata del seguro de
-      cesantia, la AFC o el Fondo de Cesantia Solidario. NO para el Sistema de Pensiones ni las
-      AFP (compendio).
-    # The Seguro de Cesantia Libros, split from compendio so an AFP question is not answered
-    # from the AFC's parallel text. Same structural metadata and filters as compendio.
-    profile: spensiones_compendio_sc
-    filters:
+      system: "Sistema de la norma. Usa SOLO el valor SC y SOLO si la pregunta nombra explicitamente el Seguro de Cesantia (por ejemplo 'seguro de cesantia', 'AFC', 'Fondo de Cesantia Solidario'). En cualquier otro caso null, incluso si la pregunta dice 'Sistema de Pensiones', 'AFP' o 'pensiones' (ese nombre no cuenta): nunca uses SP."
       libro: "Numero romano del Libro (por ejemplo I, II, III). Solo el numero romano, sin la palabra Libro."
       titulo: "Numero romano del Titulo (por ejemplo I, II, III). Solo el numero romano, sin la palabra Titulo."
       letra: "Letra del Titulo (por ejemplo A, B, D.1). Solo la letra en mayuscula."

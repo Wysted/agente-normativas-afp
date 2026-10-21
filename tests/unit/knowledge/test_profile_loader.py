@@ -502,7 +502,7 @@ def _case_validate(registry: RagProfileRegistry) -> None:
 class TestSpensionesCase:
     def test_the_case_files_are_found(self) -> None:
         assert "articulo_faq.yaml" in CASE_FILES
-        assert len(CASE_FILES) == 8
+        assert len(CASE_FILES) == 7
 
     def test_the_directory_loads_without_any_adapter(self) -> None:
         profiles = load_profiles_dir(CASE_PROFILES)
@@ -510,7 +510,6 @@ class TestSpensionesCase:
             "spensiones_articulo_faq",
             "spensiones_circular",
             "spensiones_compendio",
-            "spensiones_compendio_sc",
             "spensiones_jurisprudencia_indice",
             "spensiones_jurisprudencia_nota",
             "spensiones_ncg",
@@ -543,7 +542,6 @@ class TestSpensionesCase:
         modes = {p.name: p.retrieval_mode for p in load_profiles_dir(CASE_PROFILES)}
         assert modes == {
             "spensiones_compendio": "hybrid",
-            "spensiones_compendio_sc": "hybrid",
             "spensiones_ncg": "hybrid",
             "spensiones_circular": "hybrid",
             "spensiones_resolucion": "dense",

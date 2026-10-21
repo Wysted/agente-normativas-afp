@@ -94,7 +94,7 @@ def test_build_wires_the_spensiones_case_profiles_router_and_batch_ingest() -> N
             knowledge={"profiles_dir": profiles_dir}, reranker={"url": "http://reranker:80"}
         )
     )
-    assert len(container.profiles.all()) == 9  # the default profile + the eight of the case
+    assert len(container.profiles.all()) == 8  # the default profile + the seven of the case
     selection = container.profile_router.select({"doc_type": "ncg"})
     assert selection.profile is not None
     assert selection.profile.name == "spensiones_ncg"

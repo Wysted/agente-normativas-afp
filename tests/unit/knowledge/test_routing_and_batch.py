@@ -164,8 +164,7 @@ class TestYamlRouting:
 @pytest.mark.parametrize(
     ("row", "expected"),
     [
-        ({"doc_type": "compendio_libro", "area": "pensiones"}, "spensiones_compendio"),
-        ({"doc_type": "compendio_libro", "area": "cesantia"}, "spensiones_compendio_sc"),
+        ({"doc_type": "compendio_libro"}, "spensiones_compendio"),
         ({"doc_type": "compendio_titulo"}, None),  # navigation hubs are not ingested
         ({"doc_type": "circular"}, "spensiones_circular"),
         ({"doc_type": "ncg"}, "spensiones_ncg"),

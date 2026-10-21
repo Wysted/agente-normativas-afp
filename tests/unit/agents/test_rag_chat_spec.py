@@ -455,20 +455,21 @@ class TestSpensionesAgent:
         assert (spec.evidence_aggregate, spec.evidence_margin, spec.probe_k) == ("max", 0.05, 3)
         assert spec.max_topics == 2
         assert {"evidence_margin", "evidence_aggregate", "probe_k"} <= spec.model_fields_set
-        assert [t.evidence_bias for t in spec.topics] == [0.0] * 8  # calibrated on a dev set only
+        assert [t.evidence_bias for t in spec.topics] == [0.0] * 7  # calibrated on a dev set only
 
     def test_one_topic_per_profile_with_a_spanish_description(self) -> None:
         spec, registry = self._load()
 
         assert {t.profile for t in spec.topics} == {p.name for p in registry.all()}
-        assert len(spec.topics) == 8
+        assert len(spec.topics) == 7
         assert all(len(t.description) > 40 for t in spec.topics)
 
     def test_the_allowlists(self) -> None:
         spec, _ = self._load()
         filters = {t.name: set(t.filters or {}) for t in spec.topics}
 
-        compendio_filters = {
+        assert filters["compendio"] == {
+            "system",
             "libro",
             "titulo",
             "letra",
@@ -477,8 +478,6 @@ class TestSpensionesAgent:
             "numeros",
             "amended_by_ncg",
         }
-        assert filters["compendio"] == compendio_filters
-        assert filters["compendio_sc"] == compendio_filters
         assert filters["ncg"] == {"ncg_number", "issued_date"}
         assert filters["circular"] == {"circular_number", "series", "issued_date"}
         assert filters["resolucion"] == {"resolution_number", "issued_date"}
@@ -487,17 +486,13 @@ class TestSpensionesAgent:
         assert filters["jurisprudencia_indice"] == set()
         assert not self.FORBIDDEN & set().union(*filters.values())
 
-    def test_the_compendio_is_split_by_system_into_two_topics(self) -> None:
+    def test_the_system_hint_only_asks_for_the_cesantia_value(self) -> None:
         spec, _ = self._load()
-        topics = {t.name: t for t in spec.topics}
-        compendio, compendio_sc = topics["compendio"], topics["compendio_sc"]
+        compendio = next(t for t in spec.topics if t.name == "compendio")
+        hint = (compendio.filters or {})["system"]
 
-        assert compendio.profile == "spensiones_compendio"
-        assert compendio.description.startswith("Compendio de Normas del Sistema de Pensiones")
-        assert compendio_sc.profile == "spensiones_compendio_sc"
-        assert compendio_sc.description.startswith("Compendio de Normas del Seguro de Cesantia")
-        # The topic split replaces the old `system` filter hint.
-        assert "system" not in (compendio.filters or {})
+        assert "SOLO el valor SC" in hint
+        assert "nunca uses SP" in hint
 
     def test_it_builds_the_runner_with_the_evidence_router_and_the_merge_tiebreak(self) -> None:
         spec, registry = self._load()
