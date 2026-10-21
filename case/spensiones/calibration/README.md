@@ -323,6 +323,29 @@ The criterion was fixed before the runs. Baselines: the keep-conditions run (jud
   (a named profile cannot use the `LLM_` settings' key). In Docker: `APP_LLM_PROFILES_FILE` with
   the container path, and `OPENAI_API_KEY` in `.env`.
 
+## Oficios (`oficio.yaml`, `oficio_dev.jsonl`)
+
+489 Oficios Ordinarios (2001-2024), the Superintendencia's answers to consultations.
+- Profile adapted from `circular.yaml`. 485 ingest; 4 are scans with no text layer and fail,
+  since the `simple` parser does no OCR. That makes 3,312 chunks, median 5 per oficio.
+- `oficio_dev.jsonl`: 20 blind questions from 20 oficios spread over the years. With 40 rerank
+  candidates the search on the oficio topic scores MRR@10 .724.
+
+Routing (MRR@10 with the router order and no tie-break) against the setup without oficios
+(`C40`):
+
+| oficio `evidence_bias` | oficio set | the 5 other sets, pooled | other-set questions that route to oficio |
+|---|---|---|---|
+| no oficio topic (C40) | n/a | .739 | 0 |
+| 0 | .641 | .698 | 50 of 187 |
+| -0.04 (kept) | .517 | .721 | 19 |
+| -0.08 | .425 | .733 | 4 |
+
+- Oficios cover every subject, so they win routing slots in other areas, and no bias keeps them
+  reachable without that cost. The guard fails at every value. Not shipped.
+- Next: let the LLM tie-break (reads passages) decide, or route to oficios only when the question
+  asks how the Superintendencia resolved a case. Both need an OpenAI run.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36

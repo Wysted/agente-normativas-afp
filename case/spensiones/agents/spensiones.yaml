@@ -206,6 +206,19 @@ topics:
       plazo.
     profile: spensiones_jurisprudencia_indice
     filters: {}       # no filter fields: the extractor is never called
+  - name: oficio
+    description: >-
+      Oficios Ordinarios de la Superintendencia (2001-2024): respuestas a consultas concretas
+      de AFP, empleadores, afiliados u otras instituciones, con el criterio que la
+      Superintendencia aplica a un caso o a una duda de interpretacion. Elegir cuando la pregunta
+      busca como la Superintendencia resolvio o interpreto una situacion, o cita un "Oficio
+      Ordinario N° ...". NO para la regla general vigente (compendio o ncg).
+    profile: spensiones_oficio
+    # Best of a dev grid (0 to -0.08) under its rule; the routing guard still fails (README).
+    evidence_bias: -0.04
+    filters:
+      oficio_number: "Numero del Oficio Ordinario, como entero. Si la pregunta cita UN oficio, el mismo numero en el limite inferior y en el superior. Solo si la pregunta lo nombra."
+      issued_date: "Fecha del oficio. Solo si la pregunta da una fecha, mes o anio; para un anio completo, del 01-01 al 31-12 de ese anio."
 prompts:
   analyze: |
     Preparas una pregunta de un usuario para buscarla en la normativa del Sistema de Pensiones de Chile.

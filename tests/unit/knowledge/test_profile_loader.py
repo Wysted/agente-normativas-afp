@@ -503,7 +503,7 @@ def _case_validate(registry: RagProfileRegistry) -> None:
 class TestSpensionesCase:
     def test_the_case_files_are_found(self) -> None:
         assert "articulo_faq.yaml" in CASE_FILES
-        assert len(CASE_FILES) == 7
+        assert len(CASE_FILES) == 8
 
     def test_the_directory_loads_without_any_adapter(self) -> None:
         profiles = load_profiles_dir(CASE_PROFILES)
@@ -514,6 +514,7 @@ class TestSpensionesCase:
             "spensiones_jurisprudencia_indice",
             "spensiones_jurisprudencia_nota",
             "spensiones_ncg",
+            "spensiones_oficio",
             "spensiones_resolucion",
         ]
 
@@ -545,6 +546,7 @@ class TestSpensionesCase:
             "spensiones_compendio": "hybrid",
             "spensiones_ncg": "hybrid",
             "spensiones_circular": "hybrid",
+            "spensiones_oficio": "hybrid",
             "spensiones_resolucion": "dense",
             "spensiones_jurisprudencia_nota": "dense",
             "spensiones_jurisprudencia_indice": "dense",
@@ -592,7 +594,7 @@ class TestSpensionesCase:
         first = {p.name: p.fingerprint for p in load_profiles_dir(CASE_PROFILES)}
         second = {p.name: p.fingerprint for p in load_profiles_dir(CASE_PROFILES)}
         assert first == second
-        assert len(set(first.values())) == 7
+        assert len(set(first.values())) == 8
 
     async def test_articulo_faq_sample_matches_the_reference_preview(self) -> None:
         """Reference: validation_report.md (10 blocks, keywords 2, related_aids 7).
