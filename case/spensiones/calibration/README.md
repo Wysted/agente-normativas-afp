@@ -162,10 +162,10 @@ Offline (2026-10-20), MRR@10 on the 147 dev questions:
     retrieval gained the most.
   - Next step: a synthesis prompt that keeps the conditions of the cited norm.
 - The router probes are dense only, so the scope bands did not move.
-- Deployment: set `RERANKER_MAX_CANDIDATES=20` (the app default is 8). The TEI server must
-  accept 20 texts per request: `--max-client-batch-size` of at least 20, and
-  `--max-concurrent-requests` of at least 40, since TEI counts each text and two topics rerank
-  in parallel. Otherwise every rerank fails and `FallbackReranker` silently keeps the vector
+- Deployment: set `RERANKER_MAX_CANDIDATES=40` (20 until the 10-Libro corpus; the app default is
+  8). The TEI server must accept 40 texts per request: `--max-client-batch-size` of at least 40,
+  and `--max-concurrent-requests` of at least 120, since TEI counts each text and up to three
+  topics rerank in parallel (the `low` band). Otherwise every rerank fails and `FallbackReranker` silently keeps the vector
   order. The compose `reranker` service (CPU image, batch 16) does not meet this yet.
 
 ## New Libros dev set (`compendio_new_dev.jsonl`)
@@ -215,6 +215,33 @@ their profile was a `draft`, so the `jurisprudencia_nota` topic was empty.
 - Routed MRR@10 on the other 5 sets: pooled .737 against .739 without notes; routing_dev2 drops
   .007. The topic is selected for 13 of 187 other questions, as primary for 2.
 - Unlike oficios, the notes are distinct enough for the evidence router.
+
+## Live guard: 10 Libros + Notas Internas (2026-10-21)
+
+Setup: all 10 compendio Libros in one profile, Notas Internas with OCR, 40 rerank candidates, and
+the scope bands recalibrated (`low_confidence_below` 0.6621, `out_of_scope_below` 0.4732).
+Baseline: the GPU rerank run. The floors were fixed before the run.
+
+| measure | before | after | floor |
+|---|---|---|---|
+| `operativa` live hit | 19/20 | **17/20** | 18 |
+| `v1_mixed` live hit | 12/19 | 11/19 | 11 |
+| cotizaciones live hit | 19/20 | 18/20 | 18 |
+| in-dev faithfulness | 37/38 | **34/38** | 36 |
+| in-dev refusal | 38/40 | 38/40 | 37 |
+| in-dev citation | 33/39 | 31/39 | 30 |
+| ood refusal | 79/80 | 77/80 | 77 |
+| `compendio_new_dev` live hit | not in the corpus | 39/40 | - |
+| `nota_dev` live hit | not in the corpus | 10/10 | - |
+
+- Accepted as a documented exception: two floors failed, `operativa` and faithfulness. In exchange,
+  49 questions from areas that were missing are now answered.
+- The `operativa` losses (af-01, af-28 and af-35, plus af-02 and af-36) match the offline crowding
+  of Libro I by SP III-V. af-19 and af-34 were gained.
+- Faithfulness: 2 of the 4 failures are judge quotes that are not verbatim (in-cmp-15, in-idx-38).
+  The other 2 drop or merge a condition of the norm (in-ncg-21, in-cir-26); no answer states a fact
+  the sources lack.
+- Next: a synthesis prompt that keeps the conditions of the cited norm.
 
 ## Label verification (near-domain `out` items)
 
