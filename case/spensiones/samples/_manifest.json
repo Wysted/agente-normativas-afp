@@ -357,5 +357,1255 @@
   "date": "2026-09-01",
   "title": "Resolución Exenta N° 1195, del 1 de septiembre de 2026, que establece el Régimen de Inversión de los Fondos de Pensiones, vigente a partir del 1 de abril de 2027.",
   "doc_type": "resolucion"
+ },
+ {
+  "id": "compendio-sp-libro-iii",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2815.pdf",
+  "path": "compendio/compendio-sp-libro-iii.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro III Beneficios Previsionales",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sp-libro-iv",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2538.pdf",
+  "path": "compendio/compendio-sp-libro-iv.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro IV Fondos de Pensiones y Regulación de Conflictos de Intereses",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sp-libro-v",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/portal/compendio/596/fo-propertyvalue-2539.pdf",
+  "path": "compendio/compendio-sp-libro-v.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro V Aspectos Administrativos y Operacionales de las Administradoras de Fondos de Pensiones, Administrador del Fondo Autónomo de Protección Previsional y del Instituto de Previsión Social",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-i",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroI.pdf",
+  "path": "compendio/compendio-sc-libro-i.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro I. Afiliación al Seguro de Cesantía de la Ley N° 19.728",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-ii",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroII.pdf",
+  "path": "compendio/compendio-sc-libro-ii.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro II. Cotizaciones al Seguro de Cesantía",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-iii",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroIII.pdf",
+  "path": "compendio/compendio-sc-libro-iii.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro III. Beneficios del Seguro de Cesantía",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-iv",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroIV.pdf",
+  "path": "compendio/compendio-sc-libro-iv.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro IV. Fondos de Cesantía y Regulación de Conflictos de Intereses",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "compendio-sc-libro-v",
+  "family": "compendio",
+  "url": "https://www.spensiones.cl/compendio-ace/data/pdf/LibroV.pdf",
+  "path": "compendio/compendio-sc-libro-v.pdf",
+  "content_type": "application/pdf",
+  "date": null,
+  "title": "Libro V. Aspectos Administrativos y Operacionales de la Administradora de Fondos de Cesantía",
+  "doc_type": "compendio_libro"
+ },
+ {
+  "id": "cms-aid-16298",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16298_recurso_1.pdf",
+  "path": "notas/cms-aid-16298.pdf",
+  "content_type": "application/pdf",
+  "date": "2024-03-11",
+  "title": "Nota Interna N° 174, del 11 de marzo de 2024",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16426",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16426_recurso_1.pdf",
+  "path": "notas/cms-aid-16426.pdf",
+  "content_type": "application/pdf",
+  "date": "2024-03-04",
+  "title": "Nota Interna N° 151, del 4 de marzo de 2024",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16344",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16344_recurso_1.pdf",
+  "path": "notas/cms-aid-16344.pdf",
+  "content_type": "application/pdf",
+  "date": "2024-01-31",
+  "title": "Nota Interna N° 83, del 31 de enero de 2024",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16301",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16301_recurso_1.pdf",
+  "path": "notas/cms-aid-16301.pdf",
+  "content_type": "application/pdf",
+  "date": "2024-01-30",
+  "title": "Nota Interna N° 77, del 30 de enero de 2024",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16300",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16300_recurso_1.pdf",
+  "path": "notas/cms-aid-16300.pdf",
+  "content_type": "application/pdf",
+  "date": "2024-01-24",
+  "title": "Nota Interna N° 56, del 24 de enero de 2024",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16299",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16299_recurso_1.pdf",
+  "path": "notas/cms-aid-16299.pdf",
+  "content_type": "application/pdf",
+  "date": "2024-01-16",
+  "title": "Nota Interna N° 31, del 16 de enero de 2024",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16342",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16342_recurso_1.pdf",
+  "path": "notas/cms-aid-16342.pdf",
+  "content_type": "application/pdf",
+  "date": "2024-01-08",
+  "title": "Nota Interna N° 14, del 8 de enero de 2024",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16303",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16303_recurso_1.pdf",
+  "path": "notas/cms-aid-16303.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-12-28",
+  "title": "Nota Interna N° 797, del 28 de diciembre de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16311",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16311_recurso_1.pdf",
+  "path": "notas/cms-aid-16311.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-12-26",
+  "title": "Nota Interna N° 791, del 26 de diciembre de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16345",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16345_recurso_1.pdf",
+  "path": "notas/cms-aid-16345.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-11-28",
+  "title": "Nota Interna N° 750, del 28 de noviembre de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16335",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16335_recurso_1.pdf",
+  "path": "notas/cms-aid-16335.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-11-07",
+  "title": "Nota Interna N° 702, del 7 de noviembre de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16324",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16324_recurso_1.pdf",
+  "path": "notas/cms-aid-16324.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-10-23",
+  "title": "Nota Interna N° 671, del 23 de octubre de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16328",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16328_recurso_1.pdf",
+  "path": "notas/cms-aid-16328.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-10-10",
+  "title": "Nota Interna N° 653, del 10 de octubre de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16427",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16427_recurso_1.pdf",
+  "path": "notas/cms-aid-16427.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-08-21",
+  "title": "Nota Interna N° 551, del 21 de agosto de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16398",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16398_recurso_1.pdf",
+  "path": "notas/cms-aid-16398.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-07-07",
+  "title": "Nota Interna N° 438, del 7 de julio de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16420",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16420_recurso_1.pdf",
+  "path": "notas/cms-aid-16420.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-07-03",
+  "title": "Nota Interna N° 428, del 3 de julio de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16419",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16419_recurso_1.pdf",
+  "path": "notas/cms-aid-16419.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-07-03",
+  "title": "Nota Interna N° 419, del 3 de julio de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16323",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16323_recurso_1.pdf",
+  "path": "notas/cms-aid-16323.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-06-15",
+  "title": "Nota Interna N° 409, del 15 de junio de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16403",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16403_recurso_1.pdf",
+  "path": "notas/cms-aid-16403.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-06-06",
+  "title": "Nota Interna N° 392, del 6 de junio de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16402",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16402_recurso_1.pdf",
+  "path": "notas/cms-aid-16402.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-06-01",
+  "title": "Nota Interna N° 363, del 1 de junio de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16373",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16373_recurso_1.pdf",
+  "path": "notas/cms-aid-16373.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-05-25",
+  "title": "Nota Interna N° 354, del 25 de mayo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16431",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16431_recurso_1.pdf",
+  "path": "notas/cms-aid-16431.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-05-12",
+  "title": "Nota Interna N° 329, del 12 de mayo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16331",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16331_recurso_1.pdf",
+  "path": "notas/cms-aid-16331.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-05-08",
+  "title": "Nota Interna N° 315, del 8 de mayo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16310",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16310_recurso_1.pdf",
+  "path": "notas/cms-aid-16310.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-05-02",
+  "title": "Nota Interna N° 285, del 2 de mayo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16422",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16422_recurso_1.pdf",
+  "path": "notas/cms-aid-16422.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-05-02",
+  "title": "Nota Interna N° 281, del 2 de mayo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16330",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16330_recurso_1.pdf",
+  "path": "notas/cms-aid-16330.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-04-25",
+  "title": "Nota Interna N° 236, del 25 de abril de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16334",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16334_recurso_1.pdf",
+  "path": "notas/cms-aid-16334.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-04-19",
+  "title": "Nota Interna N° 273, del 19 de abril de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16341",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16341_recurso_1.pdf",
+  "path": "notas/cms-aid-16341.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-03-30",
+  "title": "Nota Interna N° 132, del 30 de marzo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16418",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16418_recurso_1.pdf",
+  "path": "notas/cms-aid-16418.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-03-27",
+  "title": "Nota Interna N° 181, del 27 de marzo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16399",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16399_recurso_1.pdf",
+  "path": "notas/cms-aid-16399.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-03-16",
+  "title": "Nota Interna N° 185, del 16 de marzo de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16304",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16304_recurso_1.pdf",
+  "path": "notas/cms-aid-16304.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-02-02",
+  "title": "Nota Interna N° 86, del 2 de febrero de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16315",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16315_recurso_1.pdf",
+  "path": "notas/cms-aid-16315.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-01-26",
+  "title": "Nota Interna N° 73, del 26 de enero de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16417",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16417_recurso_1.pdf",
+  "path": "notas/cms-aid-16417.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-01-23",
+  "title": "Nota Interna N° 60, del 23 de enero de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16416",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16416_recurso_1.pdf",
+  "path": "notas/cms-aid-16416.pdf",
+  "content_type": "application/pdf",
+  "date": "2023-01-17",
+  "title": "Nota Interna N° 42, del 17 de enero de 2023",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16319",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16319_recurso_1.pdf",
+  "path": "notas/cms-aid-16319.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-12-14",
+  "title": "Nota Interna N° 819, del 14 de diciembre de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16297",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16297_recurso_1.pdf",
+  "path": "notas/cms-aid-16297.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-11-28",
+  "title": "Nota Interna N° 790, del 28 de noviembre de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16400",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16400_recurso_1.pdf",
+  "path": "notas/cms-aid-16400.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-11-16",
+  "title": "Nota Interna N° 760, del 16 de noviembre de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16343",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16343_recurso_1.pdf",
+  "path": "notas/cms-aid-16343.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-10-11",
+  "title": "Nota Interna N° 673, del 11 de octubre de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16362",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16362_recurso_1.pdf",
+  "path": "notas/cms-aid-16362.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-10-06",
+  "title": "Nota Interna N° 662, del 6 de octubre de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16415",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16415_recurso_1.pdf",
+  "path": "notas/cms-aid-16415.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-09-08",
+  "title": "Nota Interna N° 503, del 8 de septiembre de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16363",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16363_recurso_1.pdf",
+  "path": "notas/cms-aid-16363.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-08-30",
+  "title": "Nota Interna N° 550, del 30 de agosto de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16346",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16346_recurso_1.pdf",
+  "path": "notas/cms-aid-16346.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-08-30",
+  "title": "Nota Interna N° 549, del 30 de agosto de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16401",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16401_recurso_1.pdf",
+  "path": "notas/cms-aid-16401.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-08-08",
+  "title": "Nota Interna N° 470, del 8 de agosto de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16393",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16393_recurso_1.pdf",
+  "path": "notas/cms-aid-16393.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-06-20",
+  "title": "Nota Interna N° 378, del 20 de junio de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16322",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16322_recurso_1.pdf",
+  "path": "notas/cms-aid-16322.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-06-20",
+  "title": "Nota Interna N° 367, del 20 de junio de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16296",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16296_recurso_1.pdf",
+  "path": "notas/cms-aid-16296.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-06-20",
+  "title": "Nota Interna N° 360, del 20 de junio de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16414",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16414_recurso_1.pdf",
+  "path": "notas/cms-aid-16414.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-06-06",
+  "title": "Nota Interna N° 358, del 6 de junio de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16295",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16295_recurso_1.pdf",
+  "path": "notas/cms-aid-16295.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-03-28",
+  "title": "Nota Interna N° 209, del 28 de marzo de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16309",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16309_recurso_1.pdf",
+  "path": "notas/cms-aid-16309.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-03-28",
+  "title": "Nota Interna N° 205, del 28 de marzo de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16308",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16308_recurso_1.pdf",
+  "path": "notas/cms-aid-16308.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-03-25",
+  "title": "Nota Interna N° 203, del 25 de marzo de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16361",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16361_recurso_1.pdf",
+  "path": "notas/cms-aid-16361.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-03-25",
+  "title": "Nota Interna N° 195, del 25 de marzo de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16413",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16413_recurso_1.pdf",
+  "path": "notas/cms-aid-16413.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-03-18",
+  "title": "Nota Interna N° 175, del 18 de marzo de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16316",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16316_recurso_1.pdf",
+  "path": "notas/cms-aid-16316.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-03-14",
+  "title": "Nota Interna N° 155, del 14 de marzo de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16360",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16360_recurso_1.pdf",
+  "path": "notas/cms-aid-16360.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-02-08",
+  "title": "Nota Interna N° 92, del 8 de febrero de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16412",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16412_recurso_1.pdf",
+  "path": "notas/cms-aid-16412.pdf",
+  "content_type": "application/pdf",
+  "date": "2022-01-12",
+  "title": "Nota Interna N° 22, del 12 de enero de 2022",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16359",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16359_recurso_1.pdf",
+  "path": "notas/cms-aid-16359.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-12-29",
+  "title": "Nota Interna N° 735, del 29 de diciembre de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16302",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16302_recurso_1.pdf",
+  "path": "notas/cms-aid-16302.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-11-10",
+  "title": "Nota Interna N° 635, del 10 de noviembre de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16327",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16327_recurso_1.pdf",
+  "path": "notas/cms-aid-16327.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-11-05",
+  "title": "Nota Interna N° 626, del 5 de noviembre de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16326",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16326_recurso_1.pdf",
+  "path": "notas/cms-aid-16326.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-07-09",
+  "title": "Nota Interna N° 316, del 9 de julio de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16432",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16432_recurso_1.pdf",
+  "path": "notas/cms-aid-16432.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-07-02",
+  "title": "Nota Interna N° 305, del 2 de julio de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16318",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16318_recurso_1.pdf",
+  "path": "notas/cms-aid-16318.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-06-22",
+  "title": "Nota Interna N° 295, del 22 de junio de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16430",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16430_recurso_1.pdf",
+  "path": "notas/cms-aid-16430.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-06-15",
+  "title": "Nota Interna N° 279, del 15 de junio de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16325",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16325_recurso_1.pdf",
+  "path": "notas/cms-aid-16325.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-05-11",
+  "title": "Nota Interna N° 211, del 11 de mayo de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16317",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16317_recurso_1.pdf",
+  "path": "notas/cms-aid-16317.pdf",
+  "content_type": "application/pdf",
+  "date": "2021-04-05",
+  "title": "Nota Interna N° 160, del 5 de abril de 2021",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16458",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16458_recurso_1.pdf",
+  "path": "notas/cms-aid-16458.pdf",
+  "content_type": "application/pdf",
+  "date": "2020-12-10",
+  "title": "Nota Interna N° 561, del 10 de diciembre de 2020",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15060",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15060_recurso_1.pdf",
+  "path": "notas/cms-aid-15060.pdf",
+  "content_type": "application/pdf",
+  "date": "2020-05-19",
+  "title": "Nota Interna N° 299, del 19 de mayo de 2020",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14908",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14908_recurso_1.pdf",
+  "path": "notas/cms-aid-14908.pdf",
+  "content_type": "application/pdf",
+  "date": "2020-05-07",
+  "title": "Nota Interna N° 268, del 7 de mayo de 2020",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14915",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14915_recurso_1.pdf",
+  "path": "notas/cms-aid-14915.pdf",
+  "content_type": "application/pdf",
+  "date": "2019-03-25",
+  "title": "Nota Interna N° 173, del 25 de marzo de 2019",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14914",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14914_recurso_1.pdf",
+  "path": "notas/cms-aid-14914.pdf",
+  "content_type": "application/pdf",
+  "date": "2019-01-15",
+  "title": "Nota Interna N° 12, del 15 de enero de 2019",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16358",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16358_recurso_1.pdf",
+  "path": "notas/cms-aid-16358.pdf",
+  "content_type": "application/pdf",
+  "date": "2018-12-04",
+  "title": "Nota Interna N° 597, del 4 de diciembre de 2018",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14992",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14992_recurso_1.pdf",
+  "path": "notas/cms-aid-14992.pdf",
+  "content_type": "application/pdf",
+  "date": "2018-11-23",
+  "title": "Nota Interna N° 560, del 23 de noviembre de 2018",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14991",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14991_recurso_1.pdf",
+  "path": "notas/cms-aid-14991.pdf",
+  "content_type": "application/pdf",
+  "date": "2018-01-23",
+  "title": "Nota Interna N° 30, del 23 de enero de 2018",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14973",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14973_recurso_1.pdf",
+  "path": "notas/cms-aid-14973.pdf",
+  "content_type": "application/pdf",
+  "date": "2017-12-20",
+  "title": "Nota Interna N° 692, del 20 de diciembre de 2017",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16356",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16356_recurso_1.pdf",
+  "path": "notas/cms-aid-16356.pdf",
+  "content_type": "application/pdf",
+  "date": "2017-10-26",
+  "title": "Nota Interna N° 567, del 26 de octubre de 2017",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14972",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14972_recurso_1.pdf",
+  "path": "notas/cms-aid-14972.pdf",
+  "content_type": "application/pdf",
+  "date": "2017",
+  "title": "Nota Interna N° 607, del 24 de octubre de 201",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14971",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14971_recurso_1.pdf",
+  "path": "notas/cms-aid-14971.pdf",
+  "content_type": "application/pdf",
+  "date": "2017-09-07",
+  "title": "Nota Interna N° 502, del 7 de septiembre de 2017",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14970",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14970_recurso_1.pdf",
+  "path": "notas/cms-aid-14970.pdf",
+  "content_type": "application/pdf",
+  "date": "2017-08-07",
+  "title": "Nota Interna N° 441, del 7 de agosto de 2017",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15121",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15121_recurso_1.pdf",
+  "path": "notas/cms-aid-15121.pdf",
+  "content_type": "application/pdf",
+  "date": "2017-06-15",
+  "title": "Nota Interna N° 301, del 15 de junio de 2017",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15122",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15122_recurso_1.pdf",
+  "path": "notas/cms-aid-15122.pdf",
+  "content_type": "application/pdf",
+  "date": "2017-06-09",
+  "title": "Nota Interna N° 340, del 9 de junio de 2017",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16333",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16333_recurso_1.pdf",
+  "path": "notas/cms-aid-16333.pdf",
+  "content_type": "application/pdf",
+  "date": "2016-11-22",
+  "title": "Nota Interna N° 895, del 22 de noviembre de 2016",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16364",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16364_recurso_1.pdf",
+  "path": "notas/cms-aid-16364.pdf",
+  "content_type": "application/pdf",
+  "date": "2016-11-21",
+  "title": "Nota Interna N° 984, del 21 de noviembre de 2016",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16312",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16312_recurso_1.pdf",
+  "path": "notas/cms-aid-16312.pdf",
+  "content_type": "application/pdf",
+  "date": "2016-07-26",
+  "title": "Nota Interna N° 573, del 26 de julio de 2016",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14950",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14950_recurso_1.pdf",
+  "path": "notas/cms-aid-14950.pdf",
+  "content_type": "application/pdf",
+  "date": "2016-03-21",
+  "title": "Nota Interna N° 180, del 21 de marzo de 2016",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16355",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16355_recurso_1.pdf",
+  "path": "notas/cms-aid-16355.pdf",
+  "content_type": "application/pdf",
+  "date": "2015-11-27",
+  "title": "Nota Interna N° 891, del 27 de noviembre de 2015",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14935",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14935_recurso_1.pdf",
+  "path": "notas/cms-aid-14935.pdf",
+  "content_type": "application/pdf",
+  "date": "2015-01-22",
+  "title": "Nota Interna N° 61, del 22 de enero de 2015",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15101",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15101_recurso_1.pdf",
+  "path": "notas/cms-aid-15101.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-12-26",
+  "title": "Nota Interna N° 922, del 26 de diciembre de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16353",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16353_recurso_1.pdf",
+  "path": "notas/cms-aid-16353.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-12-24",
+  "title": "Nota Interna N° 854, del 24 de diciembre de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14894",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14894_recurso_1.pdf",
+  "path": "notas/cms-aid-14894.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-10-08",
+  "title": "Nota Interna N° 716, del 8 de octubre de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14893",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14893_recurso_1.pdf",
+  "path": "notas/cms-aid-14893.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-06-02",
+  "title": "Nota Interna N° 483, del 2 de junio de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16352",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16352_recurso_1.pdf",
+  "path": "notas/cms-aid-16352.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-05-15",
+  "title": "Nota Interna N° 255, del 15 de mayo de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15097",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15097_recurso_1.pdf",
+  "path": "notas/cms-aid-15097.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-04-23",
+  "title": "Nota Interna N° 222, del 23 de abril de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14892",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14892_recurso_1.pdf",
+  "path": "notas/cms-aid-14892.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-04-23",
+  "title": "Nota Interna N° 215, del 23 de abril de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14891",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14891_recurso_1.pdf",
+  "path": "notas/cms-aid-14891.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-03-20",
+  "title": "Nota Interna N° 142, del 20 de marzo de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14890",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14890_recurso_1.pdf",
+  "path": "notas/cms-aid-14890.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-03-12",
+  "title": "Nota Interna N° 125, del 12 de marzo de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16351",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16351_recurso_1.pdf",
+  "path": "notas/cms-aid-16351.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-02-26",
+  "title": "Nota Interna N° 108, del 26 de febrero de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16338",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16338_recurso_1.pdf",
+  "path": "notas/cms-aid-16338.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-02-12",
+  "title": "Nota Interna N° 83, del 12 de febrero de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15099",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15099_recurso_1.pdf",
+  "path": "notas/cms-aid-15099.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-02-12",
+  "title": "Nota Interna N° 83, del 12 de febrero de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16339",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16339_recurso_1.pdf",
+  "path": "notas/cms-aid-16339.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-02-10",
+  "title": "Nota Interna N° 39, del 10 de febrero de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15102",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15102_recurso_1.pdf",
+  "path": "notas/cms-aid-15102.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-02-10",
+  "title": "Nota Interna N° 39, del 10 de febrero de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15098",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15098_recurso_1.pdf",
+  "path": "notas/cms-aid-15098.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-02-05",
+  "title": "Nota Interna N° 72, del 5 de febrero de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15100",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15100_recurso_1.pdf",
+  "path": "notas/cms-aid-15100.pdf",
+  "content_type": "application/pdf",
+  "date": "2014-01-22",
+  "title": "Nota Interna N° 41, del 22 de enero de 2014",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14879",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14879_recurso_1.pdf",
+  "path": "notas/cms-aid-14879.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-10-10",
+  "title": "Nota Interna N° 768, del 10 de octubre de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15084",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15084_recurso_1.pdf",
+  "path": "notas/cms-aid-15084.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-09-13",
+  "title": "Nota Interna N° 715, del 13 de septiembre de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16479",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16479_recurso_1.pdf",
+  "path": "notas/cms-aid-16479.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-09-13",
+  "title": "Nota Interna N° 646, del 13 de septiembre de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14878",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14878_recurso_1.pdf",
+  "path": "notas/cms-aid-14878.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-09-06",
+  "title": "Nota Interna N° 703, del 6 de septiembre de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16350",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16350_recurso_1.pdf",
+  "path": "notas/cms-aid-16350.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-08-22",
+  "title": "Nota Interna N° 647, del 22 de agosto de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14877",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14877_recurso_1.pdf",
+  "path": "notas/cms-aid-14877.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-08-09",
+  "title": "Nota Interna N° 623, del 9 de agosto de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16349",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16349_recurso_1.pdf",
+  "path": "notas/cms-aid-16349.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-04-01",
+  "title": "Nota Interna N° 214, del 1 de abril de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14876",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14876_recurso_1.pdf",
+  "path": "notas/cms-aid-14876.pdf",
+  "content_type": "application/pdf",
+  "date": "2013-04-01",
+  "title": "Nota Interna N° 214, del 1 de abril de 2013",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15070",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15070_recurso_1.pdf",
+  "path": "notas/cms-aid-15070.pdf",
+  "content_type": "application/pdf",
+  "date": "2012-11-09",
+  "title": "Nota Interna N° 681, del 9 de noviembre de 2012",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16348",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16348_recurso_1.pdf",
+  "path": "notas/cms-aid-16348.pdf",
+  "content_type": "application/pdf",
+  "date": "2012-05-09",
+  "title": "Nota Interna N° 263, del 9 de mayo de 2012",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14861",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14861_recurso_1.pdf",
+  "path": "notas/cms-aid-14861.pdf",
+  "content_type": "application/pdf",
+  "date": "2012-05-07",
+  "title": "Nota Interna N° 270, del 7 de mayo de 2012",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-16347",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-16347_recurso_1.pdf",
+  "path": "notas/cms-aid-16347.pdf",
+  "content_type": "application/pdf",
+  "date": "2012-02-16",
+  "title": "Nota Interna N° 102, del 16 de febrero de 2012",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15059",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15059_recurso_1.pdf",
+  "path": "notas/cms-aid-15059.pdf",
+  "content_type": "application/pdf",
+  "date": "2011-08-25",
+  "title": "Nota Interna N° 546, del 25 de agosto de 2011",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-14855",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-14855_recurso_1.pdf",
+  "path": "notas/cms-aid-14855.pdf",
+  "content_type": "application/pdf",
+  "date": "2011-08-22",
+  "title": "Nota Interna N° 536, del 22 de agosto de 2011",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15058",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15058_recurso_1.pdf",
+  "path": "notas/cms-aid-15058.pdf",
+  "content_type": "application/pdf",
+  "date": "2009-05-12",
+  "title": "Nota Interna N° 281, del 12 de mayo de 2009",
+  "doc_type": "guia_faq"
+ },
+ {
+  "id": "cms-aid-15035",
+  "family": "notas",
+  "url": "https://www.spensiones.cl/portal/institucional/594/articles-15035_recurso_1.pdf",
+  "path": "notas/cms-aid-15035.pdf",
+  "content_type": "application/pdf",
+  "date": "2009-04-16",
+  "title": "Nota Interna N° 301, del 16 de abril de 2009",
+  "doc_type": "guia_faq"
  }
 ]

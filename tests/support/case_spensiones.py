@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import pytest
 from langchain_core.embeddings import DeterministicFakeEmbedding
 
 from agintis.cli.local_case import iter_index, load_manifest, source_for
@@ -23,6 +24,7 @@ from agintis.modules.knowledge.api import (
 from agintis.modules.knowledge.domain import Chunk
 from agintis.modules.knowledge.infrastructure.chunkers import TokenCounter
 from agintis.modules.knowledge.infrastructure.parsers import ParseLimits
+from agintis.modules.knowledge.infrastructure.parsers.limits import MIB
 from agintis.modules.knowledge.infrastructure.registry import (
     build_chunkers,
     build_cleaners,
@@ -61,7 +63,13 @@ class SampleResult:
 
 async def ingest_samples(counter: TokenCounter) -> dict[str, SampleResult]:
     """Ingest every downloaded sample with the profile the router picks; results by sample id."""
-    limits = ParseLimits()
+    # The compendio SP Libro III is 67 MB, over the 50 MiB default: the case ingests with
+    # PARSER_MAX_BYTES=104857600.
+    limits = ParseLimits(max_bytes=100 * MIB)
+    # The Notas Internas profile OCRs scans (`ocr_index_card`): without the `ocr` extra the
+    # parser would fail at the first scanned note, so skip like any missing optional service.
+    for module in ("rapidocr", "onnxruntime", "pypdfium2"):  # the `ocr` extra (parsers/ocr.py)
+        pytest.importorskip(module, reason="the spensiones samples need the `ocr` extra")
     profiles = load_profiles_dir(PROFILES_DIR)
     router = ProfileRouter(profiles)
     manifest = load_manifest(SAMPLES_DIR)

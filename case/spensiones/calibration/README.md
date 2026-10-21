@@ -162,11 +162,90 @@ Offline (2026-10-20), MRR@10 on the 147 dev questions:
     retrieval gained the most.
   - Next step: a synthesis prompt that keeps the conditions of the cited norm.
 - The router probes are dense only, so the scope bands did not move.
-- Deployment: set `RERANKER_MAX_CANDIDATES=20` (the app default is 8). The TEI server must
-  accept 20 texts per request: `--max-client-batch-size` of at least 20, and
-  `--max-concurrent-requests` of at least 40, since TEI counts each text and two topics rerank
-  in parallel. Otherwise every rerank fails and `FallbackReranker` silently keeps the vector
+- Deployment: set `RERANKER_MAX_CANDIDATES=40` (20 until the 10-Libro corpus; the app default is
+  8). The TEI server must accept 40 texts per request: `--max-client-batch-size` of at least 40,
+  and `--max-concurrent-requests` of at least 120, since TEI counts each text and up to three
+  topics rerank in parallel (the `low` band). Otherwise every rerank fails and `FallbackReranker` silently keeps the vector
   order. The compose `reranker` service (CPU image, batch 16) does not meet this yet.
+
+## New Libros dev set (`compendio_new_dev.jsonl`)
+
+40 `in` questions on the compendio Libros added on 2026-10-21: SP III (10), SP IV (8), SP V (8)
+and SC I-V (14). All are in `operativa` voice, and 21 of 40 cite a structural identifier.
+
+- Writing: four blind writers (one per 10 windows) saw only chunk text, never the router, probes
+  or scores. Each window is 20 consecutive chunks inside one Título, spread round-robin over the
+  Títulos with at least 10 chunks.
+- Checks: every snippet is relevant to its source chunk under the eval rule; no question is within
+  token Jaccard 0.5 of another set or row. Nothing was dropped. 13 snippets also match a second
+  chunk (repeated text), and either one counts as a hit.
+- `profile` is `spensiones_compendio` for SP and `spensiones_compendio_sc` for SC, from a split
+  that was measured and dropped. The single-profile runs map SC to `spensiones_compendio`.
+
+Results (2026-10-21, reranker on, raw question). The routed column is MRR with the router
+order and no tie-break:
+
+| setup | new set, gold topic | new set, routed | existing 4 sets, routed |
+|---|---|---|---|
+| 1 compendio profile, 40 candidates | .891 | .891 | .607 / .699 / .710 / .888 |
+| SP and SC split, 40 candidates | .913 | .896 | .607 / .691 / .693 / .863 |
+| before the new Libros (R1) | n/a, not in the corpus | n/a | .626 / .724 / .715 / .967 |
+
+- The split was dropped: it gained +0.005 routed on the new set, against a pre-registered +0.03,
+  and lost 0.010 on the existing sets.
+- Adding the Libros costs the existing sets up to about 0.08 routed MRR on cotizaciones. The new
+  SP III-V chunks crowd Libro I and II answers out of the rerank candidates; 40 candidates
+  recover part of it. It is an open trade-off, not a passed guard.
+- The scope bands move with the corpus. On raw questions with all 10 Libros, at the current
+  thresholds, `ood` items at or above `low_confidence_below` go from 4 to 8, and the p95 rule
+  would put the threshold at 0.662 (0.610 now). Recalibrate with `--analyze` before shipping.
+
+## Notas Internas (`guia_jurisprudencia_nota.yaml`, `nota_dev.jsonl`)
+
+The 117 "Nota Interna N° ..." rows (index doc_type `guia_faq`) had never been downloaded, and
+their profile was a `draft`, so the `jurisprudencia_nota` topic was empty.
+- Activated after checking the 101 notes with text: 556 chunks, 0 failures.
+- 16 are scans with no text layer. The profile uses `ocr_index_card`, which parses text-layer
+  PDFs exactly like `simple` and runs RapidOCR on the scans. All 117 now ingest (636 chunks), and
+  the OCR text has the same non-word share as the text-layer notes (median 0.14 against 0.12).
+  - Ingest needs the `ocr` extra (`uv sync --inexact --extra ocr`; Docker: `UV_EXTRAS` with
+    `ocr`). CI already installs every extra.
+- `nota_dev.jsonl`: 10 blind questions. MRR@10 .850 on the topic and .850 routed. The router picks
+  `jurisprudencia_nota` for 10 of 10, as primary for 9.
+- Routed MRR@10 on the other 5 sets: pooled .737 against .739 without notes; routing_dev2 drops
+  .007. The topic is selected for 13 of 187 other questions, as primary for 2.
+- Unlike oficios, the notes are distinct enough for the evidence router.
+
+## Live guard: 10 Libros + Notas Internas (2026-10-21)
+
+Setup: all 10 compendio Libros in one profile, Notas Internas with OCR, 40 rerank candidates, and
+the scope bands recalibrated (`low_confidence_below` 0.6621, `out_of_scope_below` 0.4732).
+Baseline: the GPU rerank run. The floors were fixed before the run.
+
+| measure | before | after | floor |
+|---|---|---|---|
+| `operativa` live hit | 19/20 | **17/20** | 18 |
+| `v1_mixed` live hit | 12/19 | 11/19 | 11 |
+| cotizaciones live hit | 19/20 | 18/20 | 18 |
+| in-dev faithfulness | 37/38 | **34/38** | 36 |
+| in-dev refusal | 38/40 | 38/40 | 37 |
+| in-dev citation | 33/39 | 31/39 | 30 |
+| ood refusal | 79/80 | 77/80 | 77 |
+| `compendio_new_dev` live hit | not in the corpus | 39/40 | - |
+| `nota_dev` live hit | not in the corpus | 10/10 | - |
+
+- Accepted as a documented exception: two floors failed, `operativa` and faithfulness. In exchange,
+  49 questions from areas that were missing are now answered.
+- The `operativa` losses (af-01, af-28 and af-35, plus af-02 and af-36) match the offline crowding
+  of Libro I by SP III-V. af-19 and af-34 were gained.
+- Faithfulness: 2 of the 4 failures are judge quotes that are not verbatim (in-cmp-15, in-idx-38).
+  The other 2 drop or merge a condition of the norm (in-ncg-21, in-cir-26); no answer states a fact
+  the sources lack.
+- Next: a synthesis prompt that keeps the conditions of the cited norm.
+- Re-checked after the bare-Título fix (2026-10-21): every set's numbers are unchanged except one
+  routed question of `compendio_new_dev` (nd-26 now routes to circular/ncg; .891 -> .866). The scope
+  bands still hold: at 0.6621/0.4732, 12/40 in-domain questions fall in the `low` band, 4/80 ood
+  questions pass as normal and none is refused.
 
 ## Label verification (near-domain `out` items)
 

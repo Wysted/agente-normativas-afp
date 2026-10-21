@@ -10,8 +10,10 @@
 #   LLM_PROVIDER=... LLM_MODEL=... (+ LLM_API_KEY)     # analyzer, synthesis and router models (the
 #                                                      # evidence router needs none; the ROUTER role
 #                                                      # serves `merge_tiebreak: llm` below)
-#   RERANKER_URL=... RERANKER_MAX_CANDIDATES=20        # REQUIRED: every profile reranks (`tei`);
+#   RERANKER_URL=... RERANKER_MAX_CANDIDATES=40        # REQUIRED: every profile reranks (`tei`);
 #                                                      # without a URL the profiles do not load
+# Ingest (cli.ingest) also needs PARSER_MAX_BYTES=104857600 (compendio SP Libro III is 67 MB, over
+# the 50 MiB default) and the `ocr` extra (the Notas Internas profile OCRs scans).
 # The agent then shows up in GET /v1/agents as `spensiones-rag`.
 #
 # Filters: ALWAYS list `filters` per topic (the allowlist, one precise hint per field). Without the
@@ -65,15 +67,18 @@ probe_k: 3                      # passages per topic the probe keeps (1..20)
 # out_of_scope_below (or no evidence at all): the fixed message below, no retrieval and no
 # synthesis call (the analyzer still runs). The two thresholds come from
 # case/spensiones/calibration/report.json (pre-registered rules: p95 and p50 of the out-of-domain
-# dev set; see the README there). 0.6103 / 0.4557 are the report values (0.61034 / 0.45579, tenant
-# spensiones with Libro II, analyzed queries) rounded DOWN; rounding `out` down is the safe direction (fewer refusals). Valid ONLY for that corpus
+# dev set; see the README there). 0.6621 / 0.4732 are the report values (0.66220 / 0.47325, tenant
+# spensiones with the 10 compendio Libros and the Notas Internas, analyzed queries) rounded DOWN;
+# rounding `out` down is the safe direction (fewer refusals). With the bigger corpus the old
+# 0.6103 / 0.4557 let 8/80 ood questions pass as normal; now 4/80, while 12/40 in-domain
+# questions answer in the `low` band (3 topics searched) and none is refused. Valid ONLY for that corpus
 # snapshot, tenant, embedding model and profiles: recalibrate with cli.calibrate_evidence after any
 # re-ingest. They separate DOMAIN, not answerability (near-domain questions the corpus does not
 # cover still score above them and rely on the synthesis prompt's refusal).
 clarification:
   policy: evidence
-  low_confidence_below: 0.6103
-  out_of_scope_below: 0.4557
+  low_confidence_below: 0.6621
+  out_of_scope_below: 0.4732
   out_of_scope_message: >-
     Solo puedo responder preguntas sobre la normativa del Sistema de Pensiones y del Seguro de
     Cesantia de Chile (Compendio de Normas, NCG, circulares, resoluciones y jurisprudencia), y no
@@ -100,13 +105,13 @@ min_sources: 1                  # relevant sources needed before answering
 # 0 while min_rerank_score is uncalibrated: with the tei reranker on, `relevance` would start
 # rewriting at 0.1; without a reranker the loop never fired, so 0 keeps that behaviour.
 max_rewrites: 0
-# Sources reach the model uncut: the longest chunk of this corpus is about 3300 chars, and with
-# the 1500 default 76% of the NCG chunks lost their tail (answers past char 1500 were retrieved
-# but never seen). 27200 = max_sources x 3400, so the total budget never cuts either
-# (tests/evals/test_case_spensiones.py checks both).
+# Sources reach the model uncut: the longest chunk of this corpus is about 3530 chars (compendio
+# SP Libro V), and with the 1500 default 76% of the NCG chunks lost their tail (answers past char
+# 1500 were retrieved but never seen). 28800 = max_sources x 3600, so the total budget never cuts
+# either (tests/evals/test_case_spensiones.py checks both).
 max_sources: 8
-max_source_chars: 3400
-max_context_chars: 27200
+max_source_chars: 3600
+max_context_chars: 28800
 topics:
   - name: compendio
     description: >-

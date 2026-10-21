@@ -1,16 +1,17 @@
 # Individual dictamenes published as "Nota Interna N° <n>, del <fecha>" (117 rows,
 # index doc_type=guia_faq, section "Libro de Jurisprudencia de la SP", 2021-2024).
-# NOT SAMPLED: structure unknown. Draft profile = conservative generic legal-opinion
-# layout; validate on 3-5 downloaded notes before ingesting (see DESIGN.md, next steps).
+# Validated on 2026-10-21 against the 101 notes with a text layer: memo header (ANT. / MAT. /
+# CONC.) + prose, 556 chunks, 0 failures, <= 591 tokens. 16 of the 117 are scans with no text
+# layer: ocr_index_card OCRs them (RapidOCR), the rest parse exactly as with `simple`.
 key: spensiones_jurisprudencia_nota
 schema_version: 1
-status: draft               # loads and validates, but the profile router never selects it
+status: active
 routing:
   - match: {doc_type: [guia_faq, articulo_html], title: {regex: '^\s*Nota Interna'}}
     priority: 10     # narrower than the generic article rule of articulo_faq
 top_k: 5
 chunk_max_tokens: 600
-parser_key: simple              # scanned notes would need `ocr_index_card` (`ocr` extra)
+parser_key: ocr_index_card      # text layer as `simple`; scanned notes (16 of 117) are OCR'd (`ocr` extra)
 cleaners:
   - key: strip_repeated_page_lines
     params: {zone_lines_top: 3, zone_lines_bottom: 3, min_page_ratio: 0.5, min_pages: 2, normalize_digits: true}

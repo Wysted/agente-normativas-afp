@@ -61,6 +61,7 @@ CHUNK_BUDGETS = {
     "spensiones_jurisprudencia_indice": 400,
     "spensiones_articulo_faq": 512,
     "spensiones_resolucion": 600,
+    "spensiones_jurisprudencia_nota": 600,
 }
 
 
