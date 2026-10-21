@@ -242,6 +242,10 @@ Baseline: the GPU rerank run. The floors were fixed before the run.
   The other 2 drop or merge a condition of the norm (in-ncg-21, in-cir-26); no answer states a fact
   the sources lack.
 - Next: a synthesis prompt that keeps the conditions of the cited norm.
+- Re-checked after the bare-Título fix (2026-10-21): every set's numbers are unchanged except one
+  routed question of `compendio_new_dev` (nd-26 now routes to circular/ncg; .891 -> .866). The scope
+  bands still hold: at 0.6621/0.4732, 12/40 in-domain questions fall in the `low` band, 4/80 ood
+  questions pass as normal and none is refused.
 
 ## Label verification (near-domain `out` items)
 
