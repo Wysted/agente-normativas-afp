@@ -100,7 +100,8 @@ these are ignored there (they are host paths/URLs); use the `APP_*` variants des
 | Variable | Default | Req. | Secret | Meaning |
 |---|---|---|---|---|
 | `LLM_PROVIDER` | unset | no | no | `openai`, `anthropic`, `ollama` or any `init_chat_model` provider whose uv extra is installed. OpenAI-compatible servers: `openai` plus `LLM_BASE_URL`. |
-| `LLM_MODEL` | `gpt-5.4-mini` | no | no | Default model id for every role. |
+| `LLM_MODEL` | `gpt-6-luna` | no | no | Default model id for every role. |
+| `LLM_REASONING_EFFORT` | `none` | no | no | Reasoning effort of the default profile (openai only): `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max` (each model accepts a subset). Empty = not sent (the API default applies). The default is dropped for other providers; an explicit value with one fails at boot. Set it empty for an openai model without reasoning or an OpenAI-compatible server (`LLM_BASE_URL`) that rejects the parameter. |
 | `LLM_API_KEY` | unset | no | yes | Provider key (use a dummy value for OpenAI-compatible local servers). |
 | `LLM_BASE_URL` | unset | no | no | Override the provider endpoint. |
 | `LLM_TEMPERATURE` | unset | no | no | 0..2; unset = provider default (reasoning models reject a custom value). |

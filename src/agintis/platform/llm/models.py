@@ -125,6 +125,9 @@ class LlmConfig:
     timeout_seconds: float | None = None
     max_retries: int | None = None
     stream_usage: bool | None = None
+    # Only the openai mapper passes it: the other providers' mappers drop it (LLM_REASONING_EFFORT
+    # defaults to "none" whatever the provider; an explicit value elsewhere is refused by Settings).
+    reasoning_effort: str | None = None
 
     def __post_init__(self) -> None:
         missing = set(ChatRole) - set(self.models)
@@ -142,6 +145,7 @@ class LlmConfig:
             timeout_seconds=self.timeout_seconds,
             max_retries=self.max_retries,
             stream_usage=self.stream_usage,
+            reasoning_effort=self.reasoning_effort,
         )
 
 

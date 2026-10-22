@@ -99,7 +99,8 @@ estas variables se ignoran allí (son rutas/URL del host); usa las variantes `AP
 | Variable | Default | Req. | Secret | Significado |
 |---|---|---|---|---|
 | `LLM_PROVIDER` | unset | no | no | `openai`, `anthropic`, `ollama` o cualquier proveedor de `init_chat_model` cuyo extra de uv esté instalado. Servidores compatibles con OpenAI: `openai` más `LLM_BASE_URL`. |
-| `LLM_MODEL` | `gpt-5.4-mini` | no | no | Id del modelo por defecto para todos los roles. |
+| `LLM_MODEL` | `gpt-6-luna` | no | no | Id del modelo por defecto para todos los roles. |
+| `LLM_REASONING_EFFORT` | `none` | no | no | Esfuerzo de razonamiento del perfil por defecto (solo openai): `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max` (cada modelo acepta un subconjunto). Vacío = no se envía (aplica el valor por defecto de la API). El valor por defecto se descarta con otros proveedores; un valor explícito con ellos falla al arrancar. Déjalo vacío con un modelo openai sin razonamiento o un servidor compatible con OpenAI (`LLM_BASE_URL`) que rechace el parámetro. |
 | `LLM_API_KEY` | unset | no | yes | Clave del proveedor (usa un valor ficticio para servidores locales compatibles con OpenAI). |
 | `LLM_BASE_URL` | unset | no | no | Sobrescribe el endpoint del proveedor. |
 | `LLM_TEMPERATURE` | unset | no | no | 0..2; sin definir = el valor por defecto del proveedor (los modelos de razonamiento rechazan un valor personalizado). |

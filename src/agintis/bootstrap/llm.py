@@ -58,6 +58,7 @@ def build_chat_models(settings: Settings, environ: EnvLookup | None = None) -> C
             timeout_seconds=llm.timeout_seconds,
             max_retries=llm.max_retries,
             stream_usage=llm.stream_usage,
+            reasoning_effort=llm.reasoning_effort,
         )
         if llm.provider
         else None
