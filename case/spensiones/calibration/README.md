@@ -343,8 +343,33 @@ Routing (MRR@10 with the router order and no tie-break) against the setup withou
 
 - Oficios cover every subject, so they win routing slots in other areas, and no bias keeps them
   reachable without that cost. The guard fails at every value. Not shipped.
-- Next: let the LLM tie-break (reads passages) decide, or route to oficios only when the question
-  asks how the Superintendencia resolved a case. Both need an OpenAI run.
+- Keyword gating (route to oficios only when the question says "oficio", "criterio",
+  "interpret..." and similar) was tried offline and fails: practitioners describe the situation
+  without those words. It fires on 7 of the 20 oficio questions.
+
+### With the merge tie-break (2026-10-22, gpt-6-luna)
+
+The numbers above use the router order and never ran the LLM merge tie-break, which `main`
+enables. The tie-break reads the top passages of the topics and picks the primary.
+
+Live hits, measured with the criterion fixed before the run. All runs are from the same session.
+B is the setup without oficios.
+
+| set | B | bias -0.04 | bias 0 |
+|---|---|---|---|
+| `operativa` | 19/20 | 19/20 | 19/20 |
+| `v1_mixed` | 11/19 | 12/19 | 11/19 |
+| cotizaciones | 18/20 | 18/20 | 18/20 |
+| `compendio_new_dev` | 39/40 | 38/40 | 38/40 |
+| `nota_dev` | 10/10 | 10/10 | 10/10 |
+| the five pooled | 97/109 | 97/109 | 96/109 |
+| `oficio_dev` | 0/20 | 14/20 | **18/20** |
+
+- Both biases pass: no set loses more than 1, and the pool loses at most 2. Bias 0 is kept
+  because it scores highest overall.
+- With bias 0, oficio passages are 79 of the 742 sources in the other five sets and reach 35 of
+  109 answers. They are the first source in only 3: the tie-break keeps them secondary.
+- Stage 2 (scope bands and judge): see below.
 
 ## Label verification (near-domain `out` items)
 

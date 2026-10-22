@@ -453,15 +453,13 @@ class TestSpensionesAgent:
         assert spec.uses_evidence_router
         assert not spec.uses_llm_router
 
-    def test_the_evidence_knobs_are_dev_calibrated_with_only_an_oficio_bias(self) -> None:
+    def test_the_evidence_knobs_are_the_dev_calibrated_values_with_no_bias(self) -> None:
         spec, _ = self._load()
 
         assert (spec.evidence_aggregate, spec.evidence_margin, spec.probe_k) == ("max", 0.05, 3)
         assert spec.max_topics == 2
         assert {"evidence_margin", "evidence_aggregate", "probe_k"} <= spec.model_fields_set
-        # Dev grid only (calibration README, Oficios).
-        biased = {t.name: t.evidence_bias for t in spec.topics if t.evidence_bias}
-        assert biased == {"oficio": -0.04}
+        assert [t.evidence_bias for t in spec.topics] == [0.0] * 8  # calibrated on a dev set only
 
     def test_one_topic_per_profile_with_a_spanish_description(self) -> None:
         spec, registry = self._load()
