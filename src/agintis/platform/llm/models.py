@@ -101,14 +101,15 @@ class LlmProfile:
     timeout_seconds: float | None = None
     max_retries: int | None = None
     stream_usage: bool | None = None
-    reasoning_effort: str | None = None  # openai only (checked when the profiles file is parsed)
+    reasoning_effort: str | None = None  # openai only (only the openai mapper passes it)
 
 
 @dataclass(frozen=True)
 class LlmConfig:
     """The platform defaults: one provider, a model per role (the `default` profile).
 
-    Backward compatible on purpose: an option left unset is NOT pinned, so the provider
+    Backward compatible on purpose: an option left unset is NOT pinned (`reasoning_effort` is
+    the exception: Settings defaults it to none), so the provider
     integration's own environment fallback applies (OPENAI_API_KEY, OPENAI_BASE_URL,
     ANTHROPIC_API_KEY, ANTHROPIC_BASE_URL). The operator who sets OPENAI_BASE_URL in the process
     environment redirects the default profile (and sends it the key it resolves) by design;
@@ -125,9 +126,7 @@ class LlmConfig:
     timeout_seconds: float | None = None
     max_retries: int | None = None
     stream_usage: bool | None = None
-    # Only the openai mapper passes it: the other providers' mappers drop it (LLM_REASONING_EFFORT
-    # defaults to "none" whatever the provider; an explicit value elsewhere is refused by Settings).
-    reasoning_effort: str | None = None
+    reasoning_effort: str | None = None  # openai only; `LLM_REASONING_EFFORT` pins it to none
 
     def __post_init__(self) -> None:
         missing = set(ChatRole) - set(self.models)
