@@ -305,6 +305,11 @@ The criterion was fixed before the runs. Baselines: the keep-conditions run (jud
   reasoning tokens cost more and do not help here.
 - `operativa` is back to 19/20, above the 18 floor that the 10 Libros + Notas exception failed.
 - script_mix stays 40/40 and 80/80. Answers are a bit shorter (mean 564 -> 485 chars).
+- Scope bands recalibrated with the Luna analyzer (`--analyze`, now `report.json`):
+  `low_confidence_below` stays 0.6621, and `out_of_scope_below` goes 0.4732 -> 0.4795 (+0.0063,
+  over the pre-registered 0.005 tolerance). AUROC .963. 4/80 ood questions pass as normal, 14/40
+  in-domain questions fall in the `low` band, and none is refused. The in-dev and ood judge was
+  rerun with the new bands against the same floors: see below.
 - Running it needs `LLM_PROFILES_FILE=case/spensiones/llm_profiles.yaml` and `OPENAI_API_KEY`
   (a named profile cannot use the `LLM_` settings' key). In Docker: `APP_LLM_PROFILES_FILE` with
   the container path, and `OPENAI_API_KEY` in `.env`.
