@@ -247,6 +247,36 @@ Baseline: the GPU rerank run. The floors were fixed before the run.
   bands still hold: at 0.6621/0.4732, 12/40 in-domain questions fall in the `low` band, 4/80 ood
   questions pass as normal and none is refused.
 
+## Synthesis prompt: keep the norm's conditions (2026-10-21)
+
+`prompts.synthesize` gained two rules plus an invented example:
+- Keep every condition a source puts on a rule, and apply the rule only to the subject, account
+  or document the source names.
+- Give each case (letras, numerales) with its own condition instead of chaining the cases, and say
+  so when the source rule is about something nearby rather than transferring it.
+
+It targets the 3 synthesis-side faithfulness failures seen so far (in-ncg-17, in-ncg-21,
+in-cir-26). Each drops, swaps or transfers a condition. The criterion was fixed before the run.
+Baseline: the 10 Libros + Notas run above, with the same retrieval. Live hits were not rerun: they
+only read the retrieved sources, which a synthesis prompt cannot change.
+
+| measure | before | after | rule |
+|---|---|---|---|
+| in-dev faithfulness | 34/38 | **36/38** | ≥ 36 (decides) |
+| in-dev contradicted claims | 3 | **1** | ≤ 1 (decides; keeps judge noise from passing it alone) |
+| in-dev refusal | 38/40 | 38/40 | ≥ 37 |
+| in-dev relevance | 38/40 | 38/40 | ≥ 37 |
+| in-dev citation | 31/39 | 35/38 | ≥ 28 |
+| ood refusal | 77/80 | 77/80 | ≥ 76 |
+
+- It passes, which closes the faithfulness part of the exception above. The `operativa` live hit
+  (17/20) stays an exception.
+- in-ncg-17 and in-ncg-21 now pass.
+- in-cir-26 still fails: another source sets the valuation on the day the charges are recorded.
+  It is a neighbouring rule, not a dropped condition.
+- in-cmp-15 is still a judge quote that is not verbatim.
+- Answers are about 21% longer (mean 467 -> 564 chars).
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
