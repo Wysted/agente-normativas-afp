@@ -185,7 +185,7 @@ class TestYamlRouting:
             {"doc_type": "guia_faq", "title": "Nota Interna N° 1, del 2 de mayo"},
             "spensiones_jurisprudencia_nota",
         ),
-        ({"doc_type": "oficio"}, None),
+        ({"doc_type": "oficio"}, "spensiones_oficio"),
         # Lower-priority broad rules never beat a narrower one, in any file order.
         (
             {"doc_type": "articulo_html", "title": "Resolución N° 7"},

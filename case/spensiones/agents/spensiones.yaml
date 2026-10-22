@@ -74,18 +74,18 @@ probe_k: 3                      # passages per topic the probe keeps (1..20)
 # out_of_scope_below (or no evidence at all): the fixed message below, no retrieval and no
 # synthesis call (the analyzer still runs). The two thresholds come from
 # case/spensiones/calibration/report.json (pre-registered rules: p95 and p50 of the out-of-domain
-# dev set; see the README there). 0.6621 / 0.4795 are the report values (0.66220 / 0.47955, tenant
-# spensiones with the 10 compendio Libros and the Notas Internas, queries analyzed by gpt-6-luna)
-# rounded DOWN; rounding `out` down is the safe direction (fewer refusals). 4/80 ood questions
-# pass as normal, while 14/40 in-domain questions answer in the `low` band (3 topics searched) and
-# none is refused. Valid ONLY for that corpus snapshot, tenant, embedding model, analyzer model
+# dev set; see the README there). 0.6569 / 0.4866 are the report values (0.65697 / 0.48669, tenant
+# spensiones with the 10 compendio Libros, the Notas Internas and the oficios, queries analyzed by
+# gpt-6-luna) rounded DOWN; rounding `out` down is the safe direction (fewer refusals). 4/80 ood
+# questions pass as normal, while 10/40 in-domain questions answer in the `low` band (3 topics
+# searched) and none is refused. Valid ONLY for that corpus snapshot, tenant, embedding model, analyzer model
 # and profiles: recalibrate with cli.calibrate_evidence (--analyze) after any re-ingest or
 # analyzer change. They separate DOMAIN, not answerability (near-domain questions the corpus does not
 # cover still score above them and rely on the synthesis prompt's refusal).
 clarification:
   policy: evidence
-  low_confidence_below: 0.6621
-  out_of_scope_below: 0.4795
+  low_confidence_below: 0.6569
+  out_of_scope_below: 0.4866
   out_of_scope_message: >-
     Solo puedo responder preguntas sobre la normativa del Sistema de Pensiones y del Seguro de
     Cesantia de Chile (Compendio de Normas, NCG, circulares, resoluciones y jurisprudencia), y no
@@ -206,6 +206,18 @@ topics:
       plazo.
     profile: spensiones_jurisprudencia_indice
     filters: {}       # no filter fields: the extractor is never called
+  - name: oficio
+    description: >-
+      Oficios Ordinarios de la Superintendencia (2001-2024): respuestas a consultas concretas
+      de AFP, empleadores, afiliados u otras instituciones, con el criterio que la
+      Superintendencia aplica a un caso o a una duda de interpretacion, e instrucciones
+      puntuales impartidas a las administradoras. Elegir cuando la pregunta
+      busca como la Superintendencia resolvio o interpreto una situacion, o cita un "Oficio
+      Ordinario N° ...". NO para la regla general vigente (compendio o ncg).
+    profile: spensiones_oficio
+    filters:
+      oficio_number: "Numero del Oficio Ordinario, como entero. Si la pregunta cita UN oficio, el mismo numero en el limite inferior y en el superior. Solo si la pregunta lo nombra."
+      issued_date: "Fecha del oficio. Solo si la pregunta da una fecha, mes o anio; para un anio completo, del 01-01 al 31-12 de ese anio."
 prompts:
   analyze: |
     Preparas una pregunta de un usuario para buscarla en la normativa del Sistema de Pensiones de Chile.

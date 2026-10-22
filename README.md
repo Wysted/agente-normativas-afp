@@ -113,7 +113,7 @@ Pushing a tag `vX.Y.Z` that matches the `pyproject.toml` version runs
 ## Add a case
 
 A case is a directory `case/<name>/`. `case/fastapi_es` is the worked example (Markdown corpus,
-two profiles); `case/spensiones` is the larger one (PDF/HTML, seven profiles, metadata filters).
+two profiles); `case/spensiones` is the larger one (PDF/HTML, eight profiles, metadata filters).
 Its scanned resolutions are ingested as index cards; OCR for scanned PDFs is opt-in (parser
 `ocr_index_card`, RapidOCR on CPU, ~4 s per page) and needs the `ocr` extra: `uv sync --extra ocr`
 plus the other extras you use (`--all-extras` includes it); Docker:

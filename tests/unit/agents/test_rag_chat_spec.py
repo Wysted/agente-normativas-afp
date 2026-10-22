@@ -459,13 +459,13 @@ class TestSpensionesAgent:
         assert (spec.evidence_aggregate, spec.evidence_margin, spec.probe_k) == ("max", 0.05, 3)
         assert spec.max_topics == 2
         assert {"evidence_margin", "evidence_aggregate", "probe_k"} <= spec.model_fields_set
-        assert [t.evidence_bias for t in spec.topics] == [0.0] * 7  # calibrated on a dev set only
+        assert [t.evidence_bias for t in spec.topics] == [0.0] * 8  # calibrated on a dev set only
 
     def test_one_topic_per_profile_with_a_spanish_description(self) -> None:
         spec, registry = self._load()
 
         assert {t.profile for t in spec.topics} == {p.name for p in registry.all()}
-        assert len(spec.topics) == 7
+        assert len(spec.topics) == 8
         assert all(len(t.description) > 40 for t in spec.topics)
 
     def test_the_allowlists(self) -> None:
@@ -488,6 +488,7 @@ class TestSpensionesAgent:
         assert filters["jurisprudencia_nota"] == {"nota_number", "issued_date"}
         assert filters["articulo_faq"] == {"aid"}
         assert filters["jurisprudencia_indice"] == set()
+        assert filters["oficio"] == {"oficio_number", "issued_date"}
         assert not self.FORBIDDEN & set().union(*filters.values())
 
     def test_the_system_hint_only_asks_for_the_cesantia_value(self) -> None:

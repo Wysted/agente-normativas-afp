@@ -113,7 +113,7 @@ Al hacer push de un tag `vX.Y.Z` que coincide con la versión de `pyproject.toml
 ## Agregar un caso
 
 Un caso es un directorio `case/<name>/`. `case/fastapi_es` es el ejemplo completo (corpus en Markdown,
-dos perfiles); `case/spensiones` es el más grande (PDF/HTML, siete perfiles, filtros de metadatos).
+dos perfiles); `case/spensiones` es el más grande (PDF/HTML, ocho perfiles, filtros de metadatos).
 Sus resoluciones escaneadas se ingieren como fichas; el OCR de PDF escaneados es opt-in (parser
 `ocr_index_card`, RapidOCR en CPU, ~4 s por página) y requiere el extra `ocr`: `uv sync --extra ocr`
 más los otros extras que uses (`--all-extras` lo incluye); Docker:

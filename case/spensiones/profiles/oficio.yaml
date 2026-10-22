@@ -1,0 +1,106 @@
+# Oficios Ordinarios (index doc_type=oficio, 489 rows, 2001-2024),
+# the Superintendencia's answers to consultations: administrative jurisprudence.
+# Layout: optional cover page (OFICIO ORDINARIO N°, date, MATERIA, IDENTIFICACION INTERNA,
+# DESTINOS, TEMA, signer), then a memo header (ANT. / MAT. / DE: / A:) and an unnumbered prose
+# body; footer "Superintendencia de Pensiones OF-DDN-yy-nnn". Older ones are OCR'd scans.
+# Adapted from circular.yaml (same house style).
+key: spensiones_oficio
+schema_version: 1
+routing:
+  - match: {doc_type: [oficio]}
+top_k: 6
+chunk_max_tokens: 600
+parser_key: simple
+cleaners:
+  - key: normalize_quotes
+    # Carriage returns and lone no-break spaces some PDFs emit between words (see compendio.yaml).
+    params:
+      map: {"\r": " ", "\u00a0": " "}
+  - key: strip_repeated_page_lines
+    # Auto-detects page furniture: a line (digits normalised) that repeats in the top or
+    # bottom zone of >= 50% of pages. Catches "Superintendencia de Pensiones CI-DDN-26-03",
+    # the legacy letterhead and bare page numbers without per-document regexes.
+    params: {zone_lines_top: 3, zone_lines_bottom: 3, min_page_ratio: 0.5, min_pages: 2, normalize_digits: true}
+  - key: strip_lines
+    # Page-number-only lines and the e-signature verification block.
+    params:
+      patterns:
+        - '^\s*\d{1,3}\s*$'
+        - '^Verifique documento en https?://\S+$'
+        - '^Superintendencia de Pensiones\s+[A-Z]{2}-[A-Z]{3}-\d{2}-\d{1,3}\s*$'
+        - '^[A-Z]{2}-[A-Z]{3}-\d{2}-\d{1,3}\s*$'          # internal id echoed in the page-1 footer
+  - key: normalize_whitespace
+    params: {collapse_inner_spaces: true, strip_lines: true, max_blank_lines: 1}
+chunker_key: pattern_hierarchy
+chunker_params:
+  levels:
+    - name: titulo
+      depth: 0
+      # Long consolidated circulars use upper-case TITULO/CAPITULO (not present in the two
+      # samples: unvalidated, kept upper-case only to avoid matching cross-references).
+      pattern: '^T[IÍ]TULO\s+(?P<titulo>[IVXL]+)\b\.?\s*(?P<titulo_nombre>.*)$'
+      heading_template: 'TÍTULO {titulo} {titulo_nombre}'
+    - name: capitulo
+      depth: 1
+      pattern: '^CAP[IÍ]TULO\s+(?P<capitulo>[IVXL]+)\b\.?\s*(?P<capitulo_nombre>.*)$'
+      heading_template: 'CAPÍTULO {capitulo} {capitulo_nombre}'
+    - name: seccion
+      depth: 2
+      # Closing sections written as a bare upper-case line.
+      pattern: '^(?:[IVX]{1,4}\.\s*)?(?P<seccion>VIGENCIA|ANEXOS?(?:\s+N[º°]\s*\d+)?|DISPOSICI[OÓ]N(?:ES)?\s+TRANSITORIAS?|DEROGACI[OÓ]N(?:ES)?)\s*:?\s*$'
+      heading_template: '{seccion}'
+    - name: numero
+      depth: 2
+      pattern: '^(?P<numero>\d{1,2})\.-?(?!\d)\s+\S'
+      heading_template: '{numero}.'
+    - name: literal
+      depth: 3
+      pattern: '^(?P<literal>[a-zñ])\)\s+\S'
+      heading_template: '{literal})'
+  split_level: numero
+  oversize: {strategy: deeper_levels_then_recursive, levels: [literal]}
+  merge_below_tokens: 60
+  fold_intro_below_tokens: 80
+  include_heading: true
+  heading_prefix_template: '{title:110}'   # the index title already carries number, date and often the subject
+  preamble: keep                 # cover page + ANT. / MAT. / DE / A = what was asked, one chunk
+  preamble_heading: 'Encabezado'
+extractors:
+  legal_refs:
+    # Chilean legal references in the chunk: "D.L. N° 3.500" -> "DL 3500", "Ley N° 21.735" -> "Ley 21735".
+    key: regex_labeled
+    params:
+      rules:
+        - {pattern: '\bD\.\s?L\.\s*N[°º]\s*([\d.]+)', label: DL, strip_chars: '.'}
+        - {pattern: '\bDecreto\s+Ley\s+N[°º]\s*([\d.]+)', label: DL, strip_chars: '.'}
+        - {pattern: '\bD\.\s?F\.\s?L\.\s*N[°º]\s*([\d.]+)', label: DFL, strip_chars: '.'}
+        - {pattern: '\bD\.\s?S\.(?:\s+conjunto)?\s+N[°º]\s*(\d+)', label: DS}
+        # Not the tail of "Decreto Ley N° 3.500" (that is a DL, already matched above).
+        - {pattern: '(?<!Decreto )\b[Ll]ey\s+N[°º]\s*([\d.]+)', label: Ley, strip_chars: '.'}
+metadata_fields:
+  - {name: source_id,      type: str,  source: 'document:id',        filterable: true}
+  - {name: doc_family,     type: str,  source: 'const:oficio',       filterable: true}
+  - {name: oficio_number,  type: int,  source: 'document:number',    filterable: true, indexed: true}
+  - {name: area,           type: str,  source: 'document:area',      filterable: true}
+  - name: issued_date
+    type: date
+    source: 'document:date'
+    transforms: [{key: date_floor}, {key: reject_after, params: {limit: ingest_date}}]
+    filterable: true
+    indexed: true
+  - {name: date_precision, type: str,  source: 'document:date_precision'}
+  # The memo subject line. shortcut: first line only (MAT. wraps), upgrade with a multi-line
+  # extractor or the cover page MATERIA block when filtering by subject matters.
+  - name: materia
+    type: 'list[str]'
+    source: 'extractor:regex_all'
+    params: {pattern: '(?:^|\n)\s*MAT\.?\s*:\s*([^\n]+)', group: 1, unique: true, scope: document, normalize: compact_spaces}
+  - {name: numeros,        type: 'list[str]', source: 'group:numero',   filterable: true}
+  - {name: seccion,        type: str,  source: 'group:seccion',      filterable: true}
+  - {name: cited_laws,     type: 'list[str]', source: 'extractor:legal_refs', filterable: true}
+default_filter: null
+reranker_key: tei
+# Hybrid: circulars are cited by number and section ("Circular 2425"). Neutral on the current
+# eval (6 questions, same ranks); kept for terse reference queries the AND lexical branch serves.
+retrieval_mode: hybrid
+# bm25_hybrid measured, not adopted (old dev set -0.0116 isolated), see README.
