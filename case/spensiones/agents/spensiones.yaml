@@ -7,9 +7,9 @@
 # Enable it by pointing the app at this directory (it must be run together with the profiles):
 #   KNOWLEDGE_PROFILES_DIR=case/spensiones/profiles
 #   AGENTS_DIR=case/spensiones/agents
-#   LLM_PROVIDER=... LLM_MODEL=... (+ LLM_API_KEY)     # analyzer, synthesis and router models (the
-#                                                      # evidence router needs none; the ROUTER role
-#                                                      # serves `merge_tiebreak: llm` below)
+#   LLM_PROFILES_FILE=case/spensiones/llm_profiles.yaml  # `models:` below binds every role to its
+#   OPENAI_API_KEY=...                                 # `luna_none` profile (the key it names)
+#   (Docker, CASE=spensiones: APP_LLM_PROFILES_FILE=/app/case/llm_profiles.yaml, OPENAI_API_KEY in .env)
 #   RERANKER_URL=... RERANKER_MAX_CANDIDATES=40        # REQUIRED: every profile reranks (`tei`);
 #                                                      # without a URL the profiles do not load
 # Ingest (cli.ingest) also needs PARSER_MAX_BYTES=104857600 (compendio SP Libro III is 67 MB, over
@@ -40,6 +40,13 @@ description: >-
   Responde preguntas sobre la normativa del Sistema de Pensiones y del Seguro de Cesantia
   (Compendio de Normas, NCG, circulares, resoluciones, jurisprudencia y articulos de ayuda)
   citando las fuentes recuperadas.
+# Every LLM role on gpt-6-luna with reasoning off (the ROUTER role serves `merge_tiebreak: llm`;
+# the evidence router itself needs no model). Chosen over gpt-5.4-mini and luna at medium effort
+# on the dev sets: calibration/README.md, "Model: gpt-6-luna".
+models:
+  analyzer: luna_none
+  router: luna_none
+  synthesis: luna_none
 # Router: `evidence` embeds the question once and probes every topic's profile with a dense search;
 # the best topic is always searched, another one only when its score is within `evidence_margin` of
 # the best (up to max_topics). Live eval (n=29): hit@1 .966 vs .862 for the LLM router, 0 LLM calls.
@@ -67,18 +74,18 @@ probe_k: 3                      # passages per topic the probe keeps (1..20)
 # out_of_scope_below (or no evidence at all): the fixed message below, no retrieval and no
 # synthesis call (the analyzer still runs). The two thresholds come from
 # case/spensiones/calibration/report.json (pre-registered rules: p95 and p50 of the out-of-domain
-# dev set; see the README there). 0.6621 / 0.4732 are the report values (0.66220 / 0.47325, tenant
-# spensiones with the 10 compendio Libros and the Notas Internas, analyzed queries) rounded DOWN;
-# rounding `out` down is the safe direction (fewer refusals). With the bigger corpus the old
-# 0.6103 / 0.4557 let 8/80 ood questions pass as normal; now 4/80, while 12/40 in-domain
-# questions answer in the `low` band (3 topics searched) and none is refused. Valid ONLY for that corpus
-# snapshot, tenant, embedding model and profiles: recalibrate with cli.calibrate_evidence after any
-# re-ingest. They separate DOMAIN, not answerability (near-domain questions the corpus does not
+# dev set; see the README there). 0.6621 / 0.4795 are the report values (0.66220 / 0.47955, tenant
+# spensiones with the 10 compendio Libros and the Notas Internas, queries analyzed by gpt-6-luna)
+# rounded DOWN; rounding `out` down is the safe direction (fewer refusals). 4/80 ood questions
+# pass as normal, while 14/40 in-domain questions answer in the `low` band (3 topics searched) and
+# none is refused. Valid ONLY for that corpus snapshot, tenant, embedding model, analyzer model
+# and profiles: recalibrate with cli.calibrate_evidence (--analyze) after any re-ingest or
+# analyzer change. They separate DOMAIN, not answerability (near-domain questions the corpus does not
 # cover still score above them and rely on the synthesis prompt's refusal).
 clarification:
   policy: evidence
   low_confidence_below: 0.6621
-  out_of_scope_below: 0.4732
+  out_of_scope_below: 0.4795
   out_of_scope_message: >-
     Solo puedo responder preguntas sobre la normativa del Sistema de Pensiones y del Seguro de
     Cesantia de Chile (Compendio de Normas, NCG, circulares, resoluciones y jurisprudencia), y no

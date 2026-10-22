@@ -12,3 +12,12 @@ profiles:
     api_key_env: DEEPSEEK_API_KEY
     temperature: 0
     timeout_seconds: 60
+
+  # Every role of spensiones-rag (bound under `models:` in its spec). Reasoning off: medium (the
+  # API default) did worse on the dev sets (calibration/README.md, "Model: gpt-6-luna"). No
+  # temperature: reasoning models may reject it.
+  luna_none:
+    provider: openai
+    model: gpt-6-luna
+    api_key_env: OPENAI_API_KEY
+    reasoning_effort: none

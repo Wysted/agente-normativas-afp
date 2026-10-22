@@ -1,6 +1,6 @@
 {
   "meta": {
-    "git": "0c52afc",
+    "git": "f1489d1",
     "agent": "spensiones-rag",
     "tenant": "spensiones",
     "query_input": "analyzed",
@@ -25,7 +25,7 @@
       "spensiones_jurisprudencia_indice"
     ],
     "ready_chunks": {
-      "spensiones_compendio": 11179,
+      "spensiones_compendio": 11178,
       "spensiones_ncg": 198,
       "spensiones_circular": 107,
       "spensiones_resolucion": 114,
@@ -34,7 +34,7 @@
       "spensiones_jurisprudencia_indice": 57
     },
     "profile_fingerprints": {
-      "spensiones_compendio": "9b190adaf9e868f0396aeb95c34ed838f7b10ce16ccc9dc72353b016171d19aa",
+      "spensiones_compendio": "eae65ee80cca57eac3233b9b131dc97413aa65c15b175071ba910aa065edcdd8",
       "spensiones_ncg": "937d9db1c0437be443d12ffe89eb5815217a1cf3f2a344febaf0883ea5c74903",
       "spensiones_circular": "62803ad70d4651b243b08345e20f1de15f83945a61a92f56d0406c65a1b39275",
       "spensiones_resolucion": "2e335e73383c663f3229bbd2298fe6a7160e378d733f31d13dd06eb480fab93f",
@@ -43,11 +43,11 @@
       "spensiones_jurisprudencia_indice": "e8f72e7f8269a76077fca833f3bb1b5566d46fdee8fd3c279e61174bec1f09bb"
     },
     "profiles_files": {
-      "sha256": "910b878215c24e50a71e1b2461c78bf2ec82451bd2ff2dc405e6d939b6a45ff1",
+      "sha256": "a0cd5d2c07152ed75c1d6b648dc5251d7c04c9f9b02b92badd5cbd6699350728",
       "files": {
         "articulo_faq.yaml": "14dc6b83d5ab6bc18172a1d47c5620d946ea3c0793f632dfd943afb72f8ca663",
         "circular.yaml": "c0dde6c957e7d2b79ea1c1c75287452583bd31fa67ade6e06ecb094cf48ebaff",
-        "compendio.yaml": "b9ac556e33deb5bf129f33bc03d70a5ecba021187f700e80e173187d8a8a7da9",
+        "compendio.yaml": "8a99d3aa95ada5baa2129929eb6a651d8052100b73a2d5b7e63ba4e69cabffe1",
         "guia_jurisprudencia.yaml": "2effe756b3d1b4c1db0d51ae49611326d7a2f8ddace2a8828e03039b8ab261ff",
         "guia_jurisprudencia_nota.yaml": "a236227df31d9639df4dfab25c372d4944a801da758ab202b8551201c48d621d",
         "ncg.yaml": "1c3157461f0936f42c6d1be9ac7b2f1c95a6fdf1f0f579ba68e6930b39dbbdb5",
@@ -62,7 +62,7 @@
       "case/spensiones/calibration/in_dev.jsonl": "cd172d837d9a19fe9a2a385ae5c41fe080a9de05e50a4557bac94b0301c57556",
       "case/spensiones/calibration/ood.jsonl": "c089f2570d8ef7256ae4730b2a815a0f434bd4afb98003eb47638338a80c448d"
     },
-    "analyzer_model": "default (openai:gpt-5.4-mini)"
+    "analyzer_model": "luna_none (openai:gpt-6-luna)"
   },
   "score": "max over ALL the agent's topics of TopicEvidence.raw_score (the topic's evidence_aggregate of its probe_k similarities, without evidence_bias)",
   "caveats": [
@@ -77,9 +77,9 @@
       "n": 40.0,
       "min": 0.5368081331253052,
       "max": 0.8083369503422974,
-      "mean": 0.6861248043988132,
+      "mean": 0.6843360023259429,
       "p5": 0.6111232906579971,
-      "p25": 0.6543553458582316,
+      "p25": 0.6503259535646477,
       "p50": 0.6940580930499736,
       "p75": 0.7105365131043668,
       "p95": 0.7642355275714106,
@@ -89,16 +89,16 @@
       "n": 80.0,
       "min": 0.2625769156985557,
       "max": 0.6953745510018964,
-      "mean": 0.4838968201979892,
-      "p5": 0.34025568735792594,
-      "p25": 0.4188814091515813,
-      "p50": 0.4732508415435399,
-      "p75": 0.5519636324777184,
+      "mean": 0.4834746953142372,
+      "p5": 0.3352397993206979,
+      "p25": 0.42378261036143416,
+      "p50": 0.4795474116444791,
+      "p75": 0.55091990010339,
       "p95": 0.6621953036410152,
       "p99": 0.6898367565299859
     }
   },
-  "auroc": 0.9646875,
+  "auroc": 0.963125,
   "threshold": 0.6621953036410152,
   "threshold_interval": {
     "confidence": 0.95,
@@ -109,13 +109,13 @@
     "n": 80,
     "coverage": 0.9650815311091006
   },
-  "in_recall": 0.7,
+  "in_recall": 0.65,
   "in_recall_interval": {
-    "k": 28,
+    "k": 26,
     "n": 40,
-    "rate": 0.7,
-    "lower": 0.5346837147458767,
-    "upper": 0.8343727956067644,
+    "rate": 0.65,
+    "lower": 0.48315554635100944,
+    "upper": 0.793717509129233,
     "confidence": 0.95
   },
   "out_false_in_rate": 0.05,
@@ -191,6 +191,18 @@
       "question": "Tengo contrato por obra o faena, ¿quién paga el seguro de cesantía?"
     },
     {
+      "id": "in-idx-38",
+      "score": 0.6376920316540033,
+      "topic": "compendio",
+      "question": "¿Qué criterios hay sobre las cuotas mortuorias?"
+    },
+    {
+      "id": "in-cmp-09",
+      "score": 0.6425516796872524,
+      "topic": "compendio",
+      "question": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?"
+    },
+    {
       "id": "in-cir-23",
       "score": 0.6487147389310287,
       "topic": "circular",
@@ -229,7 +241,7 @@
   ],
   "out_of_scope": {
     "rule": "p50 of the 'out' scores (pre-registered); 'in' only reports",
-    "threshold": 0.4732508415435399,
+    "threshold": 0.4795474116444791,
     "threshold_interval": {
       "confidence": 0.95,
       "lower": 0.44516643554964364,
@@ -274,11 +286,11 @@
     "chat": {
       "out": {
         "n": 10,
-        "min": 0.4108871343996269,
-        "median": 0.4555292576163106,
+        "min": 0.42597134190712416,
+        "median": 0.4604198408367517,
         "max": 0.4969052822320099,
         "above_low_confidence": 0,
-        "below_out_of_scope": 8
+        "below_out_of_scope": 7
       }
     },
     "cir": {
@@ -297,7 +309,7 @@
         "min": 0.6121814846992493,
         "median": 0.6999735831266853,
         "max": 0.7434153999933852,
-        "above_low_confidence": 14,
+        "above_low_confidence": 13,
         "below_out_of_scope": 0
       }
     },
@@ -308,7 +320,7 @@
         "median": 0.4632245071612825,
         "max": 0.5380511764929753,
         "above_low_confidence": 0,
-        "below_out_of_scope": 5
+        "below_out_of_scope": 6
       }
     },
     "faq": {
@@ -325,7 +337,7 @@
       "out": {
         "n": 12,
         "min": 0.2625769156985557,
-        "median": 0.3679627642731441,
+        "median": 0.35872763081391873,
         "max": 0.4649822573369087,
         "above_low_confidence": 0,
         "below_out_of_scope": 12
@@ -335,9 +347,9 @@
       "in": {
         "n": 6,
         "min": 0.5368081331253052,
-        "median": 0.63769040487584,
+        "median": 0.6290115608683988,
         "max": 0.7015509636596735,
-        "above_low_confidence": 2,
+        "above_low_confidence": 1,
         "below_out_of_scope": 0
       }
     },
@@ -345,7 +357,7 @@
       "out": {
         "n": 6,
         "min": 0.4089122834477511,
-        "median": 0.5336918840777145,
+        "median": 0.5257277930655169,
         "max": 0.5986578225289488,
         "above_low_confidence": 0,
         "below_out_of_scope": 1
@@ -421,7 +433,7 @@
     "in-cmp-06": "¿Cuándo se entiende devengada la comisión de una cuenta nueva creada dentro del mes?",
     "in-cmp-07": "¿Cómo se hace efectiva la bonificación fiscal por ahorro previsional voluntario?",
     "in-cmp-08": "¿Qué debe hacer un trabajador independiente para dar un mandato a un tercero sobre su cuenta de ahorro voluntario?",
-    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
+    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación del Sistema de Pensiones de Chile y dónde se presenta la solicitud?",
     "in-cmp-10": "¿Se puede repartir el saldo de la cuenta entre dos tipos de fondo?",
     "in-cmp-11": "¿Cuánto tiempo tiene la AFP nueva para revisar el archivo de traspasos el día de la transferencia?",
     "in-cmp-12": "¿Cómo repara la AFP a un afiliado cuando su cuenta perdió rentabilidad por un error de la administradora?",
@@ -450,7 +462,7 @@
     "in-idx-35": "¿Qué oficios existen sobre el tope imponible de las cotizaciones?",
     "in-idx-36": "¿Hay jurisprudencia sobre pensiones de exonerados políticos?",
     "in-idx-37": "¿Dónde encuentro dictámenes sobre la posesión efectiva y las pensiones?",
-    "in-idx-38": "¿Qué criterios hay sobre las cuotas mortuorias?",
+    "in-idx-38": "¿Qué criterios establece la normativa del Sistema de Pensiones de Chile sobre las cuotas mortuorias?",
     "in-idx-39": "Busco instrucciones sobre cotizaciones de trabajadores con más de un empleo para el seguro de cesantía.",
     "in-idx-40": "¿Existen oficios sobre convenios internacionales de seguridad social?",
     "out-gen-01": "¿Cuál es la capital de Australia?",
@@ -466,14 +478,14 @@
     "out-gen-11": "¿Cuántos kilómetros mide el ecuador terrestre?",
     "out-gen-12": "¿Por qué el cielo es azul?",
     "out-chat-01": "Hola, ¿cómo estás?",
-    "out-chat-02": "Buenos días",
-    "out-chat-03": "Gracias por tu ayuda",
+    "out-chat-02": "Buenos días.",
+    "out-chat-03": "Gracias por tu ayuda.",
     "out-chat-04": "¿Cómo te llamas?",
-    "out-chat-05": "Cuéntame un chiste",
+    "out-chat-05": "Cuéntame un chiste.",
     "out-chat-06": "¿Qué puedes hacer?",
-    "out-chat-07": "Adiós, hasta luego",
+    "out-chat-07": "Adiós, hasta luego.",
     "out-chat-08": "¿Eres una persona o un robot?",
-    "out-chat-09": "Me siento un poco cansado hoy",
+    "out-chat-09": "Me siento un poco cansado hoy.",
     "out-chat-10": "jajaja qué bueno",
     "out-code-01": "¿Cómo invierto una lista en Python?",
     "out-code-02": "Escribe una función en JavaScript que ordene un arreglo de números.",
@@ -697,10 +709,10 @@
       "label": "out"
     },
     {
-      "id": "in-cmp-09",
-      "score": 0.6869607381201243,
+      "id": "in-ncg-19",
+      "score": 0.6878729462623596,
       "topic": "compendio",
-      "question": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
+      "question": "¿Qué debe hacer la compañía de seguros con una renta vitalicia cuando se excluye a un beneficiario condenado?",
       "label": "in"
     },
     {
@@ -708,13 +720,6 @@
       "score": 0.6850346735140499,
       "topic": "compendio",
       "question": "¿Qué pasa con el traspaso de fondos si el afiliado muere justo antes de que se transfieran?",
-      "label": "in"
-    },
-    {
-      "id": "in-idx-38",
-      "score": 0.6823295558193196,
-      "topic": "compendio",
-      "question": "¿Qué criterios hay sobre las cuotas mortuorias?",
       "label": "in"
     },
     {
@@ -729,13 +734,6 @@
       "score": 0.6787908481830877,
       "topic": "circular",
       "question": "¿En qué cuenta se deposita el documento de pago de un bono de reconocimiento?",
-      "label": "in"
-    },
-    {
-      "id": "in-ncg-19",
-      "score": 0.6703784465789795,
-      "topic": "compendio",
-      "question": "¿Qué debe hacer la compañía de seguros con una renta vitalicia cuando se excluye a un beneficiario condenado?",
       "label": "in"
     },
     {
@@ -806,6 +804,20 @@
       "score": 0.6487147389310287,
       "topic": "circular",
       "question": "¿Con qué frecuencia debían las administradoras informar sobre los bonos de reconocimiento pagados por las cajas?",
+      "label": "in"
+    },
+    {
+      "id": "in-cmp-09",
+      "score": 0.6425516796872524,
+      "topic": "compendio",
+      "question": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
+      "label": "in"
+    },
+    {
+      "id": "in-idx-38",
+      "score": 0.6376920316540033,
+      "topic": "compendio",
+      "question": "¿Qué criterios hay sobre las cuotas mortuorias?",
       "label": "in"
     },
     {
@@ -949,13 +961,6 @@
       "label": "out"
     },
     {
-      "id": "out-isapre-01",
-      "score": 0.5517022876916962,
-      "topic": "compendio",
-      "question": "¿Cómo me cambio de Isapre sin perder la cobertura?",
-      "label": "out"
-    },
-    {
       "id": "out-isapre-03",
       "score": 0.5503106445259249,
       "topic": "compendio",
@@ -989,6 +994,13 @@
       "topic": "jurisprudencia_nota",
       "question": "¿Dónde encuentro dictámenes sobre la posesión efectiva y las pensiones?",
       "label": "in"
+    },
+    {
+      "id": "out-isapre-01",
+      "score": 0.5343824625015297,
+      "topic": "jurisprudencia_nota",
+      "question": "¿Cómo me cambio de Isapre sin perder la cobertura?",
+      "label": "out"
     },
     {
       "id": "out-abroad-05",
@@ -1068,10 +1080,24 @@
       "label": "out"
     },
     {
+      "id": "out-chat-03",
+      "score": 0.4910016645195119,
+      "topic": "compendio",
+      "question": "Gracias por tu ayuda",
+      "label": "out"
+    },
+    {
       "id": "out-isapre-06",
       "score": 0.4881843023410033,
       "topic": "compendio",
       "question": "¿Cuál es la diferencia entre FONASA tramo B y tramo C?",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-02",
+      "score": 0.4861161853705702,
+      "topic": "jurisprudencia_nota",
+      "question": "Buenos días",
       "label": "out"
     },
     {
@@ -1082,13 +1108,6 @@
       "label": "out"
     },
     {
-      "id": "out-chat-03",
-      "score": 0.4769455506238022,
-      "topic": "compendio",
-      "question": "Gracias por tu ayuda",
-      "label": "out"
-    },
-    {
       "id": "out-code-02",
       "score": 0.47389549016952515,
       "topic": "compendio",
@@ -1096,17 +1115,17 @@
       "label": "out"
     },
     {
-      "id": "out-chat-09",
-      "score": 0.4726061929175547,
-      "topic": "jurisprudencia_nota",
-      "question": "Me siento un poco cansado hoy",
-      "label": "out"
-    },
-    {
       "id": "out-other-02",
       "score": 0.47184354402500195,
       "topic": "compendio",
       "question": "¿Quién ganó la Copa América de 2015?",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-09",
+      "score": 0.467966596479207,
+      "topic": "jurisprudencia_nota",
+      "question": "Me siento un poco cansado hoy",
       "label": "out"
     },
     {
@@ -1138,13 +1157,6 @@
       "label": "out"
     },
     {
-      "id": "out-chat-02",
-      "score": 0.4548777314947692,
-      "topic": "jurisprudencia_nota",
-      "question": "Buenos días",
-      "label": "out"
-    },
-    {
       "id": "out-code-03",
       "score": 0.45255352415303984,
       "topic": "compendio",
@@ -1163,6 +1175,13 @@
       "score": 0.44516643554964364,
       "topic": "compendio",
       "question": "Ayúdame a redactar un saludo de cumpleaños para mi hermana.",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-07",
+      "score": 0.44500502616197113,
+      "topic": "compendio",
+      "question": "Adiós, hasta luego",
       "label": "out"
     },
     {
@@ -1208,17 +1227,17 @@
       "label": "out"
     },
     {
-      "id": "out-chat-07",
-      "score": 0.42879676818847656,
-      "topic": "compendio",
-      "question": "Adiós, hasta luego",
-      "label": "out"
-    },
-    {
       "id": "out-code-08",
       "score": 0.42642760276794434,
       "topic": "compendio",
       "question": "¿Para qué sirve el comando docker compose up?",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-05",
+      "score": 0.42597134190712416,
+      "topic": "compendio",
+      "question": "Cuéntame un chiste",
       "label": "out"
     },
     {
@@ -1240,13 +1259,6 @@
       "score": 0.41608476638794234,
       "topic": "compendio",
       "question": "¿Qué significa la palabra efímero?",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-05",
-      "score": 0.4108871343996269,
-      "topic": "compendio",
-      "question": "Cuéntame un chiste",
       "label": "out"
     },
     {
@@ -1279,7 +1291,7 @@
     },
     {
       "id": "out-gen-10",
-      "score": 0.3848196382766855,
+      "score": 0.3930803771662944,
       "topic": "compendio",
       "question": "¿Cuál es la diferencia entre un virus y una bacteria?",
       "label": "out"
@@ -1289,13 +1301,6 @@
       "score": 0.38419396830183183,
       "topic": "compendio",
       "question": "¿Cómo se juega al ajedrez?",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-12",
-      "score": 0.3821565508842468,
-      "topic": "compendio",
-      "question": "¿Por qué el cielo es azul?",
       "label": "out"
     },
     {
@@ -1310,13 +1315,6 @@
       "score": 0.3759250192731596,
       "topic": "compendio",
       "question": "Recomiéndame una película de ciencia ficción.",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-06",
-      "score": 0.36874493174224754,
-      "topic": "compendio",
-      "question": "¿Cuál es el río más largo del mundo?",
       "label": "out"
     },
     {
@@ -1352,6 +1350,20 @@
       "score": 0.3380909268341299,
       "topic": "jurisprudencia_nota",
       "question": "¿Cuál es el clima típico de Santiago en verano?",
+      "label": "out"
+    },
+    {
+      "id": "out-gen-12",
+      "score": 0.33614182472229004,
+      "topic": "resolucion",
+      "question": "¿Por qué el cielo es azul?",
+      "label": "out"
+    },
+    {
+      "id": "out-gen-06",
+      "score": 0.31810131669044717,
+      "topic": "compendio",
+      "question": "¿Cuál es el río más largo del mundo?",
       "label": "out"
     },
     {

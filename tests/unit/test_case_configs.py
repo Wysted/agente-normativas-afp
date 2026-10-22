@@ -6,6 +6,8 @@ from pathlib import Path
 import pytest
 
 from agintis.bootstrap.container import Container
+from agintis.bootstrap.settings import Settings
+from agintis.platform.llm import load_llm_profiles
 from agintis.platform.yaml_config import yaml_files
 from tests.support.postgres import PROJECT_ROOT
 from tests.support.settings import make_settings
@@ -21,21 +23,33 @@ CASES = sorted(
 )
 
 
+def case_settings(case: Path, monkeypatch: pytest.MonkeyPatch) -> Settings:
+    """The case's profiles and agents, plus its named LLM profiles when it ships some (with a
+    dummy value for each key variable they name: building never calls a model)."""
+    llm: dict[str, object] = {}
+    profiles_file = case / "llm_profiles.yaml"
+    if profiles_file.is_file():
+        llm["profiles_file"] = profiles_file
+        for profile in load_llm_profiles(profiles_file).values():
+            if profile.api_key_env:
+                monkeypatch.setenv(profile.api_key_env, "test-key")
+    return make_settings(
+        knowledge={"profiles_dir": case / "profiles"},
+        agents={"dir": case / "agents"},
+        reranker={"url": RERANKER_URL},
+        **({"llm": llm} if llm else {}),
+    )
+
+
 def test_cases_are_discovered() -> None:
     assert CASES  # guards the glob itself
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda case: case.name)
-def test_case_profiles_and_agents_load(case: Path) -> None:
+def test_case_profiles_and_agents_load(case: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     # Container.build is network-free: it loads the profiles and validates every agent spec
     # against them (unknown profile, filter field the profile does not offer, router knobs).
-    container = Container.build(
-        make_settings(
-            knowledge={"profiles_dir": case / "profiles"},
-            agents={"dir": case / "agents"},
-            reranker={"url": RERANKER_URL},
-        )
-    )
+    container = Container.build(case_settings(case, monkeypatch))
     # Exact counts: a lost profile/agent file (or one silently skipped) must fail. The built-ins
     # are the default profile and the `direct_chat` agent, so subtract them.
     assert len(container.profiles.all()) == len(yaml_files(case / "profiles")) + 1
@@ -43,18 +57,25 @@ def test_case_profiles_and_agents_load(case: Path) -> None:
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda case: case.name)
-def test_eval_questions_name_loaded_profiles(case: Path) -> None:
+def test_eval_questions_name_loaded_profiles(case: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     questions = case / "profiles" / "eval_questions.jsonl"
     if not questions.is_file():
         pytest.skip("no eval questions")
-    container = Container.build(
-        make_settings(
-            knowledge={"profiles_dir": case / "profiles"},
-            agents={"dir": case / "agents"},
-            reranker={"url": RERANKER_URL},
-        )
-    )
+    container = Container.build(case_settings(case, monkeypatch))
     known = {profile.name for profile in container.profiles.all()}
     # Only the `profile` field is read: the questions are held out.
     used = {json.loads(line)["profile"] for line in questions.read_text().splitlines() if line}
     assert used <= known
+
+
+def test_the_spensiones_case_profiles_load() -> None:
+    profiles = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
+
+    luna = profiles["luna_none"]
+    assert (luna.provider, luna.model, luna.api_key_env, luna.temperature) == (
+        "openai",
+        "gpt-6-luna",
+        "OPENAI_API_KEY",
+        None,
+    )
+    assert luna.reasoning_effort == "none"

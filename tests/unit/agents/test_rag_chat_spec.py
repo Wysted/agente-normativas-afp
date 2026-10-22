@@ -29,7 +29,7 @@ from agintis.modules.knowledge.api import (
     RagProfileRegistry,
     load_profiles_dir,
 )
-from agintis.platform.llm import ChatRole
+from agintis.platform.llm import ChatRole, load_llm_profiles
 from tests.fakes.knowledge import InMemoryChunkRepository
 from tests.fakes.llm import chat_models_for
 from tests.fakes.retrieval import FakeRetrieval
@@ -424,6 +424,10 @@ class TestMultiTopicSpec:
         assert "nope2" in str(info.value)
 
 
+# The case binds every role to a named profile (`models:`), so building it needs the catalog.
+CASE_LLM_PROFILES = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
+
+
 class TestSpensionesAgent:
     """The real case config against the real case profiles (no network, no database)."""
 
@@ -499,7 +503,9 @@ class TestSpensionesAgent:
         assert spec.merge_tiebreak == "llm"
         assert ChatRole.ROUTER in roles_used(spec)  # the tie-break, not the router
         probe = ProbeProfiles(InMemoryChunkRepository(), DeterministicFakeEmbedding(size=4))
-        deps = RagChatDeps(chat_models_for(), FakeRetrieval(), probe=probe)
+        deps = RagChatDeps(
+            chat_models_for(profiles=CASE_LLM_PROFILES), FakeRetrieval(), probe=probe
+        )
 
         (runner,) = rag_chat_runners([spec], registry, deps)
 
@@ -522,7 +528,7 @@ class TestSpensionesAgent:
                 "router": "auto",
             }
         )
-        deps = RagChatDeps(chat_models_for(), FakeRetrieval())
+        deps = RagChatDeps(chat_models_for(profiles=CASE_LLM_PROFILES), FakeRetrieval())
 
         (runner,) = rag_chat_runners([llm], registry, deps)
 
