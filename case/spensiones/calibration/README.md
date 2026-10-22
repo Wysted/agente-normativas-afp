@@ -369,7 +369,10 @@ B is the setup without oficios.
   because it scores highest overall.
 - With bias 0, oficio passages are 79 of the 742 sources in the other five sets and reach 35 of
   109 answers. They are the first source in only 3: the tie-break keeps them secondary.
-- Stage 2 (scope bands and judge): see below.
+- Stage 2, scope bands: recalibrated with `--analyze` including the oficio topic (now
+  `report.json`). `low_confidence_below` 0.6621 -> 0.6569, `out_of_scope_below` 0.4795 -> 0.4866,
+  AUROC .966. 4/80 ood questions pass as normal, 10/40 in-domain questions fall in the `low`
+  band, and none is refused.
 
 ## Label verification (near-domain `out` items)
 
