@@ -13,15 +13,11 @@ profiles:
     temperature: 0
     timeout_seconds: 60
 
-  # Candidates under evaluation (reasoning effort none vs medium, the API default); the agent
-  # binds them per role via `models:`. No temperature: reasoning models may reject it.
+  # Every role of spensiones-rag (bound under `models:` in its spec). Reasoning off: medium (the
+  # API default) did worse on the dev sets (calibration/README.md, "Model: gpt-6-luna"). No
+  # temperature: reasoning models may reject it.
   luna_none:
     provider: openai
     model: gpt-6-luna
     api_key_env: OPENAI_API_KEY
     reasoning_effort: none
-  luna_medium:
-    provider: openai
-    model: gpt-6-luna
-    api_key_env: OPENAI_API_KEY
-    reasoning_effort: medium

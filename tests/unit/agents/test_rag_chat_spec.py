@@ -29,9 +29,15 @@ from agintis.modules.knowledge.api import (
     RagProfileRegistry,
     load_profiles_dir,
 )
-from agintis.platform.llm import ChatRole
+from agintis.platform.llm import (
+    ChatModels,
+    ChatRole,
+    LlmConfig,
+    ModelCatalog,
+    load_llm_profiles,
+)
 from tests.fakes.knowledge import InMemoryChunkRepository
-from tests.fakes.llm import chat_models_for
+from tests.fakes.llm import ScriptedChatModel, chat_models_for
 from tests.fakes.retrieval import FakeRetrieval
 from tests.support.postgres import PROJECT_ROOT
 
@@ -436,6 +442,19 @@ class TestSpensionesAgent:
         (spec,) = load_agent_specs(self.AGENTS_DIR)
         return spec, registry
 
+    @staticmethod
+    def _chat_models() -> ChatModels:
+        """Fakes behind the case's named profiles (its `models:` binds every role to one)."""
+        profiles = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
+        defaults = LlmConfig(provider="openai", models={role: role.value for role in ChatRole})
+        catalog = ModelCatalog(
+            defaults,
+            profiles,
+            environ=lambda _name: "test-key",
+            builder=lambda *_args, **_kwargs: ScriptedChatModel(),
+        )
+        return ChatModels(catalog)
+
     def test_it_loads_and_validates_without_warnings(
         self, caplog: pytest.LogCaptureFixture
     ) -> None:
@@ -499,7 +518,7 @@ class TestSpensionesAgent:
         assert spec.merge_tiebreak == "llm"
         assert ChatRole.ROUTER in roles_used(spec)  # the tie-break, not the router
         probe = ProbeProfiles(InMemoryChunkRepository(), DeterministicFakeEmbedding(size=4))
-        deps = RagChatDeps(chat_models_for(), FakeRetrieval(), probe=probe)
+        deps = RagChatDeps(self._chat_models(), FakeRetrieval(), probe=probe)
 
         (runner,) = rag_chat_runners([spec], registry, deps)
 
@@ -522,7 +541,7 @@ class TestSpensionesAgent:
                 "router": "auto",
             }
         )
-        deps = RagChatDeps(chat_models_for(), FakeRetrieval())
+        deps = RagChatDeps(self._chat_models(), FakeRetrieval())
 
         (runner,) = rag_chat_runners([llm], registry, deps)
 

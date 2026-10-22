@@ -7,9 +7,8 @@
 # Enable it by pointing the app at this directory (it must be run together with the profiles):
 #   KNOWLEDGE_PROFILES_DIR=case/spensiones/profiles
 #   AGENTS_DIR=case/spensiones/agents
-#   LLM_PROVIDER=... LLM_MODEL=... (+ LLM_API_KEY)     # analyzer, synthesis and router models (the
-#                                                      # evidence router needs none; the ROUTER role
-#                                                      # serves `merge_tiebreak: llm` below)
+#   LLM_PROFILES_FILE=case/spensiones/llm_profiles.yaml  # `models:` below binds every role to its
+#   OPENAI_API_KEY=...                                 # `luna_none` profile (the key it names)
 #   RERANKER_URL=... RERANKER_MAX_CANDIDATES=40        # REQUIRED: every profile reranks (`tei`);
 #                                                      # without a URL the profiles do not load
 # Ingest (cli.ingest) also needs PARSER_MAX_BYTES=104857600 (compendio SP Libro III is 67 MB, over
@@ -40,6 +39,13 @@ description: >-
   Responde preguntas sobre la normativa del Sistema de Pensiones y del Seguro de Cesantia
   (Compendio de Normas, NCG, circulares, resoluciones, jurisprudencia y articulos de ayuda)
   citando las fuentes recuperadas.
+# Every LLM role on gpt-6-luna with reasoning off (the ROUTER role serves `merge_tiebreak: llm`;
+# the evidence router itself needs no model). Chosen over gpt-5.4-mini and luna at medium effort
+# on the dev sets: calibration/README.md, "Model: gpt-6-luna".
+models:
+  analyzer: luna_none
+  router: luna_none
+  synthesis: luna_none
 # Router: `evidence` embeds the question once and probes every topic's profile with a dense search;
 # the best topic is always searched, another one only when its score is within `evidence_margin` of
 # the best (up to max_topics). Live eval (n=29): hit@1 .966 vs .862 for the LLM router, 0 LLM calls.

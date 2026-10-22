@@ -155,14 +155,14 @@ def test_parse_accepts_plain_data() -> None:
 def test_the_spensiones_case_profiles_load() -> None:
     profiles = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
 
-    luna = {name: profiles[name] for name in ("luna_none", "luna_medium")}
-    assert {name: p.reasoning_effort for name, p in luna.items()} == {
-        "luna_none": "none",
-        "luna_medium": "medium",
-    }
-    assert {(p.provider, p.model, p.api_key_env, p.temperature) for p in luna.values()} == {
-        ("openai", "gpt-6-luna", "OPENAI_API_KEY", None)
-    }
+    luna = profiles["luna_none"]
+    assert (luna.provider, luna.model, luna.api_key_env, luna.temperature) == (
+        "openai",
+        "gpt-6-luna",
+        "OPENAI_API_KEY",
+        None,
+    )
+    assert luna.reasoning_effort == "none"
 
 
 def test_the_setting_reads_the_file_path_and_empty_means_none(
