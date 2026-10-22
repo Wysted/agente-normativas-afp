@@ -332,17 +332,18 @@ The criterion was fixed before the runs. Baselines: the keep-conditions run (jud
   candidates the search on the oficio topic scores MRR@10 .724.
 
 Routing (MRR@10 with the router order and no tie-break) against the setup without oficios
-(`C40`):
+(`C40`), on the 4 old dev sets plus `compendio_new_dev` (187 questions):
 
 | oficio `evidence_bias` | oficio set | the 5 other sets, pooled | other-set questions that route to oficio |
 |---|---|---|---|
 | no oficio topic (C40) | n/a | .739 | 0 |
 | 0 | .641 | .698 | 50 of 187 |
-| -0.04 (kept) | .517 | .721 | 19 |
+| -0.04 | .517 | .721 | 19 |
 | -0.08 | .425 | .733 | 4 |
 
 - Oficios cover every subject, so they win routing slots in other areas, and no bias keeps them
-  reachable without that cost. The guard fails at every value. Not shipped.
+  reachable without that cost. With the router order alone the guard fails at every value; the
+  tie-break below changes that.
 - Keyword gating (route to oficios only when the question says "oficio", "criterio",
   "interpret..." and similar) was tried offline and fails: practitioners describe the situation
   without those words. It fires on 7 of the 20 oficio questions.
@@ -353,7 +354,8 @@ The numbers above use the router order and never ran the LLM merge tie-break, wh
 enables. The tie-break reads the top passages of the topics and picks the primary.
 
 Live hits, measured with the criterion fixed before the run. All runs are from the same session.
-B is the setup without oficios.
+B is the setup without oficios. The five sets are `afiliacion_dev` (both phrasings),
+`cotizaciones_dev`, `compendio_new_dev` and `nota_dev` (109 questions).
 
 | set | B | bias -0.04 | bias 0 |
 |---|---|---|---|
@@ -365,14 +367,37 @@ B is the setup without oficios.
 | the five pooled | 97/109 | 97/109 | 96/109 |
 | `oficio_dev` | 0/20 | 14/20 | **18/20** |
 
-- Both biases pass: no set loses more than 1, and the pool loses at most 2. Bias 0 is kept
-  because it scores highest overall.
+- Both biases pass the rule (no set loses more than 1, the pool at most 2; the largest loss
+  measured is 1). Bias 0 is kept because it scores highest overall.
 - With bias 0, oficio passages are 79 of the 742 sources in the other five sets and reach 35 of
   109 answers. They are the first source in only 3: the tie-break keeps them secondary.
 - Stage 2, scope bands: recalibrated with `--analyze` including the oficio topic (now
   `report.json`). `low_confidence_below` 0.6621 -> 0.6569, `out_of_scope_below` 0.4795 -> 0.4866,
   AUROC .966. 4/80 ood questions pass as normal, 10/40 in-domain questions fall in the `low`
   band, and none is refused.
+- Stage 2, judge (floors fixed before the run, baseline: the gpt-6-luna run with the old bands
+  and no oficios):
+
+| measure | baseline | with oficios | floor |
+|---|---|---|---|
+| in-dev faithfulness | 37/37 | 38/39 | ≥ 35 |
+| in-dev contradicted claims | 0 | 1 | ≤ 2 |
+| in-dev refusal | 36/40 | 39/40 | ≥ 35 |
+| in-dev relevance | 36/40 | 39/40 | ≥ 35 |
+| in-dev citation | 35/38 | 38/40 | ≥ 32 |
+| ood refusal | 76/80 | 76/80 | ≥ 75 |
+| `oficio_dev` faithfulness / citation / relevance / refusal | - | 19/20, 16/20, 20/20, 20/20 | report only |
+
+- Every floor passes. 19 of the 40 in-dev answers carry an oficio source; it is the first source
+  in 2.
+- Known gap: the near-domain `out` label verification below predates the oficios. Some oficios
+  now cover two of those items: out-pens-02 (PGU) in 26 oficios and out-pens-03 (emergency
+  withdrawal) in 43. Their `out` labels likely no longer hold. They inflate the p95 band
+  (`low_confidence_below`) and count as refusal misses in the ood judge. Re-verifying the 36 items
+  against the oficio chunks, then recalibrating, is pending.
+- Personal data: the oficios are public documents of the Superintendencia, indexed as published.
+  The heading chunk (`preamble: keep`) keeps the DE/A block, and 14 oficios name a person with a
+  RUT. No redaction is applied.
 
 ## Label verification (near-domain `out` items)
 
