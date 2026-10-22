@@ -10,6 +10,7 @@ from langchain_core.language_models.model_profile import ModelProfile
 from langchain_core.messages import AIMessage
 
 from agintis.platform.llm import (
+    PROVIDER_KWARGS,
     ChatModels,
     ChatRole,
     InvalidLlmProfilesError,
@@ -25,6 +26,7 @@ from agintis.platform.llm import (
     parse_llm_profiles,
 )
 from tests.fakes.llm import ScriptedChatModel
+from tests.support.postgres import PROJECT_ROOT
 from tests.support.settings import make_settings
 
 DEFAULTS = LlmConfig(
@@ -119,6 +121,10 @@ profiles:
         ),
         ("profiles:\n  a: {provider: openai, model: m, api_key_env: 'not a name'}", "api_key_env"),
         ("profiles:\n  a: {provider: openai, model: m, temperature: 3}", "temperature"),
+        (
+            "profiles:\n  a: {provider: openai, model: m, api_key_env: K, reasoning_effort: big}",
+            "reasoning_effort",
+        ),
         ("profiles:\n  default: {provider: openai, model: m, api_key_env: K}", "reserved"),
         (
             "profiles:\n  Bad Name: {provider: openai, model: m, api_key_env: K}",
@@ -144,6 +150,19 @@ def test_a_missing_or_duplicated_file_is_an_error(tmp_path: Path) -> None:
 def test_parse_accepts_plain_data() -> None:
     raw = {"profiles": {"a": {"provider": "ollama", "model": "llama"}}}
     assert parse_llm_profiles(raw, origin="x") == {"a": LlmProfile("ollama", "llama")}
+
+
+def test_the_spensiones_case_profiles_load() -> None:
+    profiles = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
+
+    luna = {name: profiles[name] for name in ("luna_none", "luna_medium")}
+    assert {name: p.reasoning_effort for name, p in luna.items()} == {
+        "luna_none": "none",
+        "luna_medium": "medium",
+    }
+    assert {(p.provider, p.model, p.api_key_env, p.temperature) for p in luna.values()} == {
+        ("openai", "gpt-6-luna", "OPENAI_API_KEY", None)
+    }
 
 
 def test_the_setting_reads_the_file_path_and_empty_means_none(
@@ -400,6 +419,26 @@ def test_a_local_ollama_server_needs_no_key_variable() -> None:
     assert parse_llm_profiles(raw, origin="x")["p"].base_url == "http://localhost:11434"
 
 
+@pytest.mark.parametrize("effort", ["none", "minimal", "medium", "max"])
+def test_an_openai_profile_passes_its_reasoning_effort(effort: str) -> None:
+    profile = parse_llm_profiles(_one(api_key_env="K", reasoning_effort=effort), origin="x")["p"]
+    assert profile.reasoning_effort == effort
+    assert PROVIDER_KWARGS["openai"](profile)["reasoning_effort"] == effort
+
+
+def test_an_unset_reasoning_effort_is_not_passed() -> None:
+    profile = parse_llm_profiles(_one(api_key_env="K"), origin="x")["p"]
+    assert profile.reasoning_effort is None
+    assert "reasoning_effort" not in PROVIDER_KWARGS["openai"](profile)
+
+
+@pytest.mark.parametrize("provider", ["anthropic", "deepseek", "ollama", "someprovider"])
+def test_reasoning_effort_is_refused_at_parse_for_other_providers(provider: str) -> None:
+    raw = _one(provider=provider, api_key_env="K", reasoning_effort="low")
+    with pytest.raises(InvalidLlmProfilesError, match="reasoning_effort is only supported"):
+        parse_llm_profiles(raw, origin="x")
+
+
 @pytest.mark.parametrize(
     "env", ["DATABASE_URL", "auth_audience", "LLM_API_KEY", "APP_ENV", "LLM", "database"]
 )
@@ -470,6 +509,16 @@ def test_real_chat_openai_gets_the_profiles_own_base_url_and_key(
 
     assert client.openai_api_key.get_secret_value() == "sk-judge"  # type: ignore[attr-defined]
     assert client.openai_api_base == "https://api.deepseek.example/v1"  # type: ignore[attr-defined]
+
+
+def test_real_chat_openai_gets_the_profiles_reasoning_effort() -> None:
+    pytest.importorskip("langchain_openai")
+    luna = LlmProfile("openai", "gpt-6-luna", api_key_env="K", reasoning_effort="none")
+    models = ChatModels(ModelCatalog(None, {"luna": luna}, environ={"K": "sk-luna"}.get))
+
+    client = models.bind({ChatRole.ANALYZER: "luna"}, agent="a").get(ChatRole.ANALYZER)
+
+    assert client.reasoning_effort == "none"  # type: ignore[attr-defined]
 
 
 # --- views ------------------------------------------------------------------------------------

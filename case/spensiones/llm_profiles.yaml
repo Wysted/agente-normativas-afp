@@ -12,3 +12,16 @@ profiles:
     api_key_env: DEEPSEEK_API_KEY
     temperature: 0
     timeout_seconds: 60
+
+  # Candidates under evaluation (reasoning effort none vs medium, the API default); the agent
+  # binds them per role via `models:`. No temperature: reasoning models may reject it.
+  luna_none:
+    provider: openai
+    model: gpt-6-luna
+    api_key_env: OPENAI_API_KEY
+    reasoning_effort: none
+  luna_medium:
+    provider: openai
+    model: gpt-6-luna
+    api_key_env: OPENAI_API_KEY
+    reasoning_effort: medium
