@@ -9,6 +9,7 @@
 #   AGENTS_DIR=case/spensiones/agents
 #   LLM_PROFILES_FILE=case/spensiones/llm_profiles.yaml  # `models:` below binds every role to its
 #   OPENAI_API_KEY=...                                 # `luna_none` profile (the key it names)
+#   (Docker, CASE=spensiones: APP_LLM_PROFILES_FILE=/app/case/llm_profiles.yaml, OPENAI_API_KEY in .env)
 #   RERANKER_URL=... RERANKER_MAX_CANDIDATES=40        # REQUIRED: every profile reranks (`tei`);
 #                                                      # without a URL the profiles do not load
 # Ingest (cli.ingest) also needs PARSER_MAX_BYTES=104857600 (compendio SP Libro III is 67 MB, over

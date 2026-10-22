@@ -29,15 +29,9 @@ from agintis.modules.knowledge.api import (
     RagProfileRegistry,
     load_profiles_dir,
 )
-from agintis.platform.llm import (
-    ChatModels,
-    ChatRole,
-    LlmConfig,
-    ModelCatalog,
-    load_llm_profiles,
-)
+from agintis.platform.llm import ChatRole, load_llm_profiles
 from tests.fakes.knowledge import InMemoryChunkRepository
-from tests.fakes.llm import ScriptedChatModel, chat_models_for
+from tests.fakes.llm import chat_models_for
 from tests.fakes.retrieval import FakeRetrieval
 from tests.support.postgres import PROJECT_ROOT
 
@@ -430,6 +424,10 @@ class TestMultiTopicSpec:
         assert "nope2" in str(info.value)
 
 
+# The case binds every role to a named profile (`models:`), so building it needs the catalog.
+CASE_LLM_PROFILES = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
+
+
 class TestSpensionesAgent:
     """The real case config against the real case profiles (no network, no database)."""
 
@@ -441,19 +439,6 @@ class TestSpensionesAgent:
         registry = RagProfileRegistry(load_profiles_dir(self.PROFILES_DIR))
         (spec,) = load_agent_specs(self.AGENTS_DIR)
         return spec, registry
-
-    @staticmethod
-    def _chat_models() -> ChatModels:
-        """Fakes behind the case's named profiles (its `models:` binds every role to one)."""
-        profiles = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
-        defaults = LlmConfig(provider="openai", models={role: role.value for role in ChatRole})
-        catalog = ModelCatalog(
-            defaults,
-            profiles,
-            environ=lambda _name: "test-key",
-            builder=lambda *_args, **_kwargs: ScriptedChatModel(),
-        )
-        return ChatModels(catalog)
 
     def test_it_loads_and_validates_without_warnings(
         self, caplog: pytest.LogCaptureFixture
@@ -518,7 +503,9 @@ class TestSpensionesAgent:
         assert spec.merge_tiebreak == "llm"
         assert ChatRole.ROUTER in roles_used(spec)  # the tie-break, not the router
         probe = ProbeProfiles(InMemoryChunkRepository(), DeterministicFakeEmbedding(size=4))
-        deps = RagChatDeps(self._chat_models(), FakeRetrieval(), probe=probe)
+        deps = RagChatDeps(
+            chat_models_for(profiles=CASE_LLM_PROFILES), FakeRetrieval(), probe=probe
+        )
 
         (runner,) = rag_chat_runners([spec], registry, deps)
 
@@ -541,7 +528,7 @@ class TestSpensionesAgent:
                 "router": "auto",
             }
         )
-        deps = RagChatDeps(self._chat_models(), FakeRetrieval())
+        deps = RagChatDeps(chat_models_for(profiles=CASE_LLM_PROFILES), FakeRetrieval())
 
         (runner,) = rag_chat_runners([llm], registry, deps)
 

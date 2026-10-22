@@ -66,3 +66,16 @@ def test_eval_questions_name_loaded_profiles(case: Path, monkeypatch: pytest.Mon
     # Only the `profile` field is read: the questions are held out.
     used = {json.loads(line)["profile"] for line in questions.read_text().splitlines() if line}
     assert used <= known
+
+
+def test_the_spensiones_case_profiles_load() -> None:
+    profiles = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
+
+    luna = profiles["luna_none"]
+    assert (luna.provider, luna.model, luna.api_key_env, luna.temperature) == (
+        "openai",
+        "gpt-6-luna",
+        "OPENAI_API_KEY",
+        None,
+    )
+    assert luna.reasoning_effort == "none"

@@ -26,7 +26,6 @@ from agintis.platform.llm import (
     parse_llm_profiles,
 )
 from tests.fakes.llm import ScriptedChatModel
-from tests.support.postgres import PROJECT_ROOT
 from tests.support.settings import make_settings
 
 DEFAULTS = LlmConfig(
@@ -150,19 +149,6 @@ def test_a_missing_or_duplicated_file_is_an_error(tmp_path: Path) -> None:
 def test_parse_accepts_plain_data() -> None:
     raw = {"profiles": {"a": {"provider": "ollama", "model": "llama"}}}
     assert parse_llm_profiles(raw, origin="x") == {"a": LlmProfile("ollama", "llama")}
-
-
-def test_the_spensiones_case_profiles_load() -> None:
-    profiles = load_llm_profiles(PROJECT_ROOT / "case" / "spensiones" / "llm_profiles.yaml")
-
-    luna = profiles["luna_none"]
-    assert (luna.provider, luna.model, luna.api_key_env, luna.temperature) == (
-        "openai",
-        "gpt-6-luna",
-        "OPENAI_API_KEY",
-        None,
-    )
-    assert luna.reasoning_effort == "none"
 
 
 def test_the_setting_reads_the_file_path_and_empty_means_none(

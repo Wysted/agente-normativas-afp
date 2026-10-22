@@ -11,7 +11,7 @@ profiles:
     provider: openai
     model: gpt-6-luna
     api_key_env: OPENAI_API_KEY
-    reasoning_effort: none           # openai only: none|minimal|low|medium|high|xhigh|max
+    reasoning_effort: none           # openai only; models accept subsets (luna: no minimal)
   judge:
     provider: deepseek               # needs the `deepseek` extra; see the note below
     model: deepseek-chat
@@ -113,7 +113,7 @@ class LlmProfileSpec(BaseModel):
         if self.reasoning_effort is not None and self.provider != "openai":
             raise ValueError(
                 f"reasoning_effort is only supported by provider 'openai', not {self.provider!r}: "
-                "unset it (it would be silently ignored)"
+                "unset it (agintis only maps it for openai)"
             )
         return self
 
