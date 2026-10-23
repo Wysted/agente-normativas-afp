@@ -107,11 +107,13 @@ primary_weight: 2               # merge: the primary topic contributes 2 hits pe
 # accepted exception and what is unmeasured: calibration/README.md, "Merge tie-break".
 merge_tiebreak: llm
 sufficiency: relevance          # judge the hits' own evidence (rerank score only; no reranker = no signal = always sufficient)
-min_rerank_score: 0.1           # relevance threshold when a reranker scored the hits (uncalibrated)
+# Calibrated offline (calibration README, "Rewrite loop"): the 5th percentile of the best rerank
+# score over the 116 dev questions whose answer was retrieved, rounded down. Below it sit 4 of
+# those 116 and 9 of the 13 misses.
+min_rerank_score: 0.92
 min_sources: 1                  # relevant sources needed before answering
-# 0 while min_rerank_score is uncalibrated: with the tei reranker on, `relevance` would start
-# rewriting at 0.1; without a reranker the loop never fired, so 0 keeps that behaviour.
-max_rewrites: 0
+# One rewrite when no merged source reaches min_rerank_score (the loop needs the tei reranker).
+max_rewrites: 1
 # Sources reach the model uncut: the longest chunk of this corpus is about 3530 chars (compendio
 # SP Libro V), and with the 1500 default 76% of the NCG chunks lost their tail (answers past char
 # 1500 were retrieved but never seen). 28800 = max_sources x 3600, so the total budget never cuts

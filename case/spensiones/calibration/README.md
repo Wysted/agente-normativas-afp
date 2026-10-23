@@ -400,6 +400,44 @@ B is the setup without oficios. The five sets are `afiliacion_dev` (both phrasin
   The heading chunk (`preamble: keep`) keeps the DE/A block, and 14 oficios name a person with a
   RUT. No redaction is applied.
 
+## Rewrite loop: `min_rerank_score` and `max_rewrites` (2026-10-22)
+
+After the merge, the agent rewrites the query when no source reaches `min_rerank_score`. Until now
+the threshold was an uncalibrated 0.1 and the loop was off (`max_rewrites: 0`).
+
+Stage 1 ran offline, with no LLM and a rule fixed before computing:
+- 129 dev questions with expected snippets: `afiliacion_dev`, `cotizaciones_dev`,
+  `compendio_new_dev`, `nota_dev` and `oficio_dev`.
+- Each question is routed by the evidence router and searched hybrid with TEI rerank at 40
+  candidates.
+- S is the best rerank score over the routed hits, and H means the snippet is retrieved.
+- The threshold is the 5th percentile of S over the H questions, rounded down: **0.92**.
+
+| group | n | median S | below 0.92 |
+|---|---|---|---|
+| answer retrieved (H) | 116 | .997 | 4 |
+| answer missed | 13 | .840 | 9 (69%) |
+| ood | 76 | .005 | 74 (most never reach retrieval: scope check) |
+
+The old 0.1 would have caught 2 of the 13 misses.
+
+Stage 2 set `max_rewrites: 1`. Its live guard had a criterion fixed before the run; the baseline
+is the oficios cleanup run.
+
+| measure | baseline | rewrite | rule |
+|---|---|---|---|
+| live hits, 129 questions pooled | 116 | **119** | ≥ 117 (decides) |
+| `v1_mixed` / `operativa` | 12/19, 20/20 | 14/19, 20/20 | each ≥ −1 |
+| cotizaciones / `compendio_new_dev` / `nota_dev` / `oficio_dev` | 18, 38, 10, 18 | 18, 39, 10, 18 | each ≥ −1 |
+| in-dev faithfulness / refusal / relevance / citation | 37/38, 37, 37, 33/39 | 37/38, 38, 38, 36/39 | ≥ 35, 36, 36, 31 |
+| ood refusal misses | 1/76 | 0/76 | ≤ 3 |
+| `oficio_dev` faithfulness / citation | 20/20, 18/20 | 20/20, 20/20 | report |
+
+- It passes, with 0 dump or judge errors.
+- Rescued: af-01 (lost earlier to the Libro I crowding), af-16 and nd-26. None was lost.
+- Cost: a rewritten turn adds 1 model call and 1 retrieval. The dumps do not record how often it
+  fired.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
