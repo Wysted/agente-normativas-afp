@@ -326,8 +326,9 @@ The criterion was fixed before the runs. Baselines: the keep-conditions run (jud
 ## Oficios (`oficio.yaml`, `oficio_dev.jsonl`)
 
 489 Oficios Ordinarios (2001-2024), the Superintendencia's answers to consultations.
-- Profile adapted from `circular.yaml`. 485 ingest; 4 are scans with no text layer and fail,
-  since the `simple` parser does no OCR. That makes 3,312 chunks, median 5 per oficio.
+- Profile adapted from `circular.yaml`. All 489 ingest (3,324 chunks, median 5 per oficio): the
+  4 scans with no text layer are OCR'd by `ocr_index_card` since the cleanup below (before it, 485
+  and 3,312 with the `simple` parser).
 - `oficio_dev.jsonl`: 20 blind questions from 20 oficios spread over the years. With 40 rerank
   candidates the search on the oficio topic scores MRR@10 .724.
 
@@ -483,6 +484,41 @@ Recalibrated on the 76 items (`--analyze`, gpt-6-luna, now `report.json`): `low_
 0.6569 -> 0.6137, `out_of_scope_below` 0.4866 -> 0.4779, AUROC .966 -> .988. 4/76 ood questions
 pass as normal, 3/40 in-domain questions fall in the `low` band, and none is refused. The covered
 items were what inflated the p95 band.
+
+### Oficios cleanup (2026-10-22)
+
+- `oficio.yaml` now uses `ocr_index_card`, so all 489 oficios index, the 4 scans included.
+- The internal-id line regexes cover every id seen: `OF-DDN-20-3753`, 5-digit numbers and
+  `OF-DDNI-…`.
+- The unmatched `titulo` and `capitulo` levels and the unused `materia` field are gone.
+- An offline check over all 489 oficios, against the previous profile, found:
+  - 0 line differences other than internal-id lines in the 485 text oficios;
+  - 0 id-only lines left;
+  - an OCR non-word share of 0.144, against 0.147 for text oficios.
+- Only the oficio profile was reingested: 4 indexed, 485 replaced, 0 failed.
+
+Guard, with floors fixed before the run. Baseline: the stage 2 judge run and the bias-0 live hits.
+
+| measure | baseline | cleanup | floor |
+|---|---|---|---|
+| in-dev faithfulness | 38/39 | 37/38 | ≥ 36 |
+| in-dev refusal / relevance | 39/40, 39/40 | 37/40, 37/40 | ≥ 37 |
+| in-dev citation | 38/40 | **33/39** | ≥ 35 |
+| ood refusal misses | 4/80 | 1/76 | ≤ 4 |
+| judge errors | 0 | **1** | 0 |
+| the five other sets' live hits, pooled | 96/109 | 98/109 | ≥ 94 |
+| `oficio_dev` live hit / faithfulness | 18/20, 19/20 | 18/20, 20/20 | ≥ 17, ≥ 18 |
+
+Accepted as a documented exception, because both failures are judge noise:
+- Citation:
+  - The 6 citation failures are disjoint from the baseline's 2.
+  - None of them changed scope band.
+  - in-cmp-05 and in-cir-24 cite the same sources in both runs, and the verdict flipped.
+  - In-dev citation over the comparable runs was 31, 35, 36, 35, 38 and 33. The floor (the best
+    run minus 3) was too tight. Future floors for this measure should come from that run-to-run
+    range.
+- The judge error: the faithfulness judge's output on out-abroad-03, a refusal, did not parse. No
+  floored measure uses it.
 
 ## Edits to `in_dev.jsonl`
 
