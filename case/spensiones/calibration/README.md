@@ -515,8 +515,13 @@ The other 32 stay `out`. Borderline cases kept `out`:
 - out-isapre-06: one nota gives the coverage of FONASA groups C and D, but does not compare B and C.
 - out-abroad-*: the oficios explain the bilateral agreements, not the foreign systems.
 
-For out-pens-02 and out-pens-03 the answering chunk exists but is in no profile's top-3: that is a
-retrieval gap, not a label issue. Details: `~/scratch/agintis/labels/ood_reverify.md` (local).
+For out-pens-02 and out-pens-03 the chunk the verifier picked is in no profile's top-3 for the raw
+question. It is not a gap of the agent, though. Offline, the PGU-requirements chunk ranks 11 of 40
+after rerank (other Título XVII chunks score 0.99), and the 10% oficio ranks 5 (rerank 0.20).
+Live, with 8 merged sources from 2 topics, the agent answered both: the four PGU requirements, and
+the 10% withdrawal with its 150 UF / 35 UF bounds, noting it was exceptional. The same facts sit
+in other oficios and chapters that do reach the sources. The rewrite loop does not fire here,
+because other sources score above 0.92. Details: `~/scratch/agintis/labels/ood_reverify.md` (local).
 
 Recalibrated on the 76 items (`--analyze`, gpt-6-luna, now `report.json`): `low_confidence_below`
 0.6569 -> 0.6137, `out_of_scope_below` 0.4866 -> 0.4779, AUROC .966 -> .988. 4/76 ood questions
