@@ -1,6 +1,6 @@
 {
   "meta": {
-    "git": "b32ccc1",
+    "git": "34ec5d5",
     "agent": "spensiones-rag",
     "tenant": "spensiones",
     "query_input": "analyzed",
@@ -34,7 +34,7 @@
       "spensiones_jurisprudencia_nota": 636,
       "spensiones_articulo_faq": 8,
       "spensiones_jurisprudencia_indice": 57,
-      "spensiones_oficio": 3312
+      "spensiones_oficio": 3324
     },
     "profile_fingerprints": {
       "spensiones_compendio": "eae65ee80cca57eac3233b9b131dc97413aa65c15b175071ba910aa065edcdd8",
@@ -44,10 +44,10 @@
       "spensiones_jurisprudencia_nota": "81b880e141ed84895d45be669b573df7794559dbf37d6ed540f3305ac8461b2d",
       "spensiones_articulo_faq": "df5f8e67aa807220fec7de479c41636d306cc9769cdef4015e127ebd7189de4b",
       "spensiones_jurisprudencia_indice": "e8f72e7f8269a76077fca833f3bb1b5566d46fdee8fd3c279e61174bec1f09bb",
-      "spensiones_oficio": "0fa5607bd98a91a49e40241f9c8415dcde642a4361f246275782bedca920b7c4"
+      "spensiones_oficio": "bd457bf431b730706fa2be5bb2fcc6e566c345747900c24903aaadf23379dd32"
     },
     "profiles_files": {
-      "sha256": "898b5a76a308ce2b9ddf80c1c78ebfc7b1775e38758d095eb8cae0f3d8e32cc2",
+      "sha256": "b048db9c63faf0310430bccc0ee3adb26e5172679aee16913648384295f35ba4",
       "files": {
         "articulo_faq.yaml": "14dc6b83d5ab6bc18172a1d47c5620d946ea3c0793f632dfd943afb72f8ca663",
         "circular.yaml": "c0dde6c957e7d2b79ea1c1c75287452583bd31fa67ade6e06ecb094cf48ebaff",
@@ -55,7 +55,7 @@
         "guia_jurisprudencia.yaml": "2effe756b3d1b4c1db0d51ae49611326d7a2f8ddace2a8828e03039b8ab261ff",
         "guia_jurisprudencia_nota.yaml": "a236227df31d9639df4dfab25c372d4944a801da758ab202b8551201c48d621d",
         "ncg.yaml": "1c3157461f0936f42c6d1be9ac7b2f1c95a6fdf1f0f579ba68e6930b39dbbdb5",
-        "oficio.yaml": "c989d5b089561ab4d5b5489538ab9988be2023f7c5e3f938dffb1c31aff3b675",
+        "oficio.yaml": "624cc89dbabf3a431f2e068b8dd628c22ddbdfe4b35a0db0c0c1b4763e488392",
         "resolucion.yaml": "f33025c93edfc0aad43915c47b387be3a9bd9178cc4a7ef4dd667cda28ad7e63"
       }
     },
@@ -65,7 +65,7 @@
     "max_query_chars": 2000,
     "files": {
       "case/spensiones/calibration/in_dev.jsonl": "cd172d837d9a19fe9a2a385ae5c41fe080a9de05e50a4557bac94b0301c57556",
-      "case/spensiones/calibration/ood.jsonl": "c089f2570d8ef7256ae4730b2a815a0f434bd4afb98003eb47638338a80c448d"
+      "case/spensiones/calibration/ood.jsonl": "73e6483762ac42bc371278310d6c3559af931032ab0dd89ed315b8437229289c"
     },
     "analyzer_model": "luna_none (openai:gpt-6-luna)"
   },
@@ -82,7 +82,7 @@
       "n": 40.0,
       "min": 0.5900543928146362,
       "max": 0.8083369503422974,
-      "mean": 0.6907359793562238,
+      "mean": 0.6904734427499684,
       "p5": 0.6113543212413788,
       "p25": 0.6577183844662938,
       "p50": 0.6940580930499736,
@@ -91,71 +91,71 @@
       "p99": 0.795895130657287
     },
     "out": {
-      "n": 80.0,
+      "n": 76.0,
       "min": 0.2781827068870464,
-      "max": 0.7273176312446646,
-      "mean": 0.49219398333046643,
-      "p5": 0.34815639493746536,
-      "p25": 0.42477410792749015,
-      "p50": 0.4866918177302182,
-      "p75": 0.5651729871384202,
-      "p95": 0.656970020972329,
-      "p99": 0.696544803380967
+      "max": 0.6656274795532227,
+      "mean": 0.4820699455682141,
+      "p5": 0.3465170743448066,
+      "p25": 0.4188814091515813,
+      "p50": 0.4779104435262948,
+      "p75": 0.5521625475854434,
+      "p95": 0.6137560643755973,
+      "p99": 0.6424773945766382
     }
   },
-  "auroc": 0.9659375,
-  "threshold": 0.656970020972329,
+  "auroc": 0.9884868421052632,
+  "threshold": 0.6137560643755973,
   "threshold_interval": {
     "confidence": 0.95,
-    "lower": 0.6094485521316528,
-    "upper": 0.7273176312446646,
-    "lower_rank": 72,
-    "upper_rank": 80,
-    "n": 80,
-    "coverage": 0.9650815311091006
+    "lower": 0.5986578225289488,
+    "upper": 0.6656274795532227,
+    "lower_rank": 68,
+    "upper_rank": 76,
+    "n": 76,
+    "coverage": 0.9662376749206313
   },
-  "in_recall": 0.75,
+  "in_recall": 0.925,
   "in_recall_interval": {
-    "k": 30,
+    "k": 37,
     "n": 40,
-    "rate": 0.75,
-    "lower": 0.5880380198485702,
-    "upper": 0.873085201067155,
+    "rate": 0.925,
+    "lower": 0.7961352512671012,
+    "upper": 0.9842578201489585,
     "confidence": 0.95
   },
-  "out_false_in_rate": 0.05,
+  "out_false_in_rate": 0.05263157894736842,
   "out_false_in_rate_interval": {
     "k": 4,
-    "n": 80,
-    "rate": 0.05,
-    "lower": 0.013789393976461783,
-    "upper": 0.12309873644315289,
+    "n": 76,
+    "rate": 0.05263157894736842,
+    "lower": 0.014524558339156501,
+    "upper": 0.1293091584529848,
     "confidence": 0.95
   },
   "out_above": [
-    {
-      "id": "out-pens-02",
-      "score": 0.7273176312446646,
-      "topic": "oficio",
-      "question": "¿Cuáles son los requisitos para recibir la Pensión Garantizada Universal?"
-    },
-    {
-      "id": "out-pens-06",
-      "score": 0.6883646845817566,
-      "topic": "compendio",
-      "question": "¿Cómo postulo al bono por hijo para las mujeres?"
-    },
-    {
-      "id": "out-pens-03",
-      "score": 0.6670985221862793,
-      "topic": "compendio",
-      "question": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?"
-    },
     {
       "id": "out-labor-01",
       "score": 0.6656274795532227,
       "topic": "compendio",
       "question": "¿Cuántos días de aviso previo debo dar si renuncio a mi trabajo?"
+    },
+    {
+      "id": "out-bank-05",
+      "score": 0.6347606995844435,
+      "topic": "oficio",
+      "question": "¿Cómo abro una cuenta corriente en un banco?"
+    },
+    {
+      "id": "out-labor-02",
+      "score": 0.6271543841294029,
+      "topic": "compendio",
+      "question": "¿Cómo se calcula la indemnización por años de servicio en un despido por necesidades de la empresa?"
+    },
+    {
+      "id": "out-abroad-03",
+      "score": 0.6266786011074306,
+      "topic": "compendio",
+      "question": "¿Cómo se calcula la pensión del Seguro Social en Estados Unidos?"
     }
   ],
   "in_below": [
@@ -176,61 +176,19 @@
       "score": 0.6121814846992493,
       "topic": "compendio",
       "question": "¿Puede una AFP negarse a afiliar a una persona por alguna característica personal?"
-    },
-    {
-      "id": "in-cir-28",
-      "score": 0.6174362669847182,
-      "topic": "circular",
-      "question": "¿Qué es la curva cero real y cómo se usa en el vector de tasas?"
-    },
-    {
-      "id": "in-faq-32",
-      "score": 0.6381669640541077,
-      "topic": "oficio",
-      "question": "Tengo contrato por obra o faena, ¿quién paga el seguro de cesantía?"
-    },
-    {
-      "id": "in-cir-23",
-      "score": 0.6487147389310287,
-      "topic": "circular",
-      "question": "¿Con qué frecuencia debían las administradoras informar sobre los bonos de reconocimiento pagados por las cajas?"
-    },
-    {
-      "id": "in-cmp-08",
-      "score": 0.6489601715469516,
-      "topic": "compendio",
-      "question": "¿Qué debe hacer un trabajador independiente para dar un mandato a un tercero sobre su cuenta de ahorro voluntario?"
-    },
-    {
-      "id": "in-res-29",
-      "score": 0.6507812142372131,
-      "topic": "resolucion",
-      "question": "¿Qué complementa la resolución sobre funcionarios sujetos pasivos de la ley del lobby?"
-    },
-    {
-      "id": "in-res-30",
-      "score": 0.6522722244262695,
-      "topic": "resolucion",
-      "question": "¿Quién es considerado sujeto pasivo de la ley de lobby en la Superintendencia de Pensiones?"
-    },
-    {
-      "id": "in-idx-40",
-      "score": 0.6550497196688857,
-      "topic": "jurisprudencia_indice",
-      "question": "¿Existen oficios sobre convenios internacionales de seguridad social?"
     }
   ],
   "out_of_scope": {
     "rule": "p50 of the 'out' scores (pre-registered); 'in' only reports",
-    "threshold": 0.4866918177302182,
+    "threshold": 0.4779104435262948,
     "threshold_interval": {
       "confidence": 0.95,
-      "lower": 0.4556524889365583,
-      "upper": 0.5174717748918621,
-      "lower_rank": 31,
-      "upper_rank": 50,
-      "n": 80,
-      "coverage": 0.9670073815735238
+      "lower": 0.45255352415303984,
+      "upper": 0.5128794022130619,
+      "lower_rank": 29,
+      "upper_rank": 48,
+      "n": 76,
+      "coverage": 0.9713733444912621
     },
     "in_refused_rate": 0.0,
     "in_refused_rate_interval": {
@@ -250,7 +208,7 @@
         "min": 0.45369893588430155,
         "median": 0.5908786762808176,
         "max": 0.6266786011074306,
-        "above_low_confidence": 0,
+        "above_low_confidence": 1,
         "below_out_of_scope": 1
       }
     },
@@ -260,7 +218,7 @@
         "min": 0.4396634959973996,
         "median": 0.54430800676346,
         "max": 0.6347606995844435,
-        "above_low_confidence": 0,
+        "above_low_confidence": 1,
         "below_out_of_scope": 1
       }
     },
@@ -268,7 +226,7 @@
       "out": {
         "n": 10,
         "min": 0.432365357875824,
-        "median": 0.46454500248993735,
+        "median": 0.4650912024985371,
         "max": 0.5174717748918621,
         "above_low_confidence": 0,
         "below_out_of_scope": 6
@@ -280,7 +238,7 @@
         "min": 0.6174362669847182,
         "median": 0.6915489637491365,
         "max": 0.8083369503422974,
-        "above_low_confidence": 4,
+        "above_low_confidence": 6,
         "below_out_of_scope": 0
       }
     },
@@ -290,7 +248,7 @@
         "min": 0.6121814846992493,
         "median": 0.6999735831266853,
         "max": 0.7434153999933852,
-        "above_low_confidence": 14,
+        "above_low_confidence": 15,
         "below_out_of_scope": 0
       }
     },
@@ -301,7 +259,7 @@
         "median": 0.4644907631360521,
         "max": 0.5519675078353296,
         "above_low_confidence": 0,
-        "below_out_of_scope": 7
+        "below_out_of_scope": 6
       }
     },
     "faq": {
@@ -310,7 +268,7 @@
         "min": 0.6381669640541077,
         "median": 0.7156999046617372,
         "max": 0.7764348485858606,
-        "above_low_confidence": 3,
+        "above_low_confidence": 4,
         "below_out_of_scope": 0
       }
     },
@@ -330,7 +288,7 @@
         "min": 0.5900543928146362,
         "median": 0.6592932234087419,
         "max": 0.7614026750388183,
-        "above_low_confidence": 3,
+        "above_low_confidence": 4,
         "below_out_of_scope": 0
       }
     },
@@ -350,7 +308,7 @@
         "min": 0.5307972272992981,
         "median": 0.5618658661842346,
         "max": 0.6656274795532227,
-        "above_low_confidence": 1,
+        "above_low_confidence": 2,
         "below_out_of_scope": 0
       }
     },
@@ -371,16 +329,16 @@
         "median": 0.4067413276136273,
         "max": 0.4793928849335253,
         "above_low_confidence": 0,
-        "below_out_of_scope": 12
+        "below_out_of_scope": 11
       }
     },
     "pens": {
       "out": {
-        "n": 6,
+        "n": 2,
         "min": 0.5789657831192017,
-        "median": 0.6618064437219122,
-        "max": 0.7273176312446646,
-        "above_low_confidence": 3,
+        "median": 0.5942071676254272,
+        "max": 0.6094485521316528,
+        "above_low_confidence": 0,
         "below_out_of_scope": 0
       }
     },
@@ -390,7 +348,7 @@
         "min": 0.6507812142372131,
         "median": 0.6515267193317413,
         "max": 0.6522722244262695,
-        "above_low_confidence": 0,
+        "above_low_confidence": 2,
         "below_out_of_scope": 0
       }
     },
@@ -414,7 +372,7 @@
     "in-cmp-06": "¿Cuándo se entiende devengada la comisión de una cuenta nueva creada dentro del mes?",
     "in-cmp-07": "¿Cómo se hace efectiva la bonificación fiscal por ahorro previsional voluntario?",
     "in-cmp-08": "¿Qué debe hacer un trabajador independiente para dar un mandato a un tercero sobre su cuenta de ahorro voluntario?",
-    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
+    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación del Sistema de Pensiones de Chile y dónde se presenta la solicitud?",
     "in-cmp-10": "¿Se puede repartir el saldo de la cuenta entre dos tipos de fondo?",
     "in-cmp-11": "¿Cuánto tiempo tiene la AFP nueva para revisar el archivo de traspasos el día de la transferencia?",
     "in-cmp-12": "¿Cómo repara la AFP a un afiliado cuando su cuenta perdió rentabilidad por un error de la administradora?",
@@ -520,12 +478,8 @@
     "out-bank-04": "¿Qué es el CAE de un crédito universitario?",
     "out-bank-05": "¿Cómo abro una cuenta corriente en un banco?",
     "out-bank-06": "¿Qué significa estar en DICOM y cómo salgo?",
-    "out-pens-01": "¿A qué edad me puedo jubilar si soy hombre en el Sistema de Pensiones de Chile?",
-    "out-pens-02": "¿Cuáles son los requisitos para recibir la Pensión Garantizada Universal?",
-    "out-pens-03": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?",
     "out-pens-04": "¿Cuál es el monto de la pensión de alimentos que debo pagar a mi hijo?",
-    "out-pens-05": "¿Qué AFP tiene mejor rentabilidad este año según los analistas?",
-    "out-pens-06": "¿Cómo postulo al bono por hijo para las mujeres?"
+    "out-pens-05": "¿Qué AFP tiene mejor rentabilidad este año según los analistas?"
   },
   "scores": [
     {
@@ -576,13 +530,6 @@
       "topic": "articulo_faq",
       "question": "¿Qué parte de la cotización de cesantía va a mi cuenta individual cuando mi contrato es a plazo fijo?",
       "label": "in"
-    },
-    {
-      "id": "out-pens-02",
-      "score": 0.7273176312446646,
-      "topic": "oficio",
-      "question": "¿Cuáles son los requisitos para recibir la Pensión Garantizada Universal?",
-      "label": "out"
     },
     {
       "id": "in-cmp-07",
@@ -683,24 +630,10 @@
       "label": "in"
     },
     {
-      "id": "out-pens-06",
-      "score": 0.6883646845817566,
-      "topic": "compendio",
-      "question": "¿Cómo postulo al bono por hijo para las mujeres?",
-      "label": "out"
-    },
-    {
       "id": "in-ncg-19",
       "score": 0.6878729462623596,
       "topic": "compendio",
       "question": "¿Qué debe hacer la compañía de seguros con una renta vitalicia cuando se excluye a un beneficiario condenado?",
-      "label": "in"
-    },
-    {
-      "id": "in-cmp-09",
-      "score": 0.6869607381201243,
-      "topic": "compendio",
-      "question": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
       "label": "in"
     },
     {
@@ -732,18 +665,18 @@
       "label": "in"
     },
     {
+      "id": "in-cmp-09",
+      "score": 0.6764592738699059,
+      "topic": "oficio",
+      "question": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
+      "label": "in"
+    },
+    {
       "id": "in-cmp-16",
       "score": 0.6684654157439134,
       "topic": "compendio",
       "question": "¿Qué renta mínima se usa para cotizar un afiliado independiente?",
       "label": "in"
-    },
-    {
-      "id": "out-pens-03",
-      "score": 0.6670985221862793,
-      "topic": "compendio",
-      "question": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?",
-      "label": "out"
     },
     {
       "id": "out-labor-01",
@@ -765,13 +698,6 @@
       "topic": "ncg",
       "question": "¿Qué ocurre con un certificado de saldo ya emitido si se notifica la condena de un beneficiario?",
       "label": "in"
-    },
-    {
-      "id": "out-pens-01",
-      "score": 0.6565143652575451,
-      "topic": "compendio",
-      "question": "¿A qué edad me puedo jubilar si soy hombre?",
-      "label": "out"
     },
     {
       "id": "in-idx-40",
@@ -1117,6 +1043,13 @@
       "label": "out"
     },
     {
+      "id": "out-chat-01",
+      "score": 0.46552350706142276,
+      "topic": "oficio",
+      "question": "Hola, ¿cómo estás?",
+      "label": "out"
+    },
+    {
       "id": "out-other-01",
       "score": 0.4653661251068115,
       "topic": "oficio",
@@ -1135,13 +1068,6 @@
       "score": 0.4646588979356514,
       "topic": "jurisprudencia_nota",
       "question": "¿Eres una persona o un robot?",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-01",
-      "score": 0.4644311070442233,
-      "topic": "oficio",
-      "question": "Hola, ¿cómo estás?",
       "label": "out"
     },
     {

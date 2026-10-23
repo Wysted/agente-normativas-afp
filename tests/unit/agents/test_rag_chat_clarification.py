@@ -665,8 +665,8 @@ class TestSpensiones:
         clarification = spec.clarification
         assert clarification.policy == "evidence"
         assert (clarification.low_confidence_below, clarification.out_of_scope_below) == (
-            0.6569,
-            0.4866,
+            0.6137,
+            0.4779,
         )
         assert clarification.out_of_scope_message != DEFAULT_OUT_OF_SCOPE_MESSAGE
         assert clarification.out_of_scope_message.startswith("Solo puedo responder")

@@ -326,8 +326,9 @@ The criterion was fixed before the runs. Baselines: the keep-conditions run (jud
 ## Oficios (`oficio.yaml`, `oficio_dev.jsonl`)
 
 489 Oficios Ordinarios (2001-2024), the Superintendencia's answers to consultations.
-- Profile adapted from `circular.yaml`. 485 ingest; 4 are scans with no text layer and fail,
-  since the `simple` parser does no OCR. That makes 3,312 chunks, median 5 per oficio.
+- Profile adapted from `circular.yaml`. All 489 ingest (3,324 chunks, median 5 per oficio): the
+  4 scans with no text layer are OCR'd by `ocr_index_card` since the cleanup below (before it, 485
+  and 3,312 with the `simple` parser).
 - `oficio_dev.jsonl`: 20 blind questions from 20 oficios spread over the years. With 40 rerank
   candidates the search on the oficio topic scores MRR@10 .724.
 
@@ -454,6 +455,70 @@ Result: 36/36 verified `out`, 0 relabelled. `indice` chunks are lists of oficio 
 
 The other 44 `out` items (`gen`, `chat`, `code`, `other`) are unrelated to pensions, health,
 labour, tax or banking and were not checked chunk by chunk.
+
+### Re-verification against the grown corpus (2026-10-22)
+
+The table above predates the 10 compendio Libros, the Notas Internas and the oficios. The 36 items
+were checked again, before recalibrating, against the whole tenant: 11k compendio chunks, 636
+notas, 3,324 oficio chunks after the OCR reingest, and the other profiles. Same method: read the
+top-3 chunks of every profile, search every chunk's text with `unaccent`, never look at scores.
+The rule, fixed beforehand: an item that some chunk answers is REMOVED from `ood.jsonl` (not
+rewritten), which leaves 76 items.
+
+| id | now answered by |
+|---|---|
+| out-pens-01 (retirement age, men) | compendio Libro III Título I Letra B Cap. II: "Tienen derecho a pensión de vejez los afiliados que hayan cumplido los 65 años si son hombres y 60 años si son mujeres" |
+| out-pens-02 (PGU requirements) | compendio Libro III Título XVII Letra B Cap. III: 65 years, not in the richest 10%, 20 years of residence, base pension under the upper bound |
+| out-pens-03 (emergency withdrawal) | oficios of 2020-2021: "retiro por única vez de hasta el 10% ... máximo 150 UF", the third 10% withdrawal under Ley 21.330 |
+| out-pens-06 (applying for the bono por hijo) | compendio Libro III Título VII Cap. IV: "deberá ser solicitada ante el IPS ... a través de la suscripción del formulario" |
+
+The other 32 stay `out`. Borderline cases kept `out`:
+- out-labor-04: "45 horas semanales" appears only as a reference to scale Seguro de Cesantía amounts.
+- out-isapre-06: one nota gives the coverage of FONASA groups C and D, but does not compare B and C.
+- out-abroad-*: the oficios explain the bilateral agreements, not the foreign systems.
+
+For out-pens-02 and out-pens-03 the answering chunk exists but is in no profile's top-3: that is a
+retrieval gap, not a label issue. Details: `~/scratch/agintis/labels/ood_reverify.md` (local).
+
+Recalibrated on the 76 items (`--analyze`, gpt-6-luna, now `report.json`): `low_confidence_below`
+0.6569 -> 0.6137, `out_of_scope_below` 0.4866 -> 0.4779, AUROC .966 -> .988. 4/76 ood questions
+pass as normal, 3/40 in-domain questions fall in the `low` band, and none is refused. The covered
+items were what inflated the p95 band.
+
+### Oficios cleanup (2026-10-22)
+
+- `oficio.yaml` now uses `ocr_index_card`, so all 489 oficios index, the 4 scans included.
+- The internal-id line regexes cover every id seen: `OF-DDN-20-3753`, 5-digit numbers and
+  `OF-DDNI-…`.
+- The unmatched `titulo` and `capitulo` levels and the unused `materia` field are gone.
+- An offline check over all 489 oficios, against the previous profile, found:
+  - 0 line differences other than internal-id lines in the 485 text oficios;
+  - 0 id-only lines left;
+  - an OCR non-word share of 0.144, against 0.147 for text oficios.
+- Only the oficio profile was reingested: 4 indexed, 485 replaced, 0 failed.
+
+Guard, with floors fixed before the run. Baseline: the stage 2 judge run and the bias-0 live hits.
+
+| measure | baseline | cleanup | floor |
+|---|---|---|---|
+| in-dev faithfulness | 38/39 | 37/38 | ≥ 36 |
+| in-dev refusal / relevance | 39/40, 39/40 | 37/40, 37/40 | ≥ 37 |
+| in-dev citation | 38/40 | **33/39** | ≥ 35 |
+| ood refusal misses | 4/80 | 1/76 | ≤ 4 |
+| judge errors | 0 | **1** | 0 |
+| the five other sets' live hits, pooled | 96/109 | 98/109 | ≥ 94 |
+| `oficio_dev` live hit / faithfulness | 18/20, 19/20 | 18/20, 20/20 | ≥ 17, ≥ 18 |
+
+Accepted as a documented exception, because both failures are judge noise:
+- Citation:
+  - The 6 citation failures are disjoint from the baseline's 2.
+  - None of them changed scope band.
+  - in-cmp-05 and in-cir-24 cite the same sources in both runs, and the verdict flipped.
+  - In-dev citation over the comparable runs was 31, 35, 36, 35, 38 and 33. The floor (the best
+    run minus 3) was too tight. Future floors for this measure should come from that run-to-run
+    range.
+- The judge error: the faithfulness judge's output on out-abroad-03, a refusal, did not parse. No
+  floored measure uses it.
 
 ## Edits to `in_dev.jsonl`
 
