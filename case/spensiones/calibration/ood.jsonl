@@ -72,9 +72,5 @@
 {"id": "out-bank-04", "question": "¿Qué es el CAE de un crédito universitario?", "label": "out"}
 {"id": "out-bank-05", "question": "¿Cómo abro una cuenta corriente en un banco?", "label": "out"}
 {"id": "out-bank-06", "question": "¿Qué significa estar en DICOM y cómo salgo?", "label": "out"}
-{"id": "out-pens-01", "question": "¿A qué edad me puedo jubilar si soy hombre?", "label": "out"}
-{"id": "out-pens-02", "question": "¿Cuáles son los requisitos para recibir la Pensión Garantizada Universal?", "label": "out"}
-{"id": "out-pens-03", "question": "¿Se puede retirar un porcentaje de los fondos de pensiones por emergencia?", "label": "out"}
 {"id": "out-pens-04", "question": "¿Cuál es el monto de la pensión de alimentos que debo pagar a mi hijo?", "label": "out"}
 {"id": "out-pens-05", "question": "¿Qué AFP tiene mejor rentabilidad este año según los analistas?", "label": "out"}
-{"id": "out-pens-06", "question": "¿Cómo postulo al bono por hijo para las mujeres?", "label": "out"}

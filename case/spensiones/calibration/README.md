@@ -455,6 +455,30 @@ Result: 36/36 verified `out`, 0 relabelled. `indice` chunks are lists of oficio 
 The other 44 `out` items (`gen`, `chat`, `code`, `other`) are unrelated to pensions, health,
 labour, tax or banking and were not checked chunk by chunk.
 
+### Re-verification against the grown corpus (2026-10-22)
+
+The table above predates the 10 compendio Libros, the Notas Internas and the oficios. The 36 items
+were checked again, before recalibrating, against the whole tenant: 11k compendio chunks, 636
+notas, 3,324 oficio chunks after the OCR reingest, and the other profiles. Same method: read the
+top-3 chunks of every profile, search every chunk's text with `unaccent`, never look at scores.
+The rule, fixed beforehand: an item that some chunk answers is REMOVED from `ood.jsonl` (not
+rewritten), which leaves 76 items.
+
+| id | now answered by |
+|---|---|
+| out-pens-01 (retirement age, men) | compendio Libro III Título I Letra B Cap. II: "Tienen derecho a pensión de vejez los afiliados que hayan cumplido los 65 años si son hombres y 60 años si son mujeres" |
+| out-pens-02 (PGU requirements) | compendio Libro III Título XVII Letra B Cap. III: 65 years, not in the richest 10%, 20 years of residence, base pension under the upper bound |
+| out-pens-03 (emergency withdrawal) | oficios of 2020-2021: "retiro por única vez de hasta el 10% ... máximo 150 UF", the third 10% withdrawal under Ley 21.330 |
+| out-pens-06 (applying for the bono por hijo) | compendio Libro III Título VII Cap. IV: "deberá ser solicitada ante el IPS ... a través de la suscripción del formulario" |
+
+The other 32 stay `out`. Borderline cases kept `out`:
+- out-labor-04: "45 horas semanales" appears only as a reference to scale Seguro de Cesantía amounts.
+- out-isapre-06: one nota gives the coverage of FONASA groups C and D, but does not compare B and C.
+- out-abroad-*: the oficios explain the bilateral agreements, not the foreign systems.
+
+For out-pens-02 and out-pens-03 the answering chunk exists but is in no profile's top-3: that is a
+retrieval gap, not a label issue. Details: `~/scratch/agintis/labels/ood_reverify.md` (local).
+
 ## Edits to `in_dev.jsonl`
 
 These are `in` items (they only report, they never set a threshold):
