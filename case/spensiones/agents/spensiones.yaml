@@ -225,6 +225,7 @@ prompts:
     Preparas una pregunta de un usuario para buscarla en la normativa del Sistema de Pensiones de Chile.
     Lee la conversacion y el ULTIMO mensaje del usuario y completa los campos:
     - standalone_query: el ultimo mensaje reescrito para que se entienda SIN la conversacion (resuelve pronombres y referencias; conserva exactamente numeros, libros, titulos, letras, capitulos, numeros de norma y nombres; en espanol). No la respondas. Si ya se entiende sola, copiala.
+      Si el ultimo mensaje depende de la conversacion y una respuesta anterior del asistente nombro ese mismo tema con terminos de la normativa (por ejemplo "cuenta de capitalizacion individual de cotizaciones obligatorias" donde el usuario dijo "producto obligatorio"), escribe esos terminos en standalone_query junto a las palabras del usuario, sin reemplazarlas.
     - is_clear: false solo si la pregunta es demasiado vaga o ambigua para buscarla.
     - confidence: numero de 0 a 1, que tan seguro estas de que standalone_query refleja lo que el usuario quiere.
     - request_kind: "domain" si es una pregunta o solicitud sobre la normativa de pensiones o del seguro de cesantia, incluida una tarea sobre ella como resumir, redactar o comparar algo de esa normativa (por ejemplo "arma un resumen breve de las reglas de traspaso entre fondos"); "social" si es un saludo, un agradecimiento, charla casual o una consulta sobre que puedes hacer (por ejemplo "buenas tardes", "muchas gracias, que tengas buen dia", "en que me puedes ayudar?"); "other" si es una tarea o tema fuera de esa normativa: programar, redactar un poema, consejos personales o de salud, o un tema ajeno (por ejemplo "escribe una funcion que ordene una lista", "me duele la cabeza, que tomo?", "dame una receta de pan"). Un saludo o agradecimiento que ademas trae una pregunta sobre la normativa es "domain" (por ejemplo "hola, cuanto demora la devolucion de un descuento mal aplicado?"). Ante la duda, "domain".
@@ -235,6 +236,16 @@ prompts:
   rewrite: |
     Una busqueda en la normativa del Sistema de Pensiones de Chile devolvio muy pocos resultados para la pregunta del usuario.
     Escribe UNA consulta de busqueda distinta para la misma pregunta: mas amplia, con sinonimos o con otra redaccion, sin detalles demasiado especificos que quiza no aparezcan en los documentos. Conserva exactamente los numeros, nombres y referencias que la pregunta indica y el espanol. No respondas la pregunta.
+    Si la pregunta usa palabras coloquiales, agrega al lado el termino que usa la normativa, sin quitar el original. Glosario (coloquial -> normativa):
+    - producto obligatorio, cuenta obligatoria -> cuenta de capitalizacion individual de cotizaciones obligatorias
+    - cuenta 2 -> cuenta de ahorro voluntario
+    - cambiarse de AFP -> traspaso entre Administradoras, orden de traspaso
+    - sin pega, sin trabajo -> afiliado cesante
+    - boletear, a honorarios -> trabajador independiente
+    - INP -> Instituto de Prevision Social (IPS)
+    - bono del Estado por ahorrar -> bonificacion fiscal
+    - estado de cuenta -> cartola
+    - la plata -> los fondos, el saldo
   extract_filters: |
     Conviertes una pregunta sobre normativa del Sistema de Pensiones de Chile en filtros de metadatos.
     Completa un campo SOLO si la pregunta nombra ese valor de forma explicita; si no, dejalo en null.

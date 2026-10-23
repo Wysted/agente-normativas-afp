@@ -438,6 +438,63 @@ is the oficios cleanup run.
 - Cost: a rewritten turn adds 1 model call and 1 retrieval. The dumps do not record how often it
   fired.
 
+## Colloquial vocabulary (`colloquial_dev.jsonl`, 2026-10-23)
+
+Users say "producto obligatorio"; the norms say "cuenta de capitalización individual de
+cotizaciones obligatorias" (0 of 15,622 chunks contain the first). In a live chat the first turn
+was saved by the rewrite, but the follow-ups ("¿y el paso a paso?", "dame el de chile") kept the
+colloquial term and retrieved the Chile-Peru transfers.
+
+The change is prompt-only:
+- `analyze`: when the last message depends on the conversation, reuse the normative terms a
+  previous answer gave for the same topic, next to the user's words.
+- `rewrite`: put the normative term next to a colloquial one, with a 9-entry glossary. An entry
+  needs the colloquial term in ~0 chunks and the normative one in many (for example "estado de
+  cuenta" 8, "cartola" 469). APV, jubilación, sueldo, cambio de fondo, herencia, PGU and "retiro
+  del 10" are literal in the corpus, so they are not in it.
+
+`dump_answers` rows take an optional `history` (earlier turns), and records carry the
+`standalone_query`. `colloquial_dev.jsonl` (20 rows, written before the glossary):
+- 16 colloquial paraphrases of dev questions, keeping their snippets (`colloquial`);
+- 4 follow-ups (`colloquial_followup`): turns 2 and 3 of the live chat, with its real history,
+  and 2 built ones whose previous answer is taken from the source text. The live-chat rows hit
+  when a source is in Libro I, Título III, Letra A, Capítulos XVIII-XXVIII (`expected_locators`).
+
+The criterion was fixed before the runs. B is `main`, N the new prompts; B1 and N1 run every
+set, B2 and N2 only `colloquial_dev`. The floors come from the documented run-to-run ranges.
+
+| measure | B1, B2 | N1, N2 | rule |
+|---|---|---|---|
+| follow-ups | 2/4, 2/4 | **3/4, 4/4** | each N ≥ 3 (decides) |
+| colloquial single-turn | 8/16, 9/16 | 10/16, 10/16 | min N ≥ 8 |
+| live hits, 129 questions pooled | 120 | 119 | ≥ 118 |
+| `v1_mixed` / `operativa` | 15/19, 20/20 | 14/19, 20/20 | each ≥ −1 |
+| cotizaciones / `compendio_new_dev` / `nota_dev` / `oficio_dev` | 18, 39, 10, 18 | 18, 39, 10, 18 | each ≥ −1 |
+| in-dev faithfulness / refusal / relevance / citation | 35/38, 39, 39, 35/40 | 36/37, 37, 37, 33/38 | ≥ 33, 37, 37, 28 |
+| ood refusal misses | 0/76 | 0/76 | ≤ 3 |
+
+- It passes, with 0 dump or judge errors and 0 reranker fallbacks.
+- The CI 5-gram check then caught one glossary entry: "el saldo de la cuenta personal" shares a
+  5-gram with in-cmp-10 and nd-33. It became "los fondos, el saldo", and `colloquial_dev` was
+  rerun twice against the same floors. N3 got follow-ups 4/4 and single-turn 11/16; N4 got 4/4
+  and 8/16. The guard was not rerun: "plata" is in 1 guard question, and the entry only acts
+  inside `rewrite`.
+- The follow-up gain is stable: 4/4 in three of the four new runs. The single-turn gain is not:
+  N ranges from 8 to 11 and B from 8 to 9.
+- On single-turn questions the `analyze` rule does nothing: 39 of 40 in-dev standalone queries
+  are identical, and the other one is a paraphrase.
+- The relevance and refusal losses (in-cmp-08, in-res-30) got identical sources in B1 and N1,
+  so they come from synthesis variance.
+- af-16 still answers right; only the snippet chunk changed.
+- af-01 is likely a cost of the `rewrite` edit. Its standalone query is identical but its
+  sources differ, and it now answers "No lo sé". The dumps do not record the rewritten query.
+- Earlier runs were slightly degraded. Until this change, `rerank-gpu` ran with
+  `--max-concurrent-requests 128`, and TEI takes one permit per text, so 40-candidate batches at
+  `--concurrency 4` got HTTP 429. The fallback keeps the vector order silently. The `rewrite` run
+  above had 6 fallen-back retrievals, and the oficio runs had 3 to 7. The container now runs with
+  2048, and the live guard rejects a dump whose log shows a fallback. The clean B1 has 120 live
+  hits, against 119 in the `rewrite` run.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
