@@ -479,6 +479,11 @@ The other 32 stay `out`. Borderline cases kept `out`:
 For out-pens-02 and out-pens-03 the answering chunk exists but is in no profile's top-3: that is a
 retrieval gap, not a label issue. Details: `~/scratch/agintis/labels/ood_reverify.md` (local).
 
+Recalibrated on the 76 items (`--analyze`, gpt-6-luna, now `report.json`): `low_confidence_below`
+0.6569 -> 0.6137, `out_of_scope_below` 0.4866 -> 0.4779, AUROC .966 -> .988. 4/76 ood questions
+pass as normal, 3/40 in-domain questions fall in the `low` band, and none is refused. The covered
+items were what inflated the p95 band.
+
 ## Edits to `in_dev.jsonl`
 
 These are `in` items (they only report, they never set a threshold):
