@@ -20,9 +20,9 @@ from agintis.modules.knowledge.api import (
     parse_profile,
     validate_profiles,
 )
+from agintis.modules.knowledge.application import NO_RERANKER_KEY
 from agintis.modules.knowledge.infrastructure.parsers import SimpleParser
 from agintis.modules.knowledge.infrastructure.registry import (
-    NO_RERANKER_KEY,
     TEI_RERANKER_KEY,
     build_chunkers,
     build_cleaners,
@@ -580,7 +580,7 @@ class TestSpensionesCase:
 
     def test_the_compendio_seccion_opens_on_headings_only(self) -> None:
         by_name = {p.name: p for p in load_profiles_dir(CASE_PROFILES)}
-        levels = by_name["spensiones_compendio"].chunker_params["levels"]
+        levels: Any = by_name["spensiones_compendio"].chunker_params["levels"]
         seccion = re.compile(levels[0]["pattern"])
         assert [line for line in self.SECCION_OPENS if not seccion.match(line)] == []
         assert [line for line in self.SECCION_IGNORES if seccion.match(line)] == []

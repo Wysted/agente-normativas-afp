@@ -154,6 +154,19 @@ plus the other extras you use (`--all-extras` includes it); Docker:
    (about 600 requests at least 0.6 s apart, pages cached in `raw_html/`), then
    `uv run python case/spensiones/fetch_samples.py` (downloads only the
    files of `samples/_manifest.json`, 3.5 s apart).
+   After a bulk ingest or revert (thousands of chunks
+   inserted and deleted), pgvector HNSW results are no longer identical to before, even after
+   `VACUUM` (measured: routed MRR moved +-0.005 with the same routing). Re-measure your baselines
+   after bulk changes, or `REINDEX` the HNSW index after a bulk revert if exact reproducibility
+   matters.
+   To undo an ingest batch auditably, `uv run python -m agintis.cli.revert_ingest --profiles
+   ... --index <same index file> --tenant <id>` lists (dry run, with counts) the documents of
+   that tenant whose source is in the index (opened read-only), and `--apply` deletes them
+   (chunks cascade; each deletion is logged with its tenant). Source URIs are resolved as ingest
+   did: the manifest `url` of each row under `--samples` (default `<index dir>/../samples`),
+   which may differ from the index `url`; rows without a local file are skipped. `--apply`
+   re-resolves the documents when it runs, so a concurrent ingest between the dry run and the
+   apply can change the set. Nothing matched prints a warning (check the tenant).
 3. `agents/*.yaml`: the agent spec (see below).
 4. `calibration/in_dev.jsonl` and `ood.jsonl`: in-domain and out-of-domain dev questions, with
    near-domain traps checked against the corpus. Calibrate the evidence thresholds:
@@ -211,6 +224,16 @@ All offline; use a separate model family for the judge than for the generator.
 
 Rules: tune prompts, retrieval and thresholds on the calibration sets only. `eval_questions` are
 held out: report on them, never tune on them.
+
+Method that worked for a change that ADDS coverage (a new document family or source). Judge it by
+NON-INFERIORITY on what already worked, not by "must improve":
+
+- Free offline stages first (retrieval and routing metrics, no LLM), live runs after.
+- At least 3 runs per arm. The tolerance floor is the run-to-run range of the baseline B
+  (mean N >= mean B - range(B)). Pre-register thresholds and the decision rule before measuring.
+- A stable loss (a question the baseline hits in >= 2/3 runs and the new arm in 0) is adjudicated
+  by reading the content before deciding.
+- Answer dumps record the token usage per model, so the cost of a run is auditable from the dump.
 
 ## Production notes
 
