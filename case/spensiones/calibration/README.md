@@ -839,6 +839,8 @@ Accepted as a documented exception, because both failures are judge noise:
   - In-dev citation over the comparable runs was 31, 35, 36, 35, 38 and 33. The floor (the best
     run minus 3) was too tight. Future floors for this measure should come from that run-to-run
     range.
+  - Corrected later (see "In-dev citation support"): across 23 runs the swing comes from the agent's
+    answers changing between runs, not from the judge.
 - The judge error: the faithfulness judge's output on out-abroad-03, a refusal, did not parse. No
   floored measure uses it.
 
@@ -901,3 +903,70 @@ non-supporting topic is selected, in both the evidence router and the merge, tie
 - Per set, the role recovers what the NCG cost at bias 0: cotizaciones, `nota_dev` and `oficio_dev`
   match the baseline, and `compendio_new_dev` goes from 39 to 40. The losses are in the colloquial
   `bank_dev` (relevance and 74-75 hits against 75-76).
+
+## Tenant after the experiments, and a fresh baseline (2026-10-24)
+
+The staging tenant `spensiones_ncgstage` was deleted: 484 documents and 5822 chunks. `spensiones`
+holds the same content as before the day's coverage experiments (648 documents, 15622 chunks), so
+the shared HNSW index changed again, and every baseline below was taken afterwards. `reg3_B1` is
+the reference run on `main` (26c4022):
+
+| measure | `reg3_B1` |
+|---|---|
+| in-dev faithfulness / citation / relevance / refusal | 38/38, 37/39, 38/40, 38/40 |
+| ood refusal misses | 1/76 |
+| live hits: afiliacion, cotizaciones, compendio_new, nota, oficio | 33/39, 18/20, 39/40, 10/10, 18/20 |
+| `colloquial_dev` single-turn / follow-ups | 14/16, 4/4 |
+| `bank_dev` gap / strong | 42/87, 32/32 |
+
+## Register rewrite, three runs per arm (2026-10-24, not merged)
+
+A re-measure of the register rewrite with 3 runs per arm on the cleaned tenant. The first attempt
+failed with 2 runs, and its noise was ±4-8 hits. The change, pre-registered before the runs, is
+the same single sentence in the `rewrite` prompt: the query is phrased the way the norm would
+phrase it (third person, the norm's technical terms). `max_rewrites` stays 1.
+
+| measure | B | N | rule |
+|---|---|---|---|
+| `bank_gap` live hits (87, decides) | 42, 41, 47 | 48, 46, 51 | min N > max B and mean +3: **fails** (46 <= 47; mean +5.0) |
+| `bank_strong` (32) | 32, 32, 32 | 32, 32, 32 | passes |
+| N1 in-dev faithfulness / citation / relevance / refusal | 38, 37, 38, 38 | 35, 32, 37, 37 | >= 36, 30, 36, 36: faithfulness **fails** |
+| N1 ood refusal misses | 1 | 1 | <= 4 |
+| N1 live hits of the six other sets | | equal or better | passes |
+
+- Report only: per `bank_gap` row, N is better on 26 and worse on 17 (sign test p = 0.22). This is
+  the same picture as the first attempt: a small mean gain that the run-to-run noise hides (B alone
+  spans 41-47), and here it also cost faithfulness.
+- Cost from the dumps' usage: $0.25 and $0.22 for the full runs, about $0.11 for each `bank_dev`
+  run, $0.92 in all.
+- The prompt alone is not worth pursuing. Two levers are left. One is to cut the agent's noise first
+  (gpt-6-luna accepts `temperature: 0` with reasoning off). The other is to bring the rewrite closer
+  to the offline oracle phrasing, which lifted 68/78.
+
+## In-dev citation support (2026-10-24, not merged)
+
+The question was whether in-dev `citation_support` failures are judge noise. An analysis of the 23
+judged in-dev runs on disk says they are not:
+- An identical answer got the same verdict 33 of 34 times.
+- The swing comes from the agent answering differently between runs.
+- Of the failed sentences, about 80 drop or widen a condition of the source, about 41 cite the wrong
+  `[n]` (the fact is in another retrieved source), and about 28 alter the object or the modality
+  ("debera" -> "puede").
+- About 16% of failed records are a judge artifact: the quote it copies has a typo and the
+  `evidence_not_verbatim` guard rejects it.
+- Eight questions account for about 75% of the failures (in-ncg-19 fails in 15 of 23 runs).
+
+A one-bullet `synthesize` rule was then pre-registered and measured: check that the fact is in the
+source you cite, and keep the force of the rule (must versus may).
+
+| measure | B (`reg3_B1`, `cit_B2`, `cit_B3`) | N (`cit_N1` to `N3`) | rule |
+|---|---|---|---|
+| in-dev citation (decides) | 37, 34, 34 | 35, 31, 35 | mean +3: **fails** (-1.3) |
+| in-dev faithfulness | 38, 37, 38 | 36, 37, 36 | mean >= 36.67: **fails** (36.33) |
+| in-dev relevance / refusal | 38, 39, 38 / 38, 39, 38 | 38, 39, 38 / 38, 39, 38 | passes |
+| ood refusal misses | 1 | 1 | <= 4 |
+
+- One more prompt rule does not fix agent-side citation errors. Options not tried yet:
+  - a post-synthesis check in code that verifies each cited sentence against its source;
+  - a judge guard that tolerates a typo in the quoted evidence. That one needs the judge to be
+    re-validated, because it moves the numbers.
