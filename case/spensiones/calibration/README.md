@@ -691,7 +691,30 @@ a new experiment with new runs, not a re-reading of the first attempt.
 - It fails on (a) and was reverted: the 130 documents were deleted and the bands kept.
 - The loss is in `cotizaciones_dev`: 19, 18, 19 -> 17, 17, 17. On cz-07 and cz-12, the help articles on the Cuenta 2 and APV (2 sources in each N run) push out the Compendio chapters that hold the technical condition; on cz-07 the agent answers that it cannot find it. cz-03 changed without any article source (noise).
 - For colloquial questions the articles help, but not beyond the noise: `bank_dev` relevance 110.33 against 110, with help articles in 66 of the 119 N1 answers.
-- What would address both: keep the articles from displacing normative sources on technical questions, for example a negative `evidence_bias` on `articulo_faq` or the tie-break's choice of primary. Neither was measured.
+- What would address both: keep the articles from displacing normative sources on technical questions, for example a negative `evidence_bias` on `articulo_faq` or the tie-break's choice of primary. The bias was measured next.
+
+## Help articles with an `articulo_faq` bias (2026-10-24, not merged)
+
+Pre-registered before the sweep: the same 138 articles, and the least negative `evidence_bias` on
+`articulo_faq` that meets all three offline rules. The base is .7809 pooled and .8708 on
+cotizaciones, on the 129 questions.
+- (i) pooled routed MRR on the 129 >= base − 0.005 (the offline noise), so >= .7759.
+- (ii) cotizaciones MRR >= its base.
+- (iii) `bank_dev` questions with a help article in the merged top 8 >= 80% of that count at bias 0.
+
+Only a bias that met all three would have gone to live runs.
+
+| bias | (i) MRR 129 | (ii) cotizaciones | (iii) `bank_dev` reach (>= 44) |
+|---|---|---|---|
+| 0 | .7731 no | .854 no | 55 yes |
+| -0.02 | .7757 no | .871 yes | 38 no |
+| -0.04 | .7809 yes | .871 yes | 18 no |
+| -0.06 | .7809 yes | .871 yes | 7 no |
+| -0.08 | .7809 yes | .871 yes | 7 no |
+
+- No value meets all three. Stopped without paid runs and reverted (130 documents deleted).
+- It is the NCG trade-off again. A bias that protects the technical questions also stops the articles from reaching the colloquial ones (55 -> 18 at -0.04). A static, per-topic bias cannot tell the two kinds of question apart.
+- What could: routing that depends on the question. For example, let the analyzer flag a member's practical question and allow `articulo_faq` as primary only then. Or make the help articles a supporting topic that is searched but never primary. Both are design changes, not measured.
 
 ## Label verification (near-domain `out` items)
 
