@@ -495,6 +495,41 @@ set, B2 and N2 only `colloquial_dev`. The floors come from the documented run-to
   2048, and the live guard rejects a dump whose log shows a fallback. The clean B1 has 120 live
   hits, against 119 in the `rewrite` run.
 
+## Colloquial question bank (`bank_dev.jsonl`) and the register rewrite (2026-10-24, not merged)
+
+An offline probe (evidence router, hybrid search, rerank; no LLM) over a hand-written bank of 140
+colloquial questions (89 in a member's voice, 51 in operations staff's voice):
+- 108 (77%) start with a weak retrieval (best rerank below 0.92). Only 1 is refused by scope.
+- Rewritten by hand in the norms' register (third person, "el afiliado", "la Administradora",
+  their terms), 88 of the 108 reach 0.92. The other 20 are coverage gaps (e.g. seasonal workers,
+  a wrong RUT, an employer's bankruptcy).
+- Word swaps alone (AFP -> Administradora, imposiciones -> cotizaciones, plata -> fondos, ...)
+  lift 15 of 78 weak questions; the full normative phrasing lifts 68. The gap is register, not
+  rare words, so a bigger glossary would fix little.
+
+`bank_dev.jsonl` keeps the 119 questions with a findable answer: 87 `bank_gap`, 32 `bank_strong`.
+Each target is the top reranked chunk of the normative (gap) or own (strong) phrasing, as a
+70-character snippet found in at most 3 chunks (chunks overlap their neighbours). These are
+silver targets: a spot check of 14 found 11 clearly right and 2-3 doubtful.
+
+Two prompt changes were measured against it, each with a criterion fixed before the runs
+(B = `main`, 2 runs each):
+
+| measure | B | register rewrite | + `max_rewrites: 2` | rule |
+|---|---|---|---|---|
+| `bank_gap` | 47, 44 | 55, 47 | 48, 52 | min N - max B >= 3 (decides) |
+| `bank_strong` | 32, 32 | 32, 32 | 32, 32 | >= 31 |
+| live hits, 129 pooled | 119 | 122 | 122 | >= 117 |
+| colloquial single-turn / follow-ups | 9/16, 3/4 | 12/16, 3/4 | 14/16, 4/4 | >= 8, >= 3 |
+
+- Both fail the deciding rule; every guard floor passes.
+- Per question (exploratory, after the fact): over the 4 register runs against the 2 baseline
+  runs, 24 rows do better and 21 worse (sign test p = 0.77). The mean gain comes from rows that
+  flip both ways between runs, not from a consistent effect.
+- The agent's run-to-run spread on this set is 4-8 hits, even on `main`. The LLM profile sets
+  no temperature (undocumented for gpt-6-luna); reducing that noise comes before measuring
+  smaller effects.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
