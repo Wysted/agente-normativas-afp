@@ -582,8 +582,9 @@ article-based answer as a miss): min of the new runs above the max of the baseli
   (tenant `spensiones` back to 8 help articles). The signal is slightly positive and within the
   run-to-run noise, the same pattern as the prompt experiments above. The `bank_dev`
   faithfulness floor was not measured (judge budget).
-- Some articles describe the former Pilar Solidario (PBSI, APSI), replaced by the PGU in 2022: a
-  risk of outdated answers if they are ingested later.
+- Some articles describe the Pilar Solidario de vejez (PBS and APS de vejez), replaced by the PGU
+  on 2022-02-01 (Ley 21.419): a risk of outdated answers. The invalidez benefits (PBSI, APSI) are
+  still in force. Corrected 2026-10-24; this line said PBSI/APSI were replaced.
 - The fetched articles stay on branch `feat/faq-coverage` (manifest) for a later attempt.
 
 ## Glossary entry "obra o faena" (2026-10-24, not merged)
@@ -658,6 +659,39 @@ It stopped at stage 1.
   - Inserting and deleting 5,600 chunks changes the HNSW graph, so approximate search returns slightly different candidates.
   - Offline MRR therefore moves by about ±0.005 after a large ingest. The −0.027 drop is well beyond it.
 - Next option, not measured: keep bias 0 and let the live LLM merge tie-break demote the NCG, as it did for the oficios. That needs its own pre-registration, the live runs of stage 3, and a re-ingest (~2.5 h on CPU). The NCG stay in the staging tenant `spensiones_ncgstage`.
+
+## Help articles, second attempt as a coverage addition (2026-10-24, not merged)
+
+The same staged non-inferiority method as the NCG, pre-registered before any measurement. It is
+a new experiment with new runs, not a re-reading of the first attempt.
+
+- Change: the 140 help-article pages of `feat/faq-coverage`, minus 2 outdated ones.
+  - Rule, fixed before classifying: exclude a page whose body presents a rule of the PBS or APS de vejez as current.
+  - Excluded: cms-aid-7974 (the Pilar Solidario family-group test) and cms-aid-8021 (APS de vejez for the old system).
+  - 130 new documents: 124 `articulo_faq` and 6 `resolucion`.
+- The answer dumps now record token usage. A full run of the 9 sets (384 questions) costs about 2.5M input and 90k output gpt-6-luna tokens, about $0.30.
+- Stages 0 to 2 passed:
+
+| stage | result | rule |
+|---|---|---|
+| 1, offline routed MRR on the 129 questions | .781 -> .773; `articulo_faq` selected for 10, primary for 3 | >= .761 |
+| 2a, the 32 near-domain `out` items against the article bodies | 0 answered, 0 removed | content only |
+| 2b, `--analyze` bands | `low` 0.6137 (same), `out` 0.4779 -> 0.4711; 4/76 ood normal, 1/40 in `low`, 0 refused | <= 4, <= 5, 0 |
+
+- Stage 3, three runs per arm (B = `reg_B2`, `reg_B3`, `faq2_B4`; N = `faq2_N1` to `N3`; 0 errors). Both decisions had to pass:
+
+| measure | B | N | rule |
+|---|---|---|---|
+| (a) live hits, 129 questions | 121, 121, 120 | 119, 118, 119 | mean N >= mean B − range = 119.67: **fails** (118.67) |
+| (b) `bank_dev` answer relevance | 111, 110, 109 | 112, 109, 110 | mean N >= 108: passes (110.33) |
+| stable losses (>= 2/3 B, 0/3 N) | | af-16 (right answer, other source), cz-07 (real) | real losses <= 2: passes |
+| N1 in-dev faithfulness / citation / relevance / refusal | | 37, 31, 39, 39 | >= 35, 30, 37, 37: passes |
+| N1 ood refusal misses / `bank_dev` faithfulness failures | | 1 / 6 | <= 3 / <= 11: passes |
+
+- It fails on (a) and was reverted: the 130 documents were deleted and the bands kept.
+- The loss is in `cotizaciones_dev`: 19, 18, 19 -> 17, 17, 17. On cz-07 and cz-12, the help articles on the Cuenta 2 and APV (2 sources in each N run) push out the Compendio chapters that hold the technical condition; on cz-07 the agent answers that it cannot find it. cz-03 changed without any article source (noise).
+- For colloquial questions the articles help, but not beyond the noise: `bank_dev` relevance 110.33 against 110, with help articles in 66 of the 119 N1 answers.
+- What would address both: keep the articles from displacing normative sources on technical questions, for example a negative `evidence_bias` on `articulo_faq` or the tie-break's choice of primary. Neither was measured.
 
 ## Label verification (near-domain `out` items)
 
