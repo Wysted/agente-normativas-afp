@@ -530,6 +530,51 @@ Two prompt changes were measured against it, each with a criterion fixed before 
   no temperature (undocumented for gpt-6-luna); reducing that noise comes before measuring
   smaller effects.
 
+## `temperature: 0` on the agent's model (2026-10-24, not merged)
+
+A single live call showed gpt-6-luna accepts `temperature: 0` with `reasoning_effort: none` (not
+documented on its model page). Criterion fixed before the runs: the rows of `bank_dev` whose live
+hit differs between two identical runs must drop from the baseline's 15 to at most 7.
+
+| measure | B1, B2 (no temperature) | t0_1, t0_2 | rule |
+|---|---|---|---|
+| rows that flip between the two runs | 15 | **11** | <= 7 (decides) |
+| identical source lists / identical answers | 29, 0 of 119 | 46, 5 of 119 | report |
+| `bank_gap` | 47, 44 | 45, 46 | mean >= 43.5 |
+| live hits, 129 pooled | 119 | 120 | >= 117 |
+| in-dev faithfulness / citation / refusal / relevance | 37/38, 37/40, 39, 39 | 35/38, 30/38, 38, 38 | >= 35, 30, 37, 37 |
+
+- It fails the noise rule and is not merged; every other floor passes (two at the floor).
+- Temperature 0 lowers the variance only partly: the API is not deterministic at 0 and four LLM
+  steps (analyze, rewrite, merge tie-break, synthesis) compound it. With this noise, future
+  experiments need more runs per arm or a paired per-row rule fixed in advance.
+
+## Help articles at full coverage (2026-10-24, undecided)
+
+The `articulo_faq`, `circular`, `ncg` and `resolucion` profiles were ingested from the 35 sample
+files only (8 help articles, 24 circulares, 14 NCG, 4 resoluciones in tenant `spensiones`), while
+spensiones.cl lists 2,586 circulares and 483 NCG and the index has 210 help-article pages. Help
+articles were scaled first: of the 210 pages, 69 are redirects to "Especiales" landing pages and
+1 is empty, leaving 140; 126 route to `articulo_faq` and 6 to `resolucion`.
+
+The criterion was fixed before the runs. It decides on the LLM judge's answer relevance on
+`bank_dev` (its silver targets predate the articles, so live hits would count a correct
+article-based answer as a miss): min of the new runs above the max of the baseline runs.
+
+| measure (faq_1 against B1) | B1 | faq_1 | floor |
+|---|---|---|---|
+| `bank_dev` answers with a help-article source / citing one | 5 / 3 | 67 / 45 | report |
+| live hits, 129 pooled | 119 | 119 | >= 117 |
+| cotizaciones | 18 | 17 | >= 17 |
+| ood refusal misses | 0 | 2 | <= 3 |
+| colloquial single-turn / follow-ups | 9/16, 3/4 | 12/16, 3/4 | >= 8, >= 3 |
+
+- Undecided: the DeepSeek judge account ran out of balance (HTTP 402) while judging the
+  baseline, and the OpenAI credits ran out during faq_2 (57 of 119 answered). The deciding judge
+  and faq_2 are pending; the articles were removed from the database until they pass.
+- Some articles describe the former Pilar Solidario (PBSI, APSI), replaced by the PGU in 2022: a
+  risk of outdated answers to check in the judged answers.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36

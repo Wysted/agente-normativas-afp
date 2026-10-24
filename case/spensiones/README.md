@@ -100,6 +100,9 @@ Works end to end: chat UI, threads with server-side history, streaming answers w
 scope refusal of off-domain questions, multi-topic retrieval with rerank, the rewrite loop.
 
 Known gaps:
+- **Sampled sources.** Circulares, NCG, resoluciones and help articles were ingested from a
+  35-file sample, not the full listings (2,586 circulares and 483 NCG on spensiones.cl). Help
+  articles at full coverage are measured but undecided (calibration README).
 - **Colloquial and lay questions.** 77% of a colloquial question bank starts with a weak
   retrieval; most are register gaps (the norms phrase it differently), not missing content.
   A normative-register rewrite did not pass its measurement (see the calibration README).
