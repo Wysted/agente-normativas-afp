@@ -952,8 +952,9 @@ judged in-dev runs on disk says they are not:
 - Of the failed sentences, about 80 drop or widen a condition of the source, about 41 cite the wrong
   `[n]` (the fact is in another retrieved source), and about 28 alter the object or the modality
   ("debera" -> "puede").
-- About 16% of failed records are a judge artifact: the quote it copies has a typo and the
-  `evidence_not_verbatim` guard rejects it.
+- A few failures are a judge artifact: the quote it copies has a typo and the
+  `evidence_not_verbatim` guard rejects it. A first estimate said 16% of failed records. A strict
+  replay (below) puts pure typos at about 2%.
 - Eight questions account for about 75% of the failures (in-ncg-19 fails in 15 of 23 runs).
 
 A one-bullet `synthesize` rule was then pre-registered and measured: check that the fact is in the
@@ -966,7 +967,26 @@ source you cite, and keep the force of the rule (must versus may).
 | in-dev relevance / refusal | 38, 39, 38 / 38, 39, 38 | 38, 39, 38 / 38, 39, 38 | passes |
 | ood refusal misses | 1 | 1 | <= 4 |
 
-- One more prompt rule does not fix agent-side citation errors. Options not tried yet:
-  - a post-synthesis check in code that verifies each cited sentence against its source;
-  - a judge guard that tolerates a typo in the quoted evidence. That one needs the judge to be
-    re-validated, because it moves the numbers.
+- One more prompt rule does not fix agent-side citation errors.
+
+Two code-side levers were then evaluated offline, for free, over the 29 judged in-dev runs on disk.
+Neither is worth building:
+- Re-pointing `[n]` after synthesis, the CiteFix approach (ACL 2025, arxiv 2504.15629):
+  - Only 36 of 199 failed sentences cite the wrong source while the fact is in another retrieved one.
+  - About 88 already cite a source that holds the fact; their error is a condition or modality,
+    which re-pointing cannot fix.
+  - Even a perfect re-pointer that adds the right source (0 correct citations broken) passes at most
+    0.17 more questions per 40-question run, because a failed question usually has several failed
+    sentences.
+  - It would also have to rewrite markers that were already streamed to the client.
+- A judge guard that tolerates a typo in the quoted evidence:
+  - Replayed on the 68 guard rejections, similarity thresholds also accept real changes (an inserted
+    "debe", OCR-broken source words).
+  - The safe rule is a one-letter substitution in one long, non-modal, digit-free word that does not
+    exist in the source. It flips 3-4 verdicts in 29 runs: citation mean .8776 -> .8802, faithfulness
+    .9624 -> .9650, with the run-to-run range unchanged.
+  - It is not worth a judge re-validation.
+
+What remains is agent-side: conditions and modality dropped in synthesis, concentrated in a few
+questions (in-ncg-19, in-cmp-09, in-idx-38). A structural change, such as quote-first synthesis,
+would be its own pre-registered experiment.
