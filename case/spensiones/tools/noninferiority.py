@@ -14,27 +14,16 @@ Runs are dirs under case/spensiones/judge/e2e. Rules:
 import argparse
 import json
 import math
-import re
 import sys
-import unicodedata
 from pathlib import Path
+
+from live_hit import is_hit, squash
 
 ROOT = Path(__file__).resolve().parents[3]
 E2E = ROOT / "case/spensiones/judge/e2e"
 CAL = ROOT / "case/spensiones/calibration"
 DEFAULT_SETS = "afiliacion_dev,cotizaciones_dev,compendio_new_dev,nota_dev,oficio_dev"
 STABLE_FRACTION = 2 / 3
-
-
-def squash(text: str) -> str:
-    return re.sub(r"\s+", "", unicodedata.normalize("NFC", text)).lower()
-
-
-def is_hit(q: dict, row: dict) -> bool:  # same rule as live_hit.py
-    sources = row.get("sources") or []
-    if "expected_locators" in q:
-        return any((s.get("locator") or "").startswith(tuple(q["expected_locators"])) for s in sources)
-    return any(squash(q["expected_snippet"]) in squash(s.get("text") or "") for s in sources)
 
 
 def read_rows(path: Path) -> list[dict]:
@@ -51,6 +40,8 @@ def hits(run: str, sets: list[str]) -> dict:
     for s in sets:
         rows = load(run, s)
         for q in read_rows(CAL / f"{s}.jsonl"):
+            if q["id"] not in rows:
+                sys.exit(f"run {run}, set {s}: question id {q['id']} missing from {s}_answers.jsonl")
             out[(s, q["id"])] = is_hit(q, rows[q["id"]])
     return out
 
@@ -58,14 +49,15 @@ def hits(run: str, sets: list[str]) -> dict:
 def band(totals_b: list[int], totals_n: list[int]) -> tuple[float, float, int, bool]:
     """(mean B, mean N, range B, N passes): mean N >= mean B - range(B)."""
     mb, mn, rng = sum(totals_b) / len(totals_b), sum(totals_n) / len(totals_n), max(totals_b) - min(totals_b)
-    return mb, mn, rng, mn >= mb - rng
+    nb, nn = len(totals_b), len(totals_n)  # integer compare: float means misjudge the exact boundary
+    return mb, mn, rng, sum(totals_n) * nb >= sum(totals_b) * nn - rng * nb * nn
 
 
 def stable(hb: list[dict], hn: list[dict]) -> tuple[list, list]:
     """(stable losses, stable gains): >= 2/3 of the runs of one side hit, none of the other."""
-    need = math.ceil(STABLE_FRACTION * len(hb))
-    losses = [k for k in hb[0] if sum(h[k] for h in hb) >= need and not any(h[k] for h in hn)]
-    gains = [k for k in hb[0] if not any(h[k] for h in hb) and sum(h[k] for h in hn) >= need]
+    need_b, need_n = math.ceil(STABLE_FRACTION * len(hb)), math.ceil(STABLE_FRACTION * len(hn))
+    losses = [k for k in hb[0] if sum(h[k] for h in hb) >= need_b and not any(h[k] for h in hn)]
+    gains = [k for k in hb[0] if not any(h[k] for h in hb) and sum(h[k] for h in hn) >= need_n]
     return losses, gains
 
 
@@ -81,6 +73,7 @@ def self_test() -> None:
     assert band([3, 3, 2], [2, 2, 2])[3] is True
     assert band([3, 3, 2], [1, 2, 1])[3] is False  # mean 1.33 < 1.67
     assert band([5, 5, 5], [4, 4, 4])[3] is False  # range 0: no slack
+    assert band([1, 2, 2], [0, 0, 2])[3] is True  # exact boundary: threshold 5/3 - 1 = 2/3 = mean N
     # stable loss q0 (hit in 2/3 B, 0/3 N) and q1 (1/3 B: not stable); gain q2 (0 B, 2/3 N)
     hb = runs((True, True, False), (True, False, False), (False, False, False))
     hn = runs((False, False, True), (False, False, True), (False, False, False))
@@ -110,7 +103,23 @@ def main() -> None:
     def in_family(src: dict) -> bool:
         return any(m in (src.get("uri") or "") for m in marks)
 
+    # Load everything the report needs before printing, so a missing file leaves no half output.
     hb, hn = [hits(r, sets) for r in B], [hits(r, sets) for r in N]
+    losses, gains = stable(hb, hn)
+    first_n = {s: load(N[0], s) for s in dict.fromkeys([*sets, "in_dev"])}  # in_dev may already be in sets
+    loss_rows = [(s, qid, next(r for r in read_rows(CAL / f"{s}.jsonl") if r["id"] == qid), first_n[s][qid])
+                 for s, qid in losses]
+    ood = {r: list(load(r, "ood").values()) for r in B + N}
+    bank = rb = rn = None
+    if args.bank_relevance:
+        def rel(run: str) -> int:
+            with (E2E / run / "bank_dev_relevance.json").open(encoding="utf-8") as f:
+                return json.load(f)["aggregate"]["answer_relevance"]["passed"]
+
+        rb, rn = [rel(r) for r in B], [rel(r) for r in N]
+        if "bank_dev" not in sets:
+            bank = list(load(N[0], "bank_dev").values())
+
     tb, tn = [sum(h.values()) for h in hb], [sum(h.values()) for h in hn]
     mb, mn, rng, ok = band(tb, tn)
     print(f"pooled hits B {tb} mean {mb:.2f} range {rng} | N {tn} mean {mn:.2f}")
@@ -119,37 +128,26 @@ def main() -> None:
         keys = [k for k in hb[0] if k[0] == s]
         print(f"  {s}: B {[sum(h[k] for k in keys) for h in hb]} N {[sum(h[k] for k in keys) for h in hn]}")
 
-    losses, gains = stable(hb, hn)
     print(f"\nstable losses {len(losses)} (adjudicate; real losses <= 2) | stable gains {len(gains)} (report)")
-    for s, qid in losses:
-        q = next(r for r in read_rows(CAL / f"{s}.jsonl") if r["id"] == qid)
-        row = load(N[0], s)[qid]
+    for s, qid, q, row in loss_rows:
         print(f"\n## {s} {qid}: {q['question']}\n   target: {q.get('expected_snippet') or q.get('expected_locators')}")
         print(f"   N1 answer: {row['answer'][:600]}")
         for src in row.get("sources") or []:
             print(f"   - [{src.get('n')}] {'NEW ' if in_family(src) else ''}{(src.get('title') or '')[:70]}"
                   f" | {(src.get('locator') or '')[:70]}")
 
-    scope_in = lambda r: sum(1 for x in load(r, "ood").values() if (x.get("scope") or {}).get("level") in ("in", "low"))  # noqa: E731
-    print("\nood scope passes:", {r: scope_in(r) for r in B + N})
-    scanned = [*sets, "in_dev"]
-    answers = [x for s in scanned for x in load(N[0], s).values()]
+    in_scope = lambda xs: sum(1 for x in xs if (x.get("scope") or {}).get("level") in ("in", "low"))  # noqa: E731
+    print("\nood scope passes:", {r: in_scope(xs) for r, xs in ood.items()})
+    answers = [x for rows in first_n.values() for x in rows.values()]
     first = sum(1 for x in answers if x.get("sources") and in_family(x["sources"][0]))
     any_ = sum(1 for x in answers if any(map(in_family, x.get("sources") or [])))
     print(f"N1 answers with a new-family source ({', '.join(marks)}): {any_}, first: {first} (report; outdated-text check on these)")
 
     if args.bank_relevance:
-        if "bank_dev" not in sets:
-            bank = load(N[0], "bank_dev").values()
+        if bank is not None:
             print("N1 bank_dev answers with / citing first a new-family source:",
                   sum(any(map(in_family, x.get("sources") or [])) for x in bank),
                   sum(bool(x.get("sources")) and in_family(x["sources"][0]) for x in bank))
-
-        def rel(run: str) -> int:
-            with (E2E / run / "bank_dev_relevance.json").open(encoding="utf-8") as f:
-                return json.load(f)["aggregate"]["answer_relevance"]["passed"]
-
-        rb, rn = [rel(r) for r in B], [rel(r) for r in N]
         mrb, mrn, rrng, rok = band(rb, rn)
         print(f"\nbank_dev relevance B {rb} mean {mrb:.2f} range {rrng} | N {rn} mean {mrn:.2f}")
         print(f"DECIDES (b): mean N {mrn:.2f} >= mean B - range {mrb - rrng:.2f} -> {verdict(rok)}")

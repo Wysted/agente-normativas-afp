@@ -25,15 +25,13 @@ for s in "${sets[@]}"; do
   if [ ! -f "$answers" ]; then
     py agintis.cli.dump_answers --profiles case/spensiones/profiles --agents "${LG_AGENTS:-case/spensiones/agents}" \
       --agent spensiones-rag --tenant spensiones --questions case/spensiones/calibration/$s.jsonl \
-      --out "$answers.partial" --concurrency 4 2>&1 | tee "$logs/dump_$s.log"
+      --out "$answers" --concurrency 4 2>&1 | tee "$logs/dump_$s.log"
     # A reranker fallback silently keeps the vector order: such a dump is not a valid measurement.
     if grep -q "Reranker unavailable" "$logs/dump_$s.log"; then
-      mv "$answers.partial" "$answers.degraded"
+      mv "$answers" "$answers.degraded"
       echo "INVALID: $s fell back to vector order ($(grep -c 'Reranker unavailable' "$logs/dump_$s.log")x); moved to $answers.degraded" >&2
       exit 1
     fi
-    # Written incrementally: only a finished dump gets the name that marks the set as done.
-    mv "$answers.partial" "$answers"
   fi
   [ "${LG_JUDGE:-1}" = 0 ] && continue
   case $s in in_dev | ood | oficio_dev)

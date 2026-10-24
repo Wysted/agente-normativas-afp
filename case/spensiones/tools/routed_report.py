@@ -26,10 +26,13 @@ def merged(row):
     return out[:CUT]
 
 
+def rr(row):
+    return next((1 / i for i, (_, h) in enumerate(merged(row), 1) if h["relevant"]), 0.0)
+
+
 if __name__ == "__main__":
     for path in sys.argv[1:]:
         rows = json.load(open(path, encoding="utf-8"))
-        rr = lambda row: next((1 / i for i, (_, h) in enumerate(merged(row), 1) if h["relevant"]), 0.0)
         out = [f"{path.rsplit('/', 1)[-1]}: W1 {sum(map(rr, rows)) / len(rows):.4f}"]
         for gold in ("compendio", "compendio_sc"):
             rs = [r for r in rows if r["expected"] == gold]
