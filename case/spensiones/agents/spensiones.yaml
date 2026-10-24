@@ -161,6 +161,7 @@ topics:
       Titulo o Capitulo, ni para preguntar que norma modifico una ubicacion (compendio), ni para
       consultas practicas de una persona (articulo_faq).
     profile: spensiones_ncg
+    supporting: true
     filters:
       ncg_number: "Numero de la NCG. Si la pregunta cita UNA NCG, el mismo numero en el limite inferior y en el superior. Solo si la pregunta lo nombra."
       issued_date: "Fecha de emision de la NCG. Solo si la pregunta da una fecha, mes o anio de emision; para un anio completo, del 01-01 al 31-12 de ese anio."
