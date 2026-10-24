@@ -939,9 +939,9 @@ phrase it (third person, the norm's technical terms). `max_rewrites` stays 1.
   spans 41-47), and here it also cost faithfulness.
 - Cost from the dumps' usage: $0.25 and $0.22 for the full runs, about $0.11 for each `bank_dev`
   run, $0.92 in all.
-- The prompt alone is not worth pursuing. Two levers are left. One is to cut the agent's noise first
-  (gpt-6-luna accepts `temperature: 0` with reasoning off). The other is to bring the rewrite closer
-  to the offline oracle phrasing, which lifted 68/78.
+- The prompt alone is not worth pursuing. Cutting the agent's noise with `temperature: 0` was
+  already tried and failed its rule (see "`temperature: 0` on the agent's model"). The lever left is
+  to bring the rewrite closer to the offline oracle phrasing, which lifted 68/78.
 
 ## In-dev citation support (2026-10-24, not merged)
 
