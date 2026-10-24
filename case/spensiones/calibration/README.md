@@ -1,6 +1,7 @@
 # Evidence calibration sets (spensiones)
 
 Dev sets for `python -m agintis.cli.calibrate_evidence` (never the held-out `eval_questions.jsonl`).
+The measurement scripts behind these experiments are in [`../tools/`](../tools/README.md).
 
 - `ood.jsonl`: 80 `out` queries. `in_dev.jsonl`: 40 `in` queries.
 - Label criterion for `out` (fixed): the ingested corpus (tenant `default`) does NOT contain an
