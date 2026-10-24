@@ -5,16 +5,24 @@
 # surcharges, no time-of-day discounts.
 models:
   gpt-6-luna:
-    # Verified 2026-10-24 on developers.openai.com/api/docs/models/gpt-6-luna and
-    # developers.openai.com/api/docs/pricing (standard tier). The page states no effective date.
-    # Not modelled: prompts over 272K input tokens cost 2x input/cached and 1.5x output.
+    # Source: developers.openai.com/api/docs/pricing (standard tier), verified 2026-10-24.
+    # The page states no effective date. Not modelled: prompts over 272K input tokens cost
+    # 2x input/cached and 1.5x output.
     - effective_from: 2026-10-01
       input: 0.10
       cached_input: 0.01
       output: 0.50
 
+  gpt-5.4-mini:
+    # Source: developers.openai.com/api/docs/pricing (standard tier), verified 2026-10-24.
+    # The page states no effective date.
+    - effective_from: 2026-10-01
+      input: 0.75
+      cached_input: 0.075
+      output: 4.50
+
   deepseek-flash:
-    # Source: api-docs.deepseek.com/quick_start/pricing. Same price as the legacy deepseek-chat.
+    # Source: api-docs.deepseek.com/quick_start/pricing.
     # PEAK rates (upper bound): off-peak is half, outside 01-04 and 06-10 UTC on weekdays.
     - effective_from: 2026-09-10
       input: 0.30
@@ -22,10 +30,7 @@ models:
       output: 1.20
 
   deepseek-chat:
-    # Legacy name, absent from api-docs.deepseek.com/quick_start/pricing. A live call on
-    # 2026-10-24 returned `"model": "deepseek-flash"`, so it is billed at the deepseek-flash price.
-    # PEAK rates (upper bound): off-peak is half, outside 01-04 and 06-10 UTC on weekdays.
-    # effective_from = the V4.1 Flash price change.
+    # Legacy name served as deepseek-flash (same price, same peak-rate caveat).
     - effective_from: 2026-09-10
       input: 0.30
       cached_input: 0.006
