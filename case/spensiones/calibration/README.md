@@ -1047,13 +1047,25 @@ no rerank) and a web search for the governing source re-sort the 21 bank questio
   - the affiliates register (Libro I T.III Cap. IV) has no correction procedure;
   - the complaints title (Libro I T.VII, 80 chunks) does not name the phone channel;
   - the fund-switch rules give deadlines and the form, but no compensation formula.
-- No SP norm answers the four outside questions. Seasonal workers follow the general regime (SUSESO
-  and DT guidance). The data questions turn on Ley 19.628 and the reserva articles of DL 3.500, which
-  were not read. Ley 21.719 replaces Ley 19.628 from 2026-12-01, and a bill filed on 2026-08-31
-  would postpone it to 2027-12-01.
+- No SP norm answers the four outside questions. The law texts were read in the BCN `obtxml` API,
+  in part:
+  - Seasonal workers follow the general regime. Codigo del Trabajo arts. 93-95 regulate their
+    contract and lodging, and only art. 94 touches social security (unpaid pay goes to the
+    unemployment account).
+  - Bonuses: DL 3.500 art. 14 takes the pay definition of Codigo del Trabajo art. 41, which lists
+    what is not pay (travel, cash-loss and tool allowances, per diem, family benefits...).
+  - Member data: DL 3.500 arts. 26, 151 and 154 are about advertising and investment information,
+    not member data. Art. 153 refers member databases to Ley 19.628. That law needs written consent
+    or a legal authorization (art. 4) and imposes secrecy (art. 7). It has no rule on a holder of a
+    notarial mandate, and its only court rule is for economic obligations (art. 18).
+  - Ley 21.719 replaces Ley 19.628 from 2026-12-01. The bill to postpone it to 2027-12-01 (boletin
+    18.623-07) was only approved in general by the Senate committee on 2026-10-20.
 - There is no SP source left to ingest for these gaps. Closing them needs a new document family
   (law texts) that was never in scope, and a new family is exactly what crowded the normative
   sources in every experiment above. It would have to start as a supporting topic. Whether the
   product needs it is a product decision, not a calibration one.
 - What the bank does show: 13 of the 21 fail on retrieval, not content, the same register gap the
-  rewrite experiments could not close.
+  rewrite experiments could not close. The stored rerank probe of the normative phrasings, taken
+  before the day's tenant changes, shows both kinds of failure:
+  - the right chapter is first but scores below 0.92 for bank-015 and bank-078;
+  - another passage is first for bank-025, 038, 085 and 103.
