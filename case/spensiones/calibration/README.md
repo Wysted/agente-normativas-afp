@@ -586,6 +586,15 @@ article-based answer as a miss): min of the new runs above the max of the baseli
   risk of outdated answers if they are ingested later.
 - The fetched articles stay on branch `feat/faq-coverage` (manifest) for a later attempt.
 
+## Glossary entry "obra o faena" (2026-10-24, not merged)
+
+Across the 10 earlier runs, bank-005 ("nana") hit 10 of 10 (no entry needed) and bank-007 ("obra
+o faena en la construcción") missed 10 of 10, a stable row a small run can decide. With the
+entry `obra o faena -> contrato por obra, trabajo o servicio determinado`, three runs on that row
+(criterion fixed before the runs: at least 2 of 3 hits) gave 0 of 3: the rewrite used the
+normative term and still missed. Not merged. in-faq-32 ("contrato por obra o faena", unemployment
+insurance) misses on `main` too; it only hit while the full help articles were ingested.
+
 ## Full NCG coverage, offline probe (2026-10-24)
 
 The 485 listed NCG were fetched and ingested into a separate staging tenant
