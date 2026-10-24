@@ -12,7 +12,9 @@ routing:
   - match: {doc_type: [ncg]}
 top_k: 6
 chunk_max_tokens: 700
-parser_key: simple
+# 5 of the 485 (NCG-SP 54, 260, 280, 284, 297) are scans with no text layer: ocr_index_card OCRs
+# them (`ocr` extra), the rest parse as with `simple` (same as oficio.yaml).
+parser_key: ocr_index_card
 cleaners:
   - key: strip_repeated_page_lines
     params: {zone_lines_top: 3, zone_lines_bottom: 3, min_page_ratio: 0.5, min_pages: 2, normalize_digits: true}

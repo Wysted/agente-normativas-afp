@@ -612,6 +612,53 @@ the titles of recent NCG that are not in the main tenant:
   needs the OCR parser on the `ncg` profile, a measured run and a recalibration of the scope
   bands. The PDFs are on branch `feat/ncg-coverage`.
 
+## Full NCG coverage in the main tenant (2026-10-24, not merged)
+
+A coverage addition, so the pre-registered rule was non-inferiority, in stages, with the free
+stages first:
+- 0: baselines;
+- 1: an offline routing guard;
+- 2: re-verify the `out` labels, then recalibrate the bands;
+- 3: three live runs per arm, with a paired per-row rule.
+
+It stopped at stage 1.
+
+- Stage 0, baselines on `main` before the ingest (0 errors, 0 reranker fallbacks):
+  - pooled live hits on the 129 questions plus `bank_dev` were 198, 197 and 196 (`reg_B1` to `reg_B3`);
+  - the stage 3 floor would have been a mean of 195.
+- Stage 2a, done in parallel against the staging tenant: all 32 near-domain `out` items stay `out`.
+  - No NCG chunk answers them. The closest are mentions in passing: GES in NCG 280, the 7%/5% health contribution in NCG 181, country codes.
+- Stage 1, all NCG ingested into `spensiones`:
+  - 484 documents and 5,822 chunks (477 indexed, 7 replaced); NCG-SP 237, at 75 MB, is over the size limit.
+  - Offline routed MRR@10 (router order, merged top 8, rerank at 40) on the same 248 questions; the rule was pooled ≥ base − 0.02:
+
+| set | before | all NCG |
+|---|---|---|
+| pooled (decides) | .577 | **.550** (floor .557) |
+| afiliacion / cotizaciones | .710 / .871 | .717 / .838 |
+| `compendio_new_dev` / `nota_dev` | .858 / .850 | .821 / .783 |
+| `oficio_dev` / `bank_dev` | .640 / .355 | .607 / .327 |
+
+- It fails. The cause is routing:
+  - the `ncg` topic is selected for 92 of the 248 questions (14 before) and is primary for 25 (2 before);
+  - of the 17 rows that rank worse, 16 have no target text in the NCG hits: the NCG passages, which restate rules the Compendio already consolidates, push the Compendio's chunks out of the top 8.
+- Exploratory, after the fact. An `evidence_bias` on `ncg` recovers the guard but also removes the gain:
+
+| `ncg` bias | pooled MRR | 12-question NCG probe ≥ 0.92 | NCG 355 |
+|---|---|---|---|
+| no NCG (`main`) | .577 | 10/12 | 0.32 |
+| 0 | .550 | 11/12 | 0.93 |
+| -0.04 | .574 | 10/12 | 0.32 |
+| -0.08 | .579 | 10/12 | 0.32 |
+
+  - The NCG 357 question stays at 0.61 in the main tenant at every bias. Its 0.97 came from the staging tenant, which holds the NCG only.
+- Reverted: the 477 new documents were deleted. The 7 earlier NCG stay, re-ingested with identical chunks.
+  - The `ncg` profile now uses `ocr_index_card`, which is a no-op for those 7 text PDFs.
+- Offline noise. After the revert, two offline runs gave .5825 and .5805, against .5768 before the ingest. The routing is identical; the differences are all in `bank_dev`.
+  - Inserting and deleting 5,600 chunks changes the HNSW graph, so approximate search returns slightly different candidates.
+  - Offline MRR therefore moves by about ±0.005 after a large ingest. The −0.027 drop is well beyond it.
+- Next option, not measured: keep bias 0 and let the live LLM merge tie-break demote the NCG, as it did for the oficios. That needs its own pre-registration, the live runs of stage 3, and a re-ingest (~2.5 h on CPU). The NCG stay in the staging tenant `spensiones_ncgstage`.
+
 ## Label verification (near-domain `out` items)
 
 Method (content only, scores were NOT used or looked at to decide): for each of the 36
