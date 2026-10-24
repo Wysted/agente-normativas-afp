@@ -990,3 +990,70 @@ Neither is worth building:
 What remains is agent-side: conditions and modality dropped in synthesis, concentrated in a few
 questions (in-ncg-19, in-cmp-09, in-idx-38). A structural change, such as quote-first synthesis,
 would be its own pre-registered experiment.
+
+## The next step after the supporting role, and a cap on supporting slots (2026-10-24, not implemented)
+
+The supporting role failed two guards by a small margin. Three follow-ups were weighed with two
+blind web researchers (official docs and papers; practitioner reports):
+- (a) cap how many of the 8 merged slots a supporting topic may take;
+- (b) route by question type: an analyzer flag for a member's practical question;
+- (c) stop the coverage line and fill the true content gaps with new sources.
+
+Both researchers leaned to (a) with medium confidence and no external proof. Per-group caps are a
+documented primitive (Vespa result diversity), but nothing measures them against authority
+crowding. Both advise against (b): query-only routing misclassifies often (arXiv 2605.27220), and a
+"practical" label on a technical question loses the normative sources. For (c) the evidence is
+thin: missing content is a listed RAG failure point (arXiv 2401.05856), not a measured dominant one.
+Both made (a) conditional on the supporting topic taking more than 2 slots today.
+
+It does not. On the stage 1 dump of the role (248 questions), the weighted round-robin already
+gives a secondary `ncg` exactly 2 of the 8 slots whenever it is selected, and 8 only when it is the
+only topic. A cap of 2 or more changes nothing, so only a cap of 1 was measured.
+
+Pre-registered before emulating: at most 1 supporting item in the top 8 while a non-supporting topic
+has sources, and the freed slots go to the next non-supporting items. It passes only if the pooled
+relevant hits, the `bank_dev` relevant hits and the pooled reach are all at least the uncapped
+value. The uncapped emulation reproduces the stage 1 MRR (.5694).
+
+| measure | no cap | cap 1 | rule |
+|---|---|---|---|
+| pooled relevant hits in the top 8 | 226 | 221 | **fails** |
+| `bank_dev` relevant hits | 69 | 68 | **fails** |
+| pooled reach (a relevant hit in the top 8) | 176 | 176 | passes |
+| report only: pooled MRR@8 | .5694 | .5696 | |
+| report only: supporting slots | 202 | 113 | |
+
+- The `ncg` slots carry relevant passages: the cap loses 2 in `compendio_new_dev` and 2 in
+  `cotizaciones_dev` without moving the first relevant hit. Under the supporting role, the residual
+  cost is not the number of slots.
+- (a) is closed and (b) is not pursued. The coverage line through more document families of the
+  same corpus ends here. The live NCG result itself was non-inferior but added no hits
+  (196.67 against 196.33), so there was little gain to protect.
+
+## True coverage gaps of the colloquial bank, re-probed (2026-10-24)
+
+The bank section above counts 20 coverage gaps: the questions whose hand-written normative phrasing
+still retrieves weakly. A full-text probe of the tenant (`to_tsquery`, normative terms, read only;
+no rerank) and a web search for the governing source re-sort the 21 bank questions kept out of
+`bank_dev`. Most are not coverage gaps:
+
+| group | questions | what it needs |
+|---|---|---|
+| the corpus holds the rule (13) | bank-011, 015, 023, 025, 028, 034, 038, 060, 078, 085, 103, 125, 140 | retrieval: rezagos (Libro I T.III Cap. XIII), canje (Cap. XXXI), fund switch deadline (Cap. XI), PGU, asesoria previsional, cesantia... |
+| the corpus covers the topic but is silent on the point asked (4) | bank-019 RUT correction, 058 compensation for an erroneous fund switch, 096 reversing an erroneous credit, 134 complaints by phone | nothing to ingest: the right answer is that the norms do not regulate it |
+| outside the SP corpus (4) | bank-006 seasonal farm workers, 029 bonuses in the taxable pay, 136 data for a third party with a notarial mandate, 138 data for a court | law texts: the general DL 3.500 regime, Codigo del Trabajo art. 41, Ley 19.628 / Ley 21.719 |
+
+- For the silent group:
+  - the affiliates register (Libro I T.III Cap. IV) has no correction procedure;
+  - the complaints title (Libro I T.VII, 80 chunks) does not name the phone channel;
+  - the fund-switch rules give deadlines and the form, but no compensation formula.
+- No SP norm answers the four outside questions. Seasonal workers follow the general regime (SUSESO
+  and DT guidance). The data questions turn on Ley 19.628 and the reserva articles of DL 3.500, which
+  were not read. Ley 21.719 replaces Ley 19.628 from 2026-12-01, and a bill filed on 2026-08-31
+  would postpone it to 2027-12-01.
+- There is no SP source left to ingest for these gaps. Closing them needs a new document family
+  (law texts) that was never in scope, and a new family is exactly what crowded the normative
+  sources in every experiment above. It would have to start as a supporting topic. Whether the
+  product needs it is a product decision, not a calibration one.
+- What the bank does show: 13 of the 21 fail on retrieval, not content, the same register gap the
+  rewrite experiments could not close.
