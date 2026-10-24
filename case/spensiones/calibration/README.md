@@ -988,8 +988,22 @@ Neither is worth building:
   - It is not worth a judge re-validation.
 
 What remains is agent-side: conditions and modality dropped in synthesis, concentrated in a few
-questions (in-ncg-19, in-cmp-09, in-idx-38). A structural change, such as quote-first synthesis,
-would be its own pre-registered experiment.
+questions (in-ncg-19, in-cmp-09, in-idx-38). A quote-first `synthesize` rule was then
+pre-registered and measured. For a rule with conditions, deadlines, amounts or a modal verb, the
+answer quotes the source's exact sentence and then explains it.
+
+| measure | B (`reg3_B1`, `cit_B2`, `cit_B3`) | N (`qf_N1` to `N3`) | rule |
+|---|---|---|---|
+| in-dev citation (decides) | 37, 34, 34 | 35, 36, 37 | mean >= 38: **fails** (36.0) |
+| in-dev faithfulness | 38, 37, 38 | 38, 36, 34 | mean >= 36.67: **fails** (36.0) |
+| in-dev relevance / refusal | 38, 39, 38 / 38, 39, 38 | 38, 38, 37 / 38, 38, 37 | >= 37.33: passes |
+| ood refusal misses | 1 | 1 | <= 4 |
+
+- Answers grow by about 8% (550 against 515 characters). Citation is a little higher and steadier,
+  but faithfulness drops and swings more: quoting the norm does not stop the explanation that
+  follows from widening it.
+- This closes the citation line. Three prompt-side approaches and two code-side approaches were
+  tried, and none is worth shipping.
 
 ## The next step after the supporting role, and a cap on supporting slots (2026-10-24, not implemented)
 
