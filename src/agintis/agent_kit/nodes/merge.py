@@ -175,6 +175,10 @@ class MergeSourcesNode:
         by_topic = {r["topic"]: r["sources"] for r in state.get("topic_results") or []}
         order = [r["topic"] for r in state.get("routed_topics") or [] if r["topic"] in by_topic]
         order += [t for t in by_topic if t not in order]  # defensive: results without a route
+        # A non-evidence router can put a supporting topic first: it must not get the weight.
+        first = next((t for t in order if t not in self._supporting), None)
+        if first is not None and first != order[0]:
+            order = [first, *(t for t in order if t != first)]
         results = await self._tiebreak(state, [(t, by_topic[t]) for t in order])
         sources = merge_sources(
             results,

@@ -107,7 +107,9 @@ class TopicSpec(_Strict):
     # elected by the tie-break) while a non-supporting topic is also selected. For a broad
     # secondary family that restates what a consolidated topic already holds. Unlike a negative
     # `evidence_bias` it does not make the topic less likely to be selected. At least one topic
-    # of an agent must be non-supporting.
+    # of an agent must be non-supporting. `routed_topics[0]`, its confidence and eval's "primary"
+    # metrics refer to the primary AFTER this reorder (the evidence router reorders; the merge
+    # also enforces it for the other routers).
     supporting: bool = False
 
 

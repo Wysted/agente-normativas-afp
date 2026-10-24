@@ -91,6 +91,18 @@ class TestEvidenceClarification:
         assert [r["topic"] for r in decision.routed] == ["ncg"]
         assert probe.calls == 1  # the router was not asked again
 
+    async def test_supporting_reorders_the_routing_but_not_the_score(self) -> None:
+        probe = FakeTopicProbe({"q": _scores(ncg=[0.8], circular=[0.78])})
+        topics = [EvidenceTopic(n, PROFILES[n], supporting=n == "ncg") for n in NAMES]
+        policy = EvidenceClarification(EvidenceTopicRouter(probe, topics), LOW, OUT)
+
+        decision = await policy.decide("q", _scope())
+
+        assert decision is not None
+        assert (decision.level, decision.score) == ("in", 0.8)  # the raw best, supporting or not
+        assert decision.routed is not None
+        assert [r["topic"] for r in decision.routed] == ["circular", "ncg"]
+
     async def test_the_gray_band_is_low_and_still_routes(self) -> None:
         probe = FakeTopicProbe({"q": _scores(circular=[0.5])})
         decision = await EvidenceClarification(_router(probe), LOW, OUT).decide("q", _scope())

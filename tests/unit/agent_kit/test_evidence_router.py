@@ -381,6 +381,26 @@ class TestSupporting:
 
         assert _names(routed) == ["ncg"]  # circular is outside the margin: not selected
 
+    async def test_widened_selection_with_a_tie_keeps_the_stable_order(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.60], faq=[0.60]))
+        router = self._router(probe, "ncg", max_topics=1, margin=0.0)
+
+        evidence = await router.evidence("q", _scope())
+
+        # circular and faq tie: spec order decides, then the supporting leader moves behind
+        assert _names(router.select(evidence, widen_to=3)) == ["circular", "ncg", "faq"]
+
+    async def test_route_node_sends_and_records_the_reordered_topics(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.69]))
+        node = RouteNode(self._router(probe, "ncg", max_topics=2, margin=0.05), NAMES, 2)
+
+        command = await node({"messages": [], "query": "q"}, runtime_for())
+
+        assert isinstance(command, Command)
+        update: dict[str, Any] = command.update  # type: ignore[assignment]
+        assert _names(update["routed_topics"]) == ["circular", "ncg"]
+        assert [s.arg["topic"] for s in command.goto] == ["circular", "ncg"]  # type: ignore[union-attr]
+
     async def test_no_flags_gives_the_same_routing_as_before(self) -> None:
         probe = FakeProbe(_scores(ncg=[0.70], circular=[0.69], faq=[0.68]))
 

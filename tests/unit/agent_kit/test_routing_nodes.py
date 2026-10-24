@@ -676,6 +676,24 @@ class TestMergeTieBreak:
             frozenset({"alpha"}),
         )
 
+    async def test_a_supporting_first_group_loses_the_primary_without_a_tiebreak(self) -> None:
+        node = MergeSourcesNode(SourceLimits(), 2, None, frozenset({"alpha"}))
+        state: Any = _routed_state(
+            "alpha",
+            "beta",
+            "gamma",
+            topic_results=[
+                _result("alpha", "a1", "a2"),
+                _result("beta", "b1", "b2"),
+                _result("gamma", "g1", "g2"),
+            ],
+        )
+
+        result = await node(state, runtime_for())
+
+        # only beta moves to the front; alpha and gamma keep their relative order
+        assert _sources(result) == ["b1", "b2", "a1", "g1", "a2", "g2"]
+
     async def test_a_supporting_group_is_never_picked_as_primary(self) -> None:
         model = ScriptedChatModel(replies=["B"])  # would pick the supporting group
         state: Any = _routed_state(
