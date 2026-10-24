@@ -1,19 +1,18 @@
 # LLM prices in USD per 1M tokens, versioned by effective date (see platform/usage/prices.py).
 # A model missing here is reported as UNPRICED, never as $0. Prices are read at report time, so
 # fixing a value re-prices the whole history; add a NEW entry when a provider changes its prices.
-#
-# PLACEHOLDER VALUES: every number below must be verified against the provider's price page
-# before the figures are used for anything but a rough estimate.
+# Only standard synchronous rates are modelled: no batch/flex/priority tiers, no long-context
+# surcharges, no time-of-day discounts.
 models:
   gpt-6-luna:
-    # List price recorded in the spensiones calibration notes ($0.10 in / $0.50 out).
-    # TODO-verify: cached_input is NOT documented in the repo; it is set equal to `input`
-    # (no cache discount), which over-estimates.
+    # Verified 2026-10-24 on developers.openai.com/api/docs/models/gpt-6-luna and
+    # developers.openai.com/api/docs/pricing (standard tier). The page states no effective date.
+    # Not modelled: prompts over 272K input tokens cost 2x input/cached and 1.5x output.
     - effective_from: 2026-10-01
       input: 0.10
-      cached_input: 0.10
+      cached_input: 0.01
       output: 0.50
 
-  # TODO-verify and add (no price found in the repo, none invented):
-  # deepseek-chat:      # judge profile of case/spensiones
-  # gpt-5.4-mini:       # profile `fast` in the docs example
+  # deepseek-chat: left UNPRICED on purpose. As of 2026-10-24 api-docs.deepseek.com no longer
+  # lists it (legacy name, announced discontinuation 2026-07-24), so its current price and
+  # underlying model are unknown.
