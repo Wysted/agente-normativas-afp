@@ -549,7 +549,7 @@ hit differs between two identical runs must drop from the baseline's 15 to at mo
   steps (analyze, rewrite, merge tie-break, synthesis) compound it. With this noise, future
   experiments need more runs per arm or a paired per-row rule fixed in advance.
 
-## Help articles at full coverage (2026-10-24, undecided)
+## Help articles at full coverage (2026-10-24, not merged)
 
 The `articulo_faq`, `circular`, `ncg` and `resolucion` profiles were ingested from the 35 sample
 files only (8 help articles, 24 circulares, 14 NCG, 4 resoluciones in tenant `spensiones`), while
@@ -569,11 +569,39 @@ article-based answer as a miss): min of the new runs above the max of the baseli
 | ood refusal misses | 0 | 2 | <= 3 |
 | colloquial single-turn / follow-ups | 9/16, 3/4 | 12/16, 3/4 | >= 8, >= 3 |
 
-- Undecided: the DeepSeek judge account ran out of balance (HTTP 402) while judging the
-  baseline, and the OpenAI credits ran out during faq_2 (57 of 119 answered). The deciding judge
-  and faq_2 are pending; the articles were removed from the database until they pass.
+- After a credit top-up, faq_2 was rerun and every run judged (relevance only on `bank_dev`, to
+  fit the judge budget; all judges on the faq_1 guard sets):
+
+| measure | B1, B2 | faq_1, faq_2 | rule |
+|---|---|---|---|
+| `bank_dev` answer relevance | 108, 111 /119 | 113, 111 /119 | min F > max B (decides) |
+| in-dev faithfulness / citation / relevance / refusal | 37/38, 37/40, 39, 39 | 37/39, 35/40, 39, 39 | >= 35, 30, 37, 37 |
+| ood refusal misses | 0 | 1 | <= 3 |
+
+- It fails by a tie (111 against 111) and is not merged: the articles were removed again
+  (tenant `spensiones` back to 8 help articles). The signal is slightly positive and within the
+  run-to-run noise, the same pattern as the prompt experiments above. The `bank_dev`
+  faithfulness floor was not measured (judge budget).
 - Some articles describe the former Pilar Solidario (PBSI, APSI), replaced by the PGU in 2022: a
-  risk of outdated answers to check in the judged answers.
+  risk of outdated answers if they are ingested later.
+- The fetched articles stay on branch `feat/faq-coverage` (manifest) for a later attempt.
+
+## Full NCG coverage, offline probe (2026-10-24)
+
+The 485 listed NCG were fetched and ingested into a separate staging tenant
+(`spensiones_ncgstage`; 479 indexed, 5,771 chunks; 5 scanned PDFs without a text layer and one of
+75 MB failed). Offline (evidence router, hybrid search, rerank; no LLM), 12 questions written from
+the titles of recent NCG that are not in the main tenant:
+
+- In the main tenant 10 of 12 already reach the 0.92 rerank threshold: the Compendio is
+  consolidated, so each NCG's rule is already in it.
+- The other two are rules the Compendio has not absorbed: "registro de proveedores de AFP"
+  (NCG 355) goes from 0.32 to 0.93 and "contabilización separada de gastos de inversión" (NCG
+  357) from 0.61 to 0.97 with the NCG; each question's top hit is its own NCG.
+- Full NCG coverage therefore adds the not-yet-consolidated rules and the amendment history,
+  less than the raw counts (483 listed, 7 ingested) suggest. Bringing it into the main tenant
+  needs the OCR parser on the `ncg` profile, a measured run and a recalibration of the scope
+  bands. The PDFs are on branch `feat/ncg-coverage`.
 
 ## Label verification (near-domain `out` items)
 
