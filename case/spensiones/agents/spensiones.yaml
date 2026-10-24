@@ -74,18 +74,18 @@ probe_k: 3                      # passages per topic the probe keeps (1..20)
 # out_of_scope_below (or no evidence at all): the fixed message below, no retrieval and no
 # synthesis call (the analyzer still runs). The two thresholds come from
 # case/spensiones/calibration/report.json (pre-registered rules: p95 and p50 of the out-of-domain
-# dev set; see the README there). 0.6137 / 0.4779 are the report values (0.61376 / 0.47791, tenant
-# spensiones with the 10 compendio Libros, the Notas Internas and the oficios, queries analyzed by
-# gpt-6-luna, 76 re-verified ood items) rounded DOWN; rounding `out` down is the safe direction
-# (fewer refusals). 4/76 ood questions pass as normal, while 3/40 in-domain questions answer in the
+# dev set; see the README there). 0.6232 / 0.4878 are the report values (0.62324 / 0.48787, tenant
+# spensiones with the 10 compendio Libros, the Notas Internas, the oficios and all 484 NCG, queries
+# analyzed by gpt-6-luna, 76 re-verified ood items) rounded DOWN; rounding `out` down is the safe
+# direction (fewer refusals). 4/76 ood questions pass as normal, while 4/40 in-domain questions answer in the
 # `low` band (3 topics searched) and none is refused. Valid ONLY for that corpus snapshot, tenant, embedding model, analyzer model
 # and profiles: recalibrate with cli.calibrate_evidence (--analyze) after any re-ingest or
 # analyzer change. They separate DOMAIN, not answerability (near-domain questions the corpus does not
 # cover still score above them and rely on the synthesis prompt's refusal).
 clarification:
   policy: evidence
-  low_confidence_below: 0.6137
-  out_of_scope_below: 0.4779
+  low_confidence_below: 0.6232
+  out_of_scope_below: 0.4878
   out_of_scope_message: >-
     Solo puedo responder preguntas sobre la normativa del Sistema de Pensiones y del Seguro de
     Cesantia de Chile (Compendio de Normas, NCG, circulares, resoluciones y jurisprudencia), y no

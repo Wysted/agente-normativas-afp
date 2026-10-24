@@ -1,6 +1,6 @@
 {
   "meta": {
-    "git": "34ec5d5",
+    "git": "6476ab0",
     "agent": "spensiones-rag",
     "tenant": "spensiones",
     "query_input": "analyzed",
@@ -28,7 +28,7 @@
     ],
     "ready_chunks": {
       "spensiones_compendio": 11178,
-      "spensiones_ncg": 198,
+      "spensiones_ncg": 5822,
       "spensiones_circular": 107,
       "spensiones_resolucion": 114,
       "spensiones_jurisprudencia_nota": 636,
@@ -38,7 +38,7 @@
     },
     "profile_fingerprints": {
       "spensiones_compendio": "eae65ee80cca57eac3233b9b131dc97413aa65c15b175071ba910aa065edcdd8",
-      "spensiones_ncg": "937d9db1c0437be443d12ffe89eb5815217a1cf3f2a344febaf0883ea5c74903",
+      "spensiones_ncg": "ca29b07854934f8a062ede0641a582dd557843cb20ed7ba9a77871b89411d1d4",
       "spensiones_circular": "62803ad70d4651b243b08345e20f1de15f83945a61a92f56d0406c65a1b39275",
       "spensiones_resolucion": "2e335e73383c663f3229bbd2298fe6a7160e378d733f31d13dd06eb480fab93f",
       "spensiones_jurisprudencia_nota": "81b880e141ed84895d45be669b573df7794559dbf37d6ed540f3305ac8461b2d",
@@ -47,14 +47,14 @@
       "spensiones_oficio": "bd457bf431b730706fa2be5bb2fcc6e566c345747900c24903aaadf23379dd32"
     },
     "profiles_files": {
-      "sha256": "b048db9c63faf0310430bccc0ee3adb26e5172679aee16913648384295f35ba4",
+      "sha256": "6a1d32916b0d35b358a3129e5d1d5f4f92894dfc28a5f05a5c05f2d3f2d692ce",
       "files": {
         "articulo_faq.yaml": "14dc6b83d5ab6bc18172a1d47c5620d946ea3c0793f632dfd943afb72f8ca663",
         "circular.yaml": "c0dde6c957e7d2b79ea1c1c75287452583bd31fa67ade6e06ecb094cf48ebaff",
         "compendio.yaml": "8a99d3aa95ada5baa2129929eb6a651d8052100b73a2d5b7e63ba4e69cabffe1",
         "guia_jurisprudencia.yaml": "2effe756b3d1b4c1db0d51ae49611326d7a2f8ddace2a8828e03039b8ab261ff",
         "guia_jurisprudencia_nota.yaml": "a236227df31d9639df4dfab25c372d4944a801da758ab202b8551201c48d621d",
-        "ncg.yaml": "1c3157461f0936f42c6d1be9ac7b2f1c95a6fdf1f0f579ba68e6930b39dbbdb5",
+        "ncg.yaml": "5b42cf12f4d302b34914a3b3549c9e2c94eed5982a71aa67b38d1baba26bc216",
         "oficio.yaml": "624cc89dbabf3a431f2e068b8dd628c22ddbdfe4b35a0db0c0c1b4763e488392",
         "resolucion.yaml": "f33025c93edfc0aad43915c47b387be3a9bd9178cc4a7ef4dd667cda28ad7e63"
       }
@@ -82,11 +82,11 @@
       "n": 40.0,
       "min": 0.5900543928146362,
       "max": 0.8083369503422974,
-      "mean": 0.6904734427499684,
+      "mean": 0.691542660690195,
       "p5": 0.6113543212413788,
       "p25": 0.6577183844662938,
-      "p50": 0.6940580930499736,
-      "p75": 0.7117592755484369,
+      "p50": 0.6957764354566245,
+      "p75": 0.7139016805045987,
       "p95": 0.7642355275714106,
       "p99": 0.795895130657287
     },
@@ -94,17 +94,17 @@
       "n": 76.0,
       "min": 0.2781827068870464,
       "max": 0.6656274795532227,
-      "mean": 0.4820699455682141,
-      "p5": 0.3465170743448066,
-      "p25": 0.4188814091515813,
-      "p50": 0.4779104435262948,
-      "p75": 0.5521625475854434,
-      "p95": 0.6137560643755973,
+      "mean": 0.49060760879813836,
+      "p5": 0.35297046376118413,
+      "p25": 0.4340203695678633,
+      "p50": 0.4878651485819716,
+      "p75": 0.5574923895021996,
+      "p95": 0.6232441105448783,
       "p99": 0.6424773945766382
     }
   },
-  "auroc": 0.9884868421052632,
-  "threshold": 0.6137560643755973,
+  "auroc": 0.9868421052631579,
+  "threshold": 0.6232441105448783,
   "threshold_interval": {
     "confidence": 0.95,
     "lower": 0.5986578225289488,
@@ -114,13 +114,13 @@
     "n": 76,
     "coverage": 0.9662376749206313
   },
-  "in_recall": 0.925,
+  "in_recall": 0.9,
   "in_recall_interval": {
-    "k": 37,
+    "k": 36,
     "n": 40,
-    "rate": 0.925,
-    "lower": 0.7961352512671012,
-    "upper": 0.9842578201489585,
+    "rate": 0.9,
+    "lower": 0.7633626001239002,
+    "upper": 0.9720745847057808,
     "confidence": 0.95
   },
   "out_false_in_rate": 0.05263157894736842,
@@ -176,15 +176,21 @@
       "score": 0.6121814846992493,
       "topic": "compendio",
       "question": "¿Puede una AFP negarse a afiliar a una persona por alguna característica personal?"
+    },
+    {
+      "id": "in-cir-28",
+      "score": 0.6174362669847182,
+      "topic": "circular",
+      "question": "¿Qué es la curva cero real y cómo se usa en el vector de tasas?"
     }
   ],
   "out_of_scope": {
     "rule": "p50 of the 'out' scores (pre-registered); 'in' only reports",
-    "threshold": 0.4779104435262948,
+    "threshold": 0.4878651485819716,
     "threshold_interval": {
       "confidence": 0.95,
-      "lower": 0.45255352415303984,
-      "upper": 0.5128794022130619,
+      "lower": 0.45369890332222307,
+      "upper": 0.5307972272992981,
       "lower_rank": 29,
       "upper_rank": 48,
       "n": 76,
@@ -215,21 +221,21 @@
     "bank": {
       "out": {
         "n": 6,
-        "min": 0.4396634959973996,
+        "min": 0.43434653589247507,
         "median": 0.54430800676346,
         "max": 0.6347606995844435,
         "above_low_confidence": 1,
-        "below_out_of_scope": 1
+        "below_out_of_scope": 2
       }
     },
     "chat": {
       "out": {
         "n": 10,
-        "min": 0.432365357875824,
-        "median": 0.4650912024985371,
-        "max": 0.5174717748918621,
+        "min": 0.45369890332222307,
+        "median": 0.5049326940123707,
+        "max": 0.5679420659559372,
         "above_low_confidence": 0,
-        "below_out_of_scope": 6
+        "below_out_of_scope": 3
       }
     },
     "cir": {
@@ -238,7 +244,7 @@
         "min": 0.6174362669847182,
         "median": 0.6915489637491365,
         "max": 0.8083369503422974,
-        "above_low_confidence": 6,
+        "above_low_confidence": 5,
         "below_out_of_scope": 0
       }
     },
@@ -246,7 +252,7 @@
       "in": {
         "n": 16,
         "min": 0.6121814846992493,
-        "median": 0.6999735831266853,
+        "median": 0.7024445967949402,
         "max": 0.7434153999933852,
         "above_low_confidence": 15,
         "below_out_of_scope": 0
@@ -255,11 +261,11 @@
     "code": {
       "out": {
         "n": 10,
-        "min": 0.42642760276794434,
-        "median": 0.4644907631360521,
-        "max": 0.5519675078353296,
+        "min": 0.425105606013203,
+        "median": 0.46887642863623646,
+        "max": 0.5768456206825756,
         "above_low_confidence": 0,
-        "below_out_of_scope": 6
+        "below_out_of_scope": 7
       }
     },
     "faq": {
@@ -276,7 +282,7 @@
       "out": {
         "n": 12,
         "min": 0.2781827068870464,
-        "median": 0.37413080589194947,
+        "median": 0.3767617996942285,
         "max": 0.4649822573369087,
         "above_low_confidence": 0,
         "below_out_of_scope": 12
@@ -296,17 +302,17 @@
       "out": {
         "n": 6,
         "min": 0.4089122834477511,
-        "median": 0.5257277930655169,
+        "median": 0.5361205579873347,
         "max": 0.5986578225289488,
         "above_low_confidence": 0,
-        "below_out_of_scope": 1
+        "below_out_of_scope": 2
       }
     },
     "labor": {
       "out": {
         "n": 6,
-        "min": 0.5307972272992981,
-        "median": 0.5618658661842346,
+        "min": 0.5054619017518709,
+        "median": 0.565549566303417,
         "max": 0.6656274795532227,
         "above_low_confidence": 2,
         "below_out_of_scope": 0
@@ -325,9 +331,9 @@
     "other": {
       "out": {
         "n": 12,
-        "min": 0.34036962212233624,
-        "median": 0.4067413276136273,
-        "max": 0.4793928849335253,
+        "min": 0.3326595226722815,
+        "median": 0.43908855121988893,
+        "max": 0.5444704241191874,
         "above_low_confidence": 0,
         "below_out_of_scope": 11
       }
@@ -335,8 +341,8 @@
     "pens": {
       "out": {
         "n": 2,
-        "min": 0.5789657831192017,
-        "median": 0.5942071676254272,
+        "min": 0.5834016799926758,
+        "median": 0.5964251160621643,
         "max": 0.6094485521316528,
         "above_low_confidence": 0,
         "below_out_of_scope": 0
@@ -357,7 +363,7 @@
         "n": 6,
         "min": 0.5128794022130619,
         "median": 0.5589143286942485,
-        "max": 0.6073712706565857,
+        "max": 0.6220992803573608,
         "above_low_confidence": 0,
         "below_out_of_scope": 0
       }
@@ -372,7 +378,7 @@
     "in-cmp-06": "¿Cuándo se entiende devengada la comisión de una cuenta nueva creada dentro del mes?",
     "in-cmp-07": "¿Cómo se hace efectiva la bonificación fiscal por ahorro previsional voluntario?",
     "in-cmp-08": "¿Qué debe hacer un trabajador independiente para dar un mandato a un tercero sobre su cuenta de ahorro voluntario?",
-    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación del Sistema de Pensiones de Chile y dónde se presenta la solicitud?",
+    "in-cmp-09": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
     "in-cmp-10": "¿Se puede repartir el saldo de la cuenta entre dos tipos de fondo?",
     "in-cmp-11": "¿Cuánto tiempo tiene la AFP nueva para revisar el archivo de traspasos el día de la transferencia?",
     "in-cmp-12": "¿Cómo repara la AFP a un afiliado cuando su cuenta perdió rentabilidad por un error de la administradora?",
@@ -525,6 +531,13 @@
       "label": "in"
     },
     {
+      "id": "in-cmp-02",
+      "score": 0.7276222868190949,
+      "topic": "ncg",
+      "question": "¿Qué plazo tiene la AFP para entregar la cartola cuatrimestral a los afiliados?",
+      "label": "in"
+    },
+    {
       "id": "in-faq-34",
       "score": 0.7274419502879351,
       "topic": "articulo_faq",
@@ -609,17 +622,17 @@
       "label": "in"
     },
     {
-      "id": "in-cmp-02",
-      "score": 0.7007684468307013,
-      "topic": "compendio",
-      "question": "¿Qué plazo tiene la AFP para entregar la cartola cuatrimestral a los afiliados?",
-      "label": "in"
-    },
-    {
       "id": "in-cmp-15",
       "score": 0.6991787194226695,
       "topic": "compendio",
       "question": "¿Cómo se registra una orden de traspaso firmada por un afiliado cesante?",
+      "label": "in"
+    },
+    {
+      "id": "in-cmp-09",
+      "score": 0.6923741514905793,
+      "topic": "ncg",
+      "question": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
       "label": "in"
     },
     {
@@ -662,13 +675,6 @@
       "score": 0.6787908481830877,
       "topic": "circular",
       "question": "¿En qué cuenta se deposita el documento de pago de un bono de reconocimiento?",
-      "label": "in"
-    },
-    {
-      "id": "in-cmp-09",
-      "score": 0.6764592738699059,
-      "topic": "oficio",
-      "question": "¿Qué documentos se piden para solicitar la desafiliación y dónde se presenta la solicitud?",
       "label": "in"
     },
     {
@@ -763,6 +769,13 @@
       "label": "out"
     },
     {
+      "id": "out-tax-01",
+      "score": 0.6220992803573608,
+      "topic": "ncg",
+      "question": "¿Cómo declaro el impuesto a la renta en la Operación Renta?",
+      "label": "out"
+    },
+    {
       "id": "in-cir-28",
       "score": 0.6174362669847182,
       "topic": "circular",
@@ -781,13 +794,6 @@
       "score": 0.6094485521316528,
       "topic": "compendio",
       "question": "¿Cuál es el monto de la pensión de alimentos que debo pagar a mi hijo?",
-      "label": "out"
-    },
-    {
-      "id": "out-tax-01",
-      "score": 0.6073712706565857,
-      "topic": "compendio",
-      "question": "¿Cómo declaro el impuesto a la renta en la Operación Renta?",
       "label": "out"
     },
     {
@@ -812,11 +818,25 @@
       "label": "out"
     },
     {
+      "id": "out-labor-05",
+      "score": 0.5962566137313843,
+      "topic": "ncg",
+      "question": "¿Cómo se pagan las horas extra y qué recargo tienen?",
+      "label": "out"
+    },
+    {
       "id": "in-idx-35",
       "score": 0.5956382155418396,
       "topic": "oficio",
       "question": "¿Qué oficios existen sobre el tope imponible de las cotizaciones?",
       "label": "in"
+    },
+    {
+      "id": "out-tax-04",
+      "score": 0.5937697580113649,
+      "topic": "compendio",
+      "question": "¿Cuándo vence el plazo para pagar el IVA mensual?",
+      "label": "out"
     },
     {
       "id": "out-bank-03",
@@ -834,16 +854,9 @@
     },
     {
       "id": "out-pens-05",
-      "score": 0.5789657831192017,
-      "topic": "oficio",
-      "question": "¿Qué AFP tiene mejor rentabilidad este año según los analistas?",
-      "label": "out"
-    },
-    {
-      "id": "out-tax-04",
-      "score": 0.5785660664945327,
+      "score": 0.5834016799926758,
       "topic": "ncg",
-      "question": "¿Cuándo vence el plazo para pagar el IVA mensual?",
+      "question": "¿Qué AFP tiene mejor rentabilidad este año según los analistas?",
       "label": "out"
     },
     {
@@ -854,10 +867,10 @@
       "label": "out"
     },
     {
-      "id": "out-labor-05",
-      "score": 0.5709840655326843,
-      "topic": "compendio",
-      "question": "¿Cómo se pagan las horas extra y qué recargo tienen?",
+      "id": "out-code-09",
+      "score": 0.5768456206825756,
+      "topic": "ncg",
+      "question": "Dame una expresión regular para validar un correo electrónico.",
       "label": "out"
     },
     {
@@ -869,9 +882,16 @@
     },
     {
       "id": "out-abroad-02",
-      "score": 0.5697007349044306,
-      "topic": "oficio",
+      "score": 0.5691925287246704,
+      "topic": "compendio",
       "question": "¿Cómo funciona el sistema de jubilaciones de ANSES en Argentina?",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-02",
+      "score": 0.5679420659559372,
+      "topic": "ncg",
+      "question": "Buenos días",
       "label": "out"
     },
     {
@@ -882,6 +902,13 @@
       "label": "out"
     },
     {
+      "id": "out-chat-03",
+      "score": 0.5554352733752383,
+      "topic": "ncg",
+      "question": "Gracias por tu ayuda",
+      "label": "out"
+    },
+    {
       "id": "out-tax-03",
       "score": 0.5541649195054136,
       "topic": "compendio",
@@ -889,24 +916,17 @@
       "label": "out"
     },
     {
-      "id": "out-labor-04",
-      "score": 0.5527476668357849,
-      "topic": "compendio",
-      "question": "¿Cuál es la jornada laboral máxima semanal en Chile?",
-      "label": "out"
-    },
-    {
-      "id": "out-code-09",
-      "score": 0.5519675078353296,
-      "topic": "oficio",
-      "question": "Dame una expresión regular para validar un correo electrónico.",
-      "label": "out"
-    },
-    {
       "id": "out-isapre-03",
-      "score": 0.5503106445259249,
+      "score": 0.5531151028344107,
       "topic": "compendio",
       "question": "¿Cuánto sube el plan de salud cuando cumplo 60 años?",
+      "label": "out"
+    },
+    {
+      "id": "out-chat-05",
+      "score": 0.5464163692941455,
+      "topic": "ncg",
+      "question": "Cuéntame un chiste",
       "label": "out"
     },
     {
@@ -914,6 +934,20 @@
       "score": 0.5457956194877625,
       "topic": "compendio",
       "question": "¿Qué es el impuesto territorial y cómo se calcula?",
+      "label": "out"
+    },
+    {
+      "id": "out-other-01",
+      "score": 0.5444704241191874,
+      "topic": "ncg",
+      "question": "Dame una receta de empanadas de pino.",
+      "label": "out"
+    },
+    {
+      "id": "out-isapre-05",
+      "score": 0.5378586534731398,
+      "topic": "ncg",
+      "question": "¿Qué es la Ley de Urgencia y cuándo se aplica en una clínica?",
       "label": "out"
     },
     {
@@ -938,24 +972,17 @@
       "label": "out"
     },
     {
+      "id": "out-chat-10",
+      "score": 0.5197985768318176,
+      "topic": "ncg",
+      "question": "jajaja qué bueno",
+      "label": "out"
+    },
+    {
       "id": "out-bank-01",
       "score": 0.517933368682865,
       "topic": "compendio",
       "question": "¿Cómo solicito un crédito hipotecario a 30 años?",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-02",
-      "score": 0.5174717748918621,
-      "topic": "oficio",
-      "question": "Buenos días",
-      "label": "out"
-    },
-    {
-      "id": "out-isapre-05",
-      "score": 0.517073123629504,
-      "topic": "compendio",
-      "question": "¿Qué es la Ley de Urgencia y cuándo se aplica en una clínica?",
       "label": "out"
     },
     {
@@ -966,6 +993,13 @@
       "label": "out"
     },
     {
+      "id": "out-chat-06",
+      "score": 0.5083703843244816,
+      "topic": "ncg",
+      "question": "¿Qué puedes hacer?",
+      "label": "out"
+    },
+    {
       "id": "out-code-01",
       "score": 0.505772590637207,
       "topic": "compendio",
@@ -973,31 +1007,24 @@
       "label": "out"
     },
     {
-      "id": "out-bank-04",
-      "score": 0.49832658454715495,
-      "topic": "compendio",
-      "question": "¿Qué es el CAE de un crédito universitario?",
+      "id": "out-labor-04",
+      "score": 0.5054619017518709,
+      "topic": "oficio",
+      "question": "¿Cuál es la jornada laboral máxima semanal en Chile?",
       "label": "out"
     },
     {
-      "id": "out-chat-06",
-      "score": 0.4969052822320099,
-      "topic": "compendio",
-      "question": "¿Qué puedes hacer?",
+      "id": "out-chat-01",
+      "score": 0.5014950037002599,
+      "topic": "ncg",
+      "question": "Hola, ¿cómo estás?",
       "label": "out"
     },
     {
-      "id": "out-code-04",
-      "score": 0.4943729927014704,
-      "topic": "compendio",
-      "question": "Muéstrame una consulta SQL con un LEFT JOIN entre dos tablas.",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-03",
-      "score": 0.4910016645195119,
-      "topic": "compendio",
-      "question": "Gracias por tu ayuda",
+      "id": "out-code-02",
+      "score": 0.49684280157089233,
+      "topic": "ncg",
+      "question": "Escribe una función en JavaScript que ordene un arreglo de números.",
       "label": "out"
     },
     {
@@ -1008,10 +1035,10 @@
       "label": "out"
     },
     {
-      "id": "out-isapre-06",
-      "score": 0.4881843023410033,
+      "id": "out-code-04",
+      "score": 0.4869636289455679,
       "topic": "compendio",
-      "question": "¿Cuál es la diferencia entre FONASA tramo B y tramo C?",
+      "question": "Muéstrame una consulta SQL con un LEFT JOIN entre dos tablas.",
       "label": "out"
     },
     {
@@ -1029,31 +1056,10 @@
       "label": "out"
     },
     {
-      "id": "out-code-02",
-      "score": 0.47642800211906433,
-      "topic": "oficio",
-      "question": "Escribe una función en JavaScript que ordene un arreglo de números.",
-      "label": "out"
-    },
-    {
       "id": "out-other-02",
       "score": 0.47184354402500195,
       "topic": "compendio",
       "question": "¿Quién ganó la Copa América de 2015?",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-01",
-      "score": 0.46552350706142276,
-      "topic": "oficio",
-      "question": "Hola, ¿cómo estás?",
-      "label": "out"
-    },
-    {
-      "id": "out-other-01",
-      "score": 0.4653661251068115,
-      "topic": "oficio",
-      "question": "Dame una receta de empanadas de pino.",
       "label": "out"
     },
     {
@@ -1092,6 +1098,20 @@
       "label": "out"
     },
     {
+      "id": "out-chat-07",
+      "score": 0.45369890332222307,
+      "topic": "ncg",
+      "question": "Adiós, hasta luego",
+      "label": "out"
+    },
+    {
+      "id": "out-isapre-06",
+      "score": 0.45269261159576835,
+      "topic": "jurisprudencia_nota",
+      "question": "¿Cuál es la diferencia entre FONASA tramo B y tramo C?",
+      "label": "out"
+    },
+    {
       "id": "out-code-03",
       "score": 0.45255352415303984,
       "topic": "compendio",
@@ -1099,38 +1119,52 @@
       "label": "out"
     },
     {
-      "id": "out-chat-07",
-      "score": 0.44500502616197113,
-      "topic": "compendio",
-      "question": "Adiós, hasta luego",
-      "label": "out"
-    },
-    {
-      "id": "out-chat-10",
-      "score": 0.4423068429414544,
-      "topic": "jurisprudencia_nota",
-      "question": "jajaja qué bueno",
+      "id": "out-other-12",
+      "score": 0.44424252045877366,
+      "topic": "ncg",
+      "question": "Traduce al inglés: me gusta caminar por la playa.",
       "label": "out"
     },
     {
       "id": "out-bank-06",
-      "score": 0.4396634959973996,
-      "topic": "jurisprudencia_nota",
+      "score": 0.44320268759735515,
+      "topic": "ncg",
       "question": "¿Qué significa estar en DICOM y cómo salgo?",
       "label": "out"
     },
     {
+      "id": "out-gen-07",
+      "score": 0.4420990216106486,
+      "topic": "ncg",
+      "question": "¿Qué significa la palabra efímero?",
+      "label": "out"
+    },
+    {
+      "id": "out-other-05",
+      "score": 0.44168971652717426,
+      "topic": "ncg",
+      "question": "Recomiéndame una película de ciencia ficción.",
+      "label": "out"
+    },
+    {
       "id": "out-code-05",
-      "score": 0.43592236745126167,
+      "score": 0.43835513110027136,
       "topic": "compendio",
       "question": "¿Cómo creo una rama nueva en git?",
       "label": "out"
     },
     {
-      "id": "out-code-10",
-      "score": 0.43436753749847723,
-      "topic": "oficio",
-      "question": "¿Qué es la complejidad algorítmica O(n log n)?",
+      "id": "out-other-09",
+      "score": 0.4364873859126036,
+      "topic": "ncg",
+      "question": "¿Cómo cambio la rueda pinchada de un auto?",
+      "label": "out"
+    },
+    {
+      "id": "out-bank-04",
+      "score": 0.43434653589247507,
+      "topic": "ncg",
+      "question": "¿Qué es el CAE de un crédito universitario?",
       "label": "out"
     },
     {
@@ -1141,13 +1175,6 @@
       "label": "out"
     },
     {
-      "id": "out-chat-05",
-      "score": 0.432365357875824,
-      "topic": "oficio",
-      "question": "Cuéntame un chiste",
-      "label": "out"
-    },
-    {
       "id": "out-code-08",
       "score": 0.42642760276794434,
       "topic": "compendio",
@@ -1155,17 +1182,17 @@
       "label": "out"
     },
     {
-      "id": "out-other-09",
-      "score": 0.4198136234061276,
+      "id": "out-code-10",
+      "score": 0.425105606013203,
       "topic": "compendio",
-      "question": "¿Cómo cambio la rueda pinchada de un auto?",
+      "question": "¿Qué es la complejidad algorítmica O(n log n)?",
       "label": "out"
     },
     {
-      "id": "out-gen-07",
-      "score": 0.41608476638794234,
-      "topic": "compendio",
-      "question": "¿Qué significa la palabra efímero?",
+      "id": "out-gen-12",
+      "score": 0.4245748176917332,
+      "topic": "ncg",
+      "question": "¿Por qué el cielo es azul?",
       "label": "out"
     },
     {
@@ -1197,31 +1224,10 @@
       "label": "out"
     },
     {
-      "id": "out-other-12",
-      "score": 0.3943195695566748,
-      "topic": "compendio",
-      "question": "Traduce al inglés: me gusta caminar por la playa.",
-      "label": "out"
-    },
-    {
       "id": "out-gen-10",
       "score": 0.3930803771662944,
       "topic": "compendio",
       "question": "¿Cuál es la diferencia entre un virus y una bacteria?",
-      "label": "out"
-    },
-    {
-      "id": "out-other-04",
-      "score": 0.38419396830183183,
-      "topic": "compendio",
-      "question": "¿Cómo se juega al ajedrez?",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-01",
-      "score": 0.38122249785728757,
-      "topic": "oficio",
-      "question": "¿Cuál es la capital de Australia?",
       "label": "out"
     },
     {
@@ -1232,10 +1238,10 @@
       "label": "out"
     },
     {
-      "id": "out-other-05",
-      "score": 0.3759250192731596,
+      "id": "out-gen-01",
+      "score": 0.3760752193950183,
       "topic": "compendio",
-      "question": "Recomiéndame una película de ciencia ficción.",
+      "question": "¿Cuál es la capital de Australia?",
       "label": "out"
     },
     {
@@ -1246,6 +1252,13 @@
       "label": "out"
     },
     {
+      "id": "out-gen-06",
+      "score": 0.36874493174224754,
+      "topic": "compendio",
+      "question": "¿Cuál es el río más largo del mundo?",
+      "label": "out"
+    },
+    {
       "id": "out-gen-05",
       "score": 0.3671805968040407,
       "topic": "compendio",
@@ -1253,10 +1266,10 @@
       "label": "out"
     },
     {
-      "id": "out-other-10",
-      "score": 0.35630740858956633,
-      "topic": "oficio",
-      "question": "¿Cuál es el clima típico de Santiago en verano?",
+      "id": "out-other-04",
+      "score": 0.35443854331970215,
+      "topic": "resolucion",
+      "question": "¿Cómo se juega al ajedrez?",
       "label": "out"
     },
     {
@@ -1267,24 +1280,17 @@
       "label": "out"
     },
     {
+      "id": "out-other-10",
+      "score": 0.3380909268341299,
+      "topic": "jurisprudencia_nota",
+      "question": "¿Cuál es el clima típico de Santiago en verano?",
+      "label": "out"
+    },
+    {
       "id": "out-other-03",
-      "score": 0.34036962212233624,
-      "topic": "compendio",
+      "score": 0.3326595226722815,
+      "topic": "oficio",
       "question": "¿Cuál es el mejor lugar para visitar en la Patagonia?",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-12",
-      "score": 0.33614182472229004,
-      "topic": "resolucion",
-      "question": "¿Por qué el cielo es azul?",
-      "label": "out"
-    },
-    {
-      "id": "out-gen-06",
-      "score": 0.31810131669044717,
-      "topic": "compendio",
-      "question": "¿Cuál es el río más largo del mundo?",
       "label": "out"
     },
     {
