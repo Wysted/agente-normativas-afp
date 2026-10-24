@@ -11,10 +11,11 @@ profiles:
     provider: openai
     model: gpt-6-luna
     api_key_env: OPENAI_API_KEY
-    reasoning_effort: none           # openai only; models accept subsets (luna: no minimal)
+    reasoning_effort: none           # openai and deepseek only; models accept subsets
   judge:
     provider: deepseek               # needs the `deepseek` extra; see the note below
-    model: deepseek-chat
+    model: deepseek-flash
+    reasoning_effort: none           # deepseek-flash thinks by default
     api_key_env: DEEPSEEK_API_KEY
     temperature: 0
     timeout_seconds: 60
@@ -70,6 +71,7 @@ MAX_PROFILES = 64
 LOCAL_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
 # Providers whose server may be local and keyless (a dummy key is still fine).
 KEYLESS_BASE_URL_PROVIDERS = frozenset({"ollama"})
+REASONING_EFFORT_PROVIDERS = frozenset({"openai", "deepseek"})
 # OpenAI's `reasoning.effort` values (each model accepts a subset; unset = the model's default).
 ReasoningEffort = Literal["none", "minimal", "low", "medium", "high", "xhigh", "max"]
 
@@ -109,11 +111,12 @@ class LlmProfileSpec(BaseModel):
     reasoning_effort: ReasoningEffort | None = None
 
     @model_validator(mode="after")
-    def _reasoning_effort_is_openai_only(self) -> Self:
-        if self.reasoning_effort is not None and self.provider != "openai":
+    def _reasoning_effort_needs_a_mapper(self) -> Self:
+        if self.reasoning_effort is not None and self.provider not in REASONING_EFFORT_PROVIDERS:
             raise ValueError(
-                f"reasoning_effort is only supported by provider 'openai', not {self.provider!r}: "
-                "unset it (agintis only maps it for openai)"
+                "reasoning_effort is only supported by providers "
+                f"{sorted(REASONING_EFFORT_PROVIDERS)}, not {self.provider!r}: "
+                "unset it (agintis only maps it for those)"
             )
         return self
 

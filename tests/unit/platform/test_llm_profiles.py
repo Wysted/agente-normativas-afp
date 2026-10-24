@@ -418,7 +418,12 @@ def test_an_unset_reasoning_effort_is_not_passed() -> None:
     assert "reasoning_effort" not in PROVIDER_KWARGS["openai"](profile)
 
 
-@pytest.mark.parametrize("provider", ["anthropic", "deepseek", "ollama", "someprovider"])
+def test_a_deepseek_profile_accepts_reasoning_effort() -> None:
+    raw = _one(provider="deepseek", api_key_env="K", reasoning_effort="none")
+    assert parse_llm_profiles(raw, origin="x")["p"].reasoning_effort == "none"
+
+
+@pytest.mark.parametrize("provider", ["anthropic", "ollama", "someprovider"])
 def test_reasoning_effort_is_refused_at_parse_for_other_providers(provider: str) -> None:
     raw = _one(provider=provider, api_key_env="K", reasoning_effort="low")
     with pytest.raises(InvalidLlmProfilesError, match="reasoning_effort is only supported"):

@@ -13,6 +13,14 @@ models:
       cached_input: 0.01
       output: 0.50
 
+  deepseek-flash:
+    # Source: api-docs.deepseek.com/quick_start/pricing. Same price as the legacy deepseek-chat.
+    # PEAK rates (upper bound): off-peak is half, outside 01-04 and 06-10 UTC on weekdays.
+    - effective_from: 2026-09-10
+      input: 0.30
+      cached_input: 0.006
+      output: 1.20
+
   deepseek-chat:
     # Legacy name, absent from api-docs.deepseek.com/quick_start/pricing. A live call on
     # 2026-10-24 returned `"model": "deepseek-flash"`, so it is billed at the deepseek-flash price.
