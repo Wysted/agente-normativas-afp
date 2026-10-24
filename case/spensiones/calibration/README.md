@@ -851,3 +851,24 @@ These are `in` items (they only report, they never set a threshold):
   sentence being final (chunk b681c5a4).
 - `in-cir-26`: replaced by a different question. Answer: circular 100, the payment is credited to
   the individual account at the share value of the previous day's close (chunk e2645ced).
+
+## Supporting topics that are never primary, offline emulation (2026-10-24, not implemented)
+
+Pre-registered before emulating. A "supporting" topic can be selected and searched, but it is not
+the primary group of the merge while a non-supporting topic is also selected. The emulation
+re-orders the routed groups of the existing offline dumps, with no code change. It decides with
+the same three rules as the bias sweep, on the help-article dump at bias 0:
+
+| emulation | MRR 129 (>= .7759) | cotizaciones (>= .8708) | `bank_dev` reach (>= 44) |
+|---|---|---|---|
+| help articles as measured | .7731 | .8542 | 55 |
+| `articulo_faq` never primary | .7783 | **.8542** | 55 |
+| NCG as measured (report only) | .5501 pooled (floor .5568) | | 92 |
+| `ncg` never primary (report only) | **.5694** | | 92 |
+
+- Help articles fail on (ii), so nothing was implemented. The article topic was primary alongside
+  another topic in 28 rows, and demoting it helps the pooled MRR. On the cotizaciones questions,
+  though, the articles take merged slots as a secondary group, so the role does not help there.
+- The NCG result is report only and was seen before any rule used it. With `ncg` never primary, the
+  offline guard that failed now passes (.5694 against .5568), and NCG passages still reach the same
+  92 questions. A follow-up would need its own pre-registration, with the live runs deciding.
