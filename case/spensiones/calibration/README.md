@@ -872,3 +872,32 @@ the same three rules as the bias sweep, on the help-article dump at bias 0:
 - The NCG result is report only and was seen before any rule used it. With `ncg` never primary, the
   offline guard that failed now passes (.5694 against .5568), and NCG passages still reach the same
   92 questions. A follow-up would need its own pre-registration, with the live runs deciding.
+
+## Full NCG as a supporting topic, live (2026-10-24, not merged)
+
+Pre-registered before the code and the runs; the live runs decide. The new `supporting` topic role
+(branch `feat/ncg-supporting`, reviewed) keeps a topic searched but never the primary group while a
+non-supporting topic is selected, in both the evidence router and the merge, tie-break included.
+`ncg` was marked supporting and all 484 NCG were ingested.
+
+- Stage 1, offline, with the real code: pooled routed MRR on the 248 questions .5694 (floor .5568,
+  .5501 without the role). `ncg` is still selected for 92 questions but primary for 3 (25 without).
+- Stage 2, bands: `low` 0.6137 -> 0.6232, `out` 0.4779 -> 0.4878; 4/76 ood normal, 4/40 in `low`,
+  0 refused. Passed.
+- Stage 3, B = `reg_B2`, `reg_B3`, `faq2_B4`; N = `ncgsup_N1` to `N3`, 0 errors (`case/spensiones/tools/noninferiority.py`):
+
+| measure | B | N | rule |
+|---|---|---|---|
+| (a) live hits, 129 + `bank_dev` (decides) | 197, 196, 196 | 197, 196, 197 | mean >= 195.33: passes (196.67) |
+| `bank_dev` answer relevance | 111, 110, 109 | 107, 106, 110 | mean >= 108: **fails** (107.67) |
+| N1 in-dev faithfulness / citation / relevance / refusal | | 34, 32, 37, 38 | >= 35, 30, 37, 37: faithfulness **fails** |
+| N1 ood refusal misses | | 1 | <= 3 |
+| stable losses | | af-16 (right answer, other source), cz-07, bank-067, bank-002 (omits a condition) | real <= 2: 3 counted conservatively |
+
+- It fails two guards by a small margin and was reverted: the 477 NCG documents were deleted, the
+  bands stayed at 0.6137 / 0.4779 on `main`, and the role was not merged.
+- Of the 4 faithfulness failures, 3 cite no NCG, and 2 are non-verbatim judge quotes, the noise
+  pattern seen before. The NCG appear in 118 of the N1 answers, as the first source in 3.
+- Per set, the role recovers what the NCG cost at bias 0: cotizaciones, `nota_dev` and `oficio_dev`
+  match the baseline, and `compendio_new_dev` goes from 39 to 40. The losses are in the colloquial
+  `bank_dev` (relevance and 74-75 hits against 75-76).
