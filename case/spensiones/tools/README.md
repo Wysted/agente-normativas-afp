@@ -23,8 +23,8 @@ result can be reproduced and audited from the repo. Run them from the repo root.
   `RERANKER_MAX_CANDIDATES=40`, `OBSERVABILITY_TRACING=none` (`live_guard.sh` exports them).
   `dump.py` and `rerank_scores.py` ignore the two `RERANKER_*` variables: they fix the reranker at
   `http://localhost:8083` in code (40 candidates in `rerank_scores.py`, `AGX_RERANK_N` in `dump.py`).
-- `live_guard.sh` writes each dump to `*.partial` and renames it when it finishes; a set whose
-  `<set>_answers.jsonl` exists is skipped, so delete it to redo the set.
+- `dump_answers` (which `live_guard.sh` calls) writes each dump to `*.partial` and renames it when
+  it finishes; a set whose `<set>_answers.jsonl` exists is skipped, so delete it to redo the set.
 - `live_guard.sh` maps `LLM_API_KEY` to `OPENAI_API_KEY` (named openai profiles read the latter) and
   drops an exported but empty key, which would otherwise win over `.env`. `LG_AGENTS=<dir>` runs
   another agents dir; `LG_JUDGE=0` skips the judge. A dump whose log shows "Reranker unavailable"
