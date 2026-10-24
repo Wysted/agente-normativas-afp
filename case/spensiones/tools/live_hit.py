@@ -8,6 +8,7 @@ import json
 import re
 import sys
 import unicodedata
+from pathlib import Path
 
 
 def squash(text: str) -> str:
@@ -33,7 +34,7 @@ def main() -> None:
             ph = q.get("phrasing", "all")
             got, total = counts.get(ph, (0, 0))
             counts[ph] = (got + hit[q["id"]], total + 1)
-        print(path.rsplit("/", 2)[-2], {ph: f"{g}/{t}" for ph, (g, t) in counts.items()})
+        print(Path(path).resolve().parent.name, {ph: f"{g}/{t}" for ph, (g, t) in counts.items()})
         results.append(hit)
     if len(results) == 2:
         for q in dev:
