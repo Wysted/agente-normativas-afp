@@ -24,7 +24,8 @@ router's normal bands (within `evidence_margin`); its `low` scope band sends up 
 evidence router's max cosine favours big profiles in near-ties and no score transform fixed it
 offline; reading the passages did. The previous evidence is never a candidate. An unparsable
 reply keeps the router order; provider errors propagate (like the router's). Fewer than 2
-candidates: no model call.
+candidates: no model call. Candidates from `supporting` topics are left out while a
+non-supporting one has sources, so the tie-break never makes a supporting topic the primary.
 """
 
 import logging
@@ -135,16 +136,20 @@ class MergeSourcesNode:
         limits: SourceLimits,
         primary_weight: int = DEFAULT_PRIMARY_WEIGHT,
         chat_models: ChatModels | None = None,
+        supporting: frozenset[str] = frozenset(),
     ) -> None:
-        """`chat_models` turns the ROUTER-model tie-break on (None = off, no model call)."""
+        """`chat_models` turns the ROUTER-model tie-break on (None = off, no model call);
+        `supporting` are the topics the tie-break may not elect as primary."""
         if primary_weight < 1:
             raise ValueError("primary_weight must be at least 1")
         self._limits = limits
         self._primary_weight = primary_weight
         self._chat_models = chat_models
+        self._supporting = supporting
 
     async def _tiebreak(self, state: RagState, results: list[TopicSources]) -> list[TopicSources]:
         candidates = [r for r in results if r[1]]
+        candidates = [r for r in candidates if r[0] not in self._supporting] or candidates
         if self._chat_models is None or len(candidates) < 2:
             return results
         letters = string.ascii_uppercase[: len(candidates)]

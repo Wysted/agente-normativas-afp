@@ -363,6 +363,26 @@ class TestMultiTopicSpec:
         with pytest.raises(InvalidAgentSpecError, match=r"topic profiles must be unique.*'p'"):
             parse_agent_spec(raw, origin="a.yaml")
 
+    def test_supporting_defaults_to_false_and_a_mixed_spec_loads(self) -> None:
+        plain = parse_agent_spec(_spec_raw(), origin="a.yaml")
+        mixed = parse_agent_spec(
+            _spec_raw(
+                _topic(name="x", profile="p1"), _topic(name="y", profile="p2", supporting=True)
+            ),
+            origin="a.yaml",
+        )
+
+        assert plain.topics[0].supporting is False
+        assert [t.supporting for t in mixed.topics] == [False, True]
+
+    def test_an_agent_whose_topics_are_all_supporting_is_rejected(self) -> None:
+        raw = _spec_raw(
+            _topic(name="x", profile="p1", supporting=True),
+            _topic(name="y", profile="p2", supporting=True),
+        )
+        with pytest.raises(InvalidAgentSpecError, match="supporting"):
+            parse_agent_spec(raw, origin="a.yaml")
+
     def test_the_llm_router_needs_at_least_two_topics(self) -> None:
         with pytest.raises(InvalidAgentSpecError, match="at least two topics"):
             parse_agent_spec(_spec_raw(router="llm"), origin="a.yaml")

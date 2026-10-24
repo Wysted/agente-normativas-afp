@@ -64,7 +64,7 @@ async def main() -> None:
     async with Container.build(settings) as c:
         router = EvidenceTopicRouter(
             c.probe_profiles,
-            [EvidenceTopic(t.name, c.profiles.get(t.profile), t.evidence_bias) for t in spec.topics],
+            [EvidenceTopic(t.name, c.profiles.get(t.profile), t.evidence_bias, t.supporting) for t in spec.topics],
             spec.max_topics, spec.evidence_margin, spec.evidence_aggregate, spec.probe_k,
             settings.knowledge.max_query_chars,
         )

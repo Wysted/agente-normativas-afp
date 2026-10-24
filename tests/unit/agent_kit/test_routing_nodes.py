@@ -668,6 +668,62 @@ class TestMergeTieBreak:
         assert TIEBREAK_PASSAGES == 2
         assert TIEBREAK_PASSAGE_CHARS == 1500
 
+    def _supporting_node(self, model: Any) -> MergeSourcesNode:
+        return MergeSourcesNode(
+            SourceLimits(),
+            2,
+            chat_models_for(by_role={ChatRole.ROUTER: model}),
+            frozenset({"alpha"}),
+        )
+
+    async def test_a_supporting_group_is_never_picked_as_primary(self) -> None:
+        model = ScriptedChatModel(replies=["B"])  # would pick the supporting group
+        state: Any = _routed_state(
+            "beta",
+            "alpha",
+            query="q",
+            topic_results=[_result("alpha", "a1", "a2"), _result("beta", "b1", "b2")],
+        )
+
+        result = await self._supporting_node(model)(state, runtime_for())
+
+        assert _sources(result) == ["b1", "b2", "a1", "a2"]
+        assert model.seen == []  # one non-supporting candidate left: nothing to decide
+
+    async def test_supporting_groups_are_left_out_of_the_candidates(self) -> None:
+        model = ScriptedChatModel(replies=["B"])
+        state: Any = _routed_state(
+            "beta",
+            "alpha",
+            "gamma",
+            query="q",
+            topic_results=[
+                _result("alpha", "a1"),
+                _result("beta", "b1", "b2"),
+                _result("gamma", "g1", "g2"),
+            ],
+        )
+
+        result = await self._supporting_node(model)(state, runtime_for())
+
+        (human,) = [m for m in model.seen[0] if isinstance(m, HumanMessage)]
+        assert "text a1" not in human.text
+        assert "Collection C" not in human.text
+        assert _sources(result)[:2] == ["g1", "g2"]  # B = gamma among beta, gamma
+
+    async def test_only_supporting_groups_still_get_the_tiebreak(self) -> None:
+        model = ScriptedChatModel(replies=["B"])
+        node = MergeSourcesNode(
+            SourceLimits(),
+            2,
+            chat_models_for(by_role={ChatRole.ROUTER: model}),
+            frozenset({"alpha", "beta"}),
+        )
+
+        result = await node(self._state(), runtime_for())
+
+        assert _sources(result)[:2] == ["b1", "b2"]
+
     async def test_provider_errors_propagate(self) -> None:
         error = rate_limit_error()
         node = self._node(RaisingModel(error=error))

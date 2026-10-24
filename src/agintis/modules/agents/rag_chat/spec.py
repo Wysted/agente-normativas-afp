@@ -103,6 +103,12 @@ class TopicSpec(_Strict):
     # one-sided offset (bigger profiles and longer chunks score higher under `max`). Calibrate it
     # on a DEV set, NEVER on the eval questions (held-out); 0 until there is such a set.
     evidence_bias: float = Field(default=0.0, ge=-MAX_EVIDENCE_BIAS, le=MAX_EVIDENCE_BIAS)
+    # Searched like any other topic, but never the PRIMARY (first routed, double merge weight,
+    # elected by the tie-break) while a non-supporting topic is also selected. For a broad
+    # secondary family that restates what a consolidated topic already holds. Unlike a negative
+    # `evidence_bias` it does not make the topic less likely to be selected. At least one topic
+    # of an agent must be non-supporting.
+    supporting: bool = False
 
 
 type ClarificationKind = Literal["none", "evidence"]
@@ -236,6 +242,8 @@ class AgentSpec(_Strict):
             duplicated = sorted({v for v in values if values.count(v) > 1})
             if duplicated:
                 raise ValueError(f"{label} must be unique, repeated: {duplicated}")
+        if all(t.supporting for t in self.topics):
+            raise ValueError("at least one topic must not be `supporting` (none could be primary)")
         if self.router == "single" and len(self.topics) != 1:
             raise ValueError("router 'single' needs exactly one topic")
         if self.router in ("llm", "evidence") and len(self.topics) < 2:
@@ -288,6 +296,10 @@ class AgentSpec(_Strict):
                 "(use evidence_margin)",
                 self.id,
             )
+
+    @property
+    def supporting_topics(self) -> frozenset[str]:
+        return frozenset(t.name for t in self.topics if t.supporting)
 
     @property
     def uses_llm_router(self) -> bool:

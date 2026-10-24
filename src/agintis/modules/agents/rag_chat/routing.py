@@ -37,7 +37,10 @@ def build_router(
             )
         return EvidenceTopicRouter(
             probe,
-            [EvidenceTopic(t.name, profiles.get(t.profile), t.evidence_bias) for t in spec.topics],
+            [
+                EvidenceTopic(t.name, profiles.get(t.profile), t.evidence_bias, t.supporting)
+                for t in spec.topics
+            ],
             spec.max_topics,
             spec.evidence_margin,
             spec.evidence_aggregate,

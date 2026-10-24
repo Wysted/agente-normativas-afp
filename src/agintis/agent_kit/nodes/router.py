@@ -275,11 +275,15 @@ class TopicProbe(Protocol):
 
 @dataclass(frozen=True, slots=True)
 class EvidenceTopic:
-    """A topic and the profile whose content is its evidence (`bias`: see the router)."""
+    """A topic and the profile whose content is its evidence (`bias`: see the router).
+
+    `supporting`: searched like any other, but never the primary (first) routed topic while a
+    non-supporting one is also selected."""
 
     name: str
     profile: RagProfile
     bias: float = 0.0
+    supporting: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -331,6 +335,17 @@ def select_by_evidence(
     ][:max_topics]
 
 
+def non_supporting_first(
+    routed: list[RoutedTopic], supporting: frozenset[str]
+) -> list[RoutedTopic]:
+    """`routed` with its best non-supporting topic moved to the front (the others keep their
+    order); unchanged when none is supporting or all of them are."""
+    first = next((r for r in routed if r["topic"] not in supporting), None)
+    if first is None or first is routed[0]:
+        return routed
+    return [first, *(r for r in routed if r is not first)]
+
+
 class EvidenceTopicRouter:
     """Routes by what the corpus says, not by what a model thinks: no LLM call.
 
@@ -351,6 +366,11 @@ class EvidenceTopicRouter:
     measured one-sided offset. It must be calibrated on a DEV set, never on the questions the
     router is evaluated with (held-out): leave it at 0 until there is one. `similarities` stay
     raw; `TopicEvidence.raw_score` is the score without the bias.
+
+    A `supporting` topic only changes the ORDER of the selection: when it ranks first and a
+    non-supporting topic is also selected, the best-ranked non-supporting one moves to the front
+    (the primary), the rest keep their order. Which topics are searched, the scores and the
+    scope check do not change; if only supporting topics are selected, nothing moves.
 
     Selection: the best-scoring topic is the primary and is always searched; another topic only
     when `best - score <= evidence_margin`, up to `max_topics`. A topic with NO hit is never
@@ -393,6 +413,7 @@ class EvidenceTopicRouter:
         self._probe = probe
         self._topics = list(topics)
         self._names = [t.name for t in topics]
+        self._supporting = frozenset(t.name for t in topics if t.supporting)
         self._max_topics = max_topics
         self._margin = margin
         self._aggregate: EvidenceAggregate = aggregate
@@ -435,6 +456,7 @@ class EvidenceTopicRouter:
         widen = widen_to is not None and widen_to > self._max_topics
         top, margin = (cast(int, widen_to), math.inf) if widen else (self._max_topics, self._margin)
         routed = select_by_evidence(evidence, top, margin) or fallback_topics(self._names, top)
+        routed = non_supporting_first(routed, self._supporting)
         logger.info(
             "Evidence router: %s -> %s",
             ", ".join(f"{e.topic}={e.score:.3f}" for e in evidence if e.score is not None) or "-",

@@ -340,6 +340,55 @@ class TestNodes:
         assert {c.query_vector for c in retrieval.calls} == {VECTOR}
 
 
+class TestSupporting:
+    def _router(self, probe: FakeProbe, *supporting: str, **kwargs: Any) -> EvidenceTopicRouter:
+        topics = [EvidenceTopic(n, PROFILES[n], supporting=n in supporting) for n in NAMES]
+        return EvidenceTopicRouter(probe, topics, **kwargs)
+
+    async def test_a_non_supporting_topic_takes_the_primary_slot(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.69], faq=[0.68]))
+
+        routed = await self._router(probe, "ncg").route("q", _scope())
+
+        assert _names(routed) == ["circular", "ncg"]
+        assert [r["confidence"] for r in routed] == [pytest.approx(0.69), pytest.approx(0.70)]
+
+    async def test_the_others_keep_their_relative_order(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.69], faq=[0.68]))
+
+        routed = await self._router(probe, "ncg", max_topics=3, margin=0.05).route("q", _scope())
+
+        assert _names(routed) == ["circular", "ncg", "faq"]
+
+    async def test_only_supporting_topics_selected_changes_nothing(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.69], faq=[0.50]))
+
+        routed = await self._router(probe, "ncg", "circular").route("q", _scope())
+
+        assert _names(routed) == ["ncg", "circular"]
+
+    async def test_a_non_supporting_primary_is_untouched(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.69]))
+
+        routed = await self._router(probe, "circular").route("q", _scope())
+
+        assert _names(routed) == ["ncg", "circular"]
+
+    async def test_selection_is_unchanged_a_supporting_topic_is_still_searched(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.60]))
+
+        routed = await self._router(probe, "ncg", margin=0.02).route("q", _scope())
+
+        assert _names(routed) == ["ncg"]  # circular is outside the margin: not selected
+
+    async def test_no_flags_gives_the_same_routing_as_before(self) -> None:
+        probe = FakeProbe(_scores(ncg=[0.70], circular=[0.69], faq=[0.68]))
+
+        assert await self._router(probe).route("q", _scope()) == await _router(probe).route(
+            "q", _scope()
+        )
+
+
 class TestBias:
     async def test_the_bias_is_added_to_the_score_before_ranking(self) -> None:
         probe = FakeProbe(_scores(ncg=[0.70], circular=[0.68]))

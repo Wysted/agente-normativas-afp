@@ -121,6 +121,9 @@ max_rewrites: 1
 max_sources: 8
 max_source_chars: 3600
 max_context_chars: 28800
+# Optional per topic: `supporting: true` = searched as usual but never the primary (first routed,
+# double merge weight, tie-break election) while a non-supporting topic is also selected. Unlike
+# `evidence_bias` it does not make the topic less likely to be selected. None is set here.
 topics:
   - name: compendio
     description: >-

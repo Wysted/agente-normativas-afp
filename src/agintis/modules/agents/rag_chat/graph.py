@@ -159,7 +159,10 @@ def _builder(
         ),
     )
     tiebreak = deps.chat_models if spec.merge_tiebreak == "llm" else None
-    builder.add_node(MERGE, MergeSourcesNode(spec.limits, spec.primary_weight, tiebreak))
+    builder.add_node(
+        MERGE,
+        MergeSourcesNode(spec.limits, spec.primary_weight, tiebreak, spec.supporting_topics),
+    )
     builder.add_node(
         REWRITE_NODE,
         RewriteQueryNode(
