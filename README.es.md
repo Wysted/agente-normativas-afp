@@ -4,6 +4,13 @@
 
 > La versión en inglés es la canónica: si difieren, vale la inglesa.
 
+> Este repositorio es la plantilla agintis aplicada a la normativa chilena de pensiones: el agente
+> `spensiones-rag` (caso `case/spensiones`) responde preguntas sobre las normas de la
+> Superintendencia de Pensiones, citando sus fuentes. Para ejecutarlo, ver
+> [Ejecutar el caso spensiones](#ejecutar-el-caso-spensiones); qué hace y cómo se midió está en
+> [case/spensiones/README.md](case/spensiones/README.md) (en inglés). El resto de este README
+> documenta la plataforma, compartida con la plantilla base.
+
 **agintis** — una plantilla de LangGraph para construir agentes: una base hexagonal (hilos, HTTP con streaming, perfiles de LLM, trazas, evaluación offline) con un agente RAG configurable que responde solo desde tus fuentes, rechaza lo que no puede responder y mide ambas cosas.
 
 Es un monolito modular en Python (un solo desplegable) con una estructura hexagonal: domain / application / infrastructure / api por módulo,
@@ -27,7 +34,7 @@ con métricas de recuperación y un juez de respuestas.
 Necesitas Docker, [uv](https://docs.astral.sh/uv/) (solo para descargar el corpus) y una clave de LLM.
 
 ```bash
-cp .env.example .env        # fill POSTGRES_* and LLM_* (LLM_PROVIDER, LLM_MODEL, LLM_API_KEY)
+cp .env.example .env        # then append LLM_PROVIDER, LLM_API_KEY (and LLM_MODEL) to it
 docker compose up -d db embeddings          # first start builds the DB image, downloads the model
 
 # 1. Fetch the corpus of a case (fastapi_es: FastAPI docs in Spanish, pinned commit)
@@ -53,6 +60,11 @@ de rutas del host de `.env` (`LLM_PROFILES_FILE`, `AUTH_JWKS_FILE`, `OBSERVABILI
 sobrescriben: pasa las rutas del contenedor con `APP_LLM_PROFILES_FILE`, `APP_AUTH_JWKS_FILE` y
 `APP_OTLP_ENDPOINT` (ver [docs/configuration.es.md](docs/configuration.es.md)).
 La ingesta y la app deben usar el mismo tenant (la CLI de ingesta usa `default` por defecto).
+`.env.example` no tiene variables `LLM_*`: sin `LLM_PROVIDER` el LLM queda deshabilitado y un agente
+que lo necesita responde un error. La imagen trae los extras `openai` y `otel`; otros proveedores
+requieren `--build-arg UV_EXTRAS=...` (ver más abajo). Perfiles opcionales de compose: `rerank`
+(cross-encoder de TEI; sin él la recuperación mantiene el orden vectorial), `observability` (trazas
+en Phoenix); `docker-compose.gpu.yml` corre el reranker en una GPU NVIDIA (uso en su encabezado).
 Las versiones etiquetadas publican la imagen como `ghcr.io/wysted/agintis:<version>`: define
 `APP_IMAGE=ghcr.io/wysted/agintis:0.3.0` y ejecuta `docker compose --profile app pull` antes de `up` para
 usarla en lugar de construirla localmente. Descarga la versión que coincide con tu checkout: el caso montado
@@ -82,7 +94,8 @@ curl -s localhost:8000/v1/threads/<thread_id>/messages -H 'X-Tenant-Id: default'
 `GET /v1/threads/<thread_id>/messages` devuelve la transcripción (`{"items": [{"role", "text", "sources"}]}`,
 de más antiguo a más nuevo) para que una UI reconstruya la conversación; los marcadores `[n]` de un mensaje del
 asistente indexan sus `sources`. Los hilos respondidos antes de que existiera este endpoint devuelven
-sus respuestas con `sources` vacío.
+sus respuestas con `sources` vacío. `GET /v1/threads` lista los hilos del tenant; `GET` y
+`DELETE /v1/threads/<thread_id>` leen o borran uno.
 
 Con `AUTH_TENANT_RESOLVER=jwt` envía `Authorization: Bearer <token>` en lugar de `X-Tenant-Id`. Para
 pruebas locales, genera uno con un par de claves desechable:
@@ -90,6 +103,50 @@ pruebas locales, genera uno con un par de claves desechable:
 que debes configurar; las claves de desarrollo se rechazan fuera de `APP_ENV=local`).
 
 Todos los ajustes están documentados en [docs/configuration.es.md](docs/configuration.es.md).
+
+## Ejecutar el caso spensiones
+
+`spensiones-rag` usa el tenant `spensiones`, el reranker (`reranker_key: tei` en todos los perfiles)
+y los perfiles de LLM con nombre de `case/spensiones/llm_profiles.yaml` (OpenAI `gpt-6-luna` para
+todos los roles, DeepSeek para el juez). Agrega a `.env`:
+
+```bash
+CASE=spensiones
+APP_LLM_PROFILES_FILE=/app/case/llm_profiles.yaml
+OPENAI_API_KEY=...            # DEEPSEEK_API_KEY too, only for cli.judge
+RERANKER_MAX_CANDIDATES=40
+```
+
+```bash
+# 1. Crawl the index from spensiones.cl (about 600 requests at least 0.6 s apart, pages cached
+#    in raw_html/), then download the files listed in samples/_manifest.json (3.5 s apart)
+mkdir -p case/spensiones/raw_html case/spensiones/index
+for step in phase_normativa phase_cms phase_cms_detail phase_compendio phase_stats build; do
+    case/spensiones/crawler/run.sh case/spensiones/crawler/$step.py
+done
+uv run python case/spensiones/fetch_samples.py
+
+# 2. Services, with the reranker on an NVIDIA GPU (set RERANKER_GPU_TAG for your card, see the
+#    header of docker-compose.gpu.yml): the CPU reranker rejects 40 candidates and retrieval
+#    then silently keeps the vector order
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml --profile rerank up -d db embeddings reranker
+
+# 3. Ingest into tenant spensiones, create the metadata indexes, start the app
+docker compose --profile app run --rm app python -m agintis.cli.ingest --tenant spensiones \
+    --profiles /app/case/profiles --index /app/case/index/documents.jsonl --samples /app/case/samples
+docker compose --profile app run --rm app python -m agintis.cli.indexes \
+    --profiles /app/case/profiles --apply
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml --profile rerank --profile app up -d
+
+curl -N localhost:8000/v1/runs/stream \
+  -H 'Content-Type: application/json' -H 'X-Tenant-Id: spensiones' \
+  -d '{"agent_id": "spensiones-rag", "message": "¿Qué plazo tiene la AFP para entregar la cartola cuatrimestral?"}'
+```
+
+Los umbrales de evidencia de `agents/spensiones.yaml` se calibraron sobre la instantánea del corpus
+del mantenedor; tras tu propio crawl, recalíbralos (paso 4 de [Agregar un caso](#agregar-un-caso)).
+`cli.eval`, `cli.dump_answers` y `cli.calibrate_evidence` también usan el tenant `default` por
+defecto: pásales `--tenant spensiones`.
 
 ## Desarrollo local (sin contenedor de la app)
 
@@ -147,14 +204,8 @@ más los otros extras que uses (`--all-extras` lo incluye); Docker:
    script en `fetch/` que produzca ambos. Tras una nueva descarga que cambió o eliminó fuentes, ingesta
    con `--prune` (índice completo, sin `--limit`); tras ingestar, ejecuta
    `cli.indexes --profiles case/<name>/profiles --apply` para los campos marcados `indexed`.
-   `case/spensiones` no tiene `fetch/`: su índice, ignorado por git, sale de `crawler/`. Desde un
-   clon nuevo ejecuta
-   `mkdir -p case/spensiones/raw_html case/spensiones/index`, luego
-   `case/spensiones/crawler/run.sh case/spensiones/crawler/<step>.py` para `phase_normativa`,
-   `phase_cms`, `phase_cms_detail`, `phase_compendio`, `phase_stats` y `build`, en ese orden
-   (unas 600 requests con al menos 0,6 s entre ellas, páginas cacheadas en `raw_html/`), y después
-   `uv run python case/spensiones/fetch_samples.py` (descarga
-   solo los archivos de `samples/_manifest.json`, con 3,5 s entre requests).
+   `case/spensiones` no tiene `fetch/`: su índice, ignorado por git, sale de `crawler/` (ver
+   [Ejecutar el caso spensiones](#ejecutar-el-caso-spensiones)).
    Tras una ingesta o reversión masiva (miles de
    chunks insertados y borrados), los resultados de HNSW de pgvector ya no son idénticos a los de
    antes, ni siquiera tras `VACUUM` (medido: el MRR con routing se movió +-0.005 con el mismo
@@ -219,7 +270,8 @@ negocio por su `api.py` y a los nodos reutilizables por `agent_kit`.
 
 ## Evaluación
 
-Todo es offline; usa para el juez una familia de modelos distinta a la del generador.
+Todo es offline; usa para el juez una familia de modelos distinta a la del generador. Cada comando
+`agintis.cli.*` lista todos sus flags con `--help`.
 
 - Recuperación (sin LLM): `uv run python -m agintis.cli.eval --profiles ... --questions case/<name>/profiles/eval_questions.jsonl [--report out.json]` (hit@k, MRR; `--route --agents DIR` agrega la precisión del router).
 - Respuestas: `cli.dump_answers --profiles ... --agents ... --agent <id> --questions <jsonl> --out answers.jsonl`, luego `cli.judge --answers answers.jsonl [--report r.json]` (juez de respuestas v12, que califica a los agentes con citas inline igual que v11: fidelidad, soporte de citas, relevancia, corrección del rechazo, mezcla de escrituras; el soporte de citas no aplica a un agente con `citations: none` salvo que emita marcadores [n] de todos modos). Define `LLM_PROFILES_FILE` (perfiles con nombre, p. ej. `case/spensiones/llm_profiles.yaml`) y `EVAL_JUDGE_PROFILE` (o `--profile`); el juez se niega a calificar con el modelo que respondió salvo que uses `--allow-self-judge`.
